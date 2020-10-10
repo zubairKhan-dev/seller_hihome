@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "294715934428",
+    "firebase_url": "https://hihome-seller.firebaseio.com",
+    "project_id": "hihome-seller",
+    "storage_bucket": "hihome-seller.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294715934428:android:b72a1c073f354b5bc45619",
+        "android_client_info": {
+          "package_name": "com.hihome.seller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "294715934428-pt8fpjvepo0gab21bf262us06rlg3mmr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSjrWOL68rQ95ZUrCjLs3k3OYfUZwHgeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "294715934428-pt8fpjvepo0gab21bf262us06rlg3mmr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

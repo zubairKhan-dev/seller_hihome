@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   AppCenter-Config.plist
+   HomeFoodApp
+
+   Created by Sohrab Hussain on 3/23/20.
+   Copyright (c) 2020 Facebook. All rights reserved.
+-->
+<plist version="1.0">
+    <dict>
+    <key>AppSecret</key>
+    <string>601d317c-f53d-4d27-936d-858c87386daf</string>
+    </dict>
+</plist>

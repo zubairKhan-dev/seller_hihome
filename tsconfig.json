@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "target": "es6",
+    "module": "es6",
+    "lib": [
+      "es6"
+    ],
+    "noEmit": true,
+    "moduleResolution": "node",
+    "jsx": "react-native",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "preserveConstEnums": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "noImplicitReturns": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "watch": true,
+    "skipLibCheck": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "custom_typings"
+    ]
+  },
+  "filesGlob": [
+    "typings/index.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "types": [
+    "react",
+    "react-native",
+    "jest"
+  ],
+  "exclude": [
+    "android",
+    "App.js",
+    "ios",
+    "build",
+    "node_modules",
+    "eres-fw"
+  ],
+  "compileOnSave": true
+}
