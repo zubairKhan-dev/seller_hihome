@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Modal from "react-native-modal";
-import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {ScrollView, Text, TouchableOpacity, View} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import {getCurrentLocale, strings} from "../Translations";
@@ -8,17 +8,15 @@ import ActionIconButton from "../ActionButton/ActionIconButton";
 import ColorTheme from "../../theme/Colors";
 import {RTLView} from "react-native-rtl-layout";
 import {SliderBox} from "react-native-image-slider-box";
-import {windowHeight} from "../../common";
+import {windowHeight, windowWidth} from "../../common";
 import SignUp from "../../screens/Account/Login/SignUp";
 import Login from "../../screens/Account/Login/Login";
 import CodePush from "react-native-code-push";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
+import {getLanguage, setLanguage} from "../../lib/user";
 
-const offers = [require('../../../assets/images/chinese.jpg'),
-    require('../../../assets/images/burger.jpeg'),
-    require('../../../assets/images/indian.jpg'),
-    require('../../../assets/images/pakistani.jpg')];
+const offers = [require('../../../assets/images/logo_back.png')];
 
 const food_images = ["https://b.zmtcdn.com/data/collections/e1d5e8f900dbca01d11f353ef4b6a97c_1581661395.jpg",
     "https://b.zmtcdn.com/data/collections/b22194cb38ed18a5200b387ad8f243f0_1582015804.jpg",
@@ -38,6 +36,7 @@ interface State {
     showLogin: boolean;
     offers: any[];
     appVersion?: string;
+    language?: string;
 }
 
 export default class LoginPopUp extends Component<Props, State> {
@@ -48,7 +47,8 @@ export default class LoginPopUp extends Component<Props, State> {
             offers: offers,
             showSignUp: false,
             showLogin: false,
-            appVersion: ""
+            appVersion: "",
+            language: undefined
         };
     }
 
@@ -70,42 +70,101 @@ export default class LoginPopUp extends Component<Props, State> {
         });
     }
 
+    updateLanguage(language) {
+        let curLanguage = getLanguage()
+        if (curLanguage === language) {
+            this.setState({language: language});
+        } else {
+            setLanguage(language);
+            this.setState({language: language});
+            // setTimeout(() => {
+            //     RNRestart.Restart();
+            // }, 1000);
+        }
+    }
+
     renderGuestUser() {
         return (
-            <View style={{backgroundColor: "#F9F7F7", marginTop: Constants.defaultPadding}}>
-                <View style={[StaticStyles.center, {padding: 2 * Constants.defaultPadding + Constants.defaultPadding}]}>
-                    <Image resizeMode={"contain"} style={{width: 200, height: 40}} source={require('../../../assets/images/app-logo.png')}/>
-                    <Text style={[{
-                        textAlign: "center",
-                        color: ColorTheme.black,
-                        fontWeight: "500",
-                        fontSize: 12,
-                    }]}> {strings("version") + " " + this.state.appVersion}</Text>
-                </View>
+            <View style={{backgroundColor: "#F9F7F7", marginTop: Constants.defaultPadding, justifyContent: "center", alignItems: "center"}}>
                 <View style={{height: Constants.defaultPaddingMin}}/>
-                <ActionIconButton icon={"login"} onPress={() => {
-                    this.setState({showLogin: true})
-                }} title={strings("email_mobile_login")} iconColor={ColorTheme.appTheme}/>
-                <View style={{height: Constants.defaultPaddingRegular}}/>
-                <RTLView locale={getCurrentLocale()}>
-                    <View style={{flex: 1}}/>
-                    <Text style={{
-                        fontWeight: "400",
-                        fontSize: 15,
-                        color: ColorTheme.grey
-                    }}>{strings("dont_have_account")}</Text>
-                    <View style={{width: Constants.defaultPadding}}/>
-                    <TouchableOpacity style={{justifyContent: "center"}} onPress={() => {
-                        this.setState({showSignUp: true})
+                {!this.state.language && <View style={{paddingTop: Constants.defaultPaddingRegular}}>
+                    <View style={{
+                        borderRadius: 25,
+                        height: 40,
+                        width: 250,
+                        borderColor: ColorTheme.appTheme,
+                        borderWidth: 1,
+                        justifyContent: "center"
                     }}>
+                        <TouchableOpacity style={{justifyContent: "center", overflow: "hidden"}}
+                                          onPress={() => {
+                                              this.updateLanguage("ar");
+                                          }}>
+                            <Text style={[{
+                                textAlign: "center",
+                                color: ColorTheme.appTheme,
+                                fontWeight: "700",
+                                fontSize: 14,
+                            }]}> {strings("arabic")}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{height: Constants.defaultPadding}}/>
+                    <View style={{
+                        borderRadius: 25,
+                        height: 40,
+                        width: 250,
+                        borderColor: ColorTheme.appTheme,
+                        borderWidth: 1,
+                        justifyContent: "center"
+                    }}>
+                        <TouchableOpacity style={{justifyContent: "center", overflow: "hidden"}}
+                                          onPress={() => {
+                                              this.updateLanguage("en");
+                                          }}>
+                            <Text style={[{
+                                textAlign: "center",
+                                color: ColorTheme.appTheme,
+                                fontWeight: "700",
+                                fontSize: 14,
+                            }]}> {strings("english")}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{marginTop: Constants.defaultPadding}}>
+                        {/*style={[{padding: 2 * Constants.defaultPadding + Constants.defaultPadding}]}*/}
+                        {/*<Image resizeMode={"contain"} style={{width: 200, height: 40}} source={require('../../../assets/images/app-logo.png')}/>*/}
+                        <Text style={[{
+                            textAlign: "center",
+                            color: ColorTheme.black,
+                            fontWeight: "500",
+                            fontSize: 12,
+                        }]}> {strings("version") + " " + this.state.appVersion}</Text>
+                    </View>
+                </View>}
+                {this.state.language && <View style={{paddingTop: Constants.defaultPaddingRegular}}>
+                    <ActionIconButton icon={"login"} onPress={() => {
+                        this.setState({showLogin: true})
+                    }} title={strings("email_mobile_login")} iconColor={ColorTheme.appTheme}/>
+                    <View style={{height: Constants.defaultPaddingRegular}}/>
+                    <RTLView locale={getCurrentLocale()}>
+                        <View style={{flex: 1}}/>
                         <Text style={{
-                            color: ColorTheme.appTheme,
-                            fontWeight: "600",
+                            fontWeight: "400",
                             fontSize: 15,
-                        }}>{strings("sign_up")}</Text>
-                    </TouchableOpacity>
-                    <View style={{flex: 1}}/>
-                </RTLView>
+                            color: ColorTheme.grey
+                        }}>{strings("dont_have_account")}</Text>
+                        <View style={{width: Constants.defaultPadding}}/>
+                        <TouchableOpacity style={{justifyContent: "center"}} onPress={() => {
+                            this.setState({showSignUp: true})
+                        }}>
+                            <Text style={{
+                                color: ColorTheme.appTheme,
+                                fontWeight: "600",
+                                fontSize: 15,
+                            }}>{strings("sign_up")}</Text>
+                        </TouchableOpacity>
+                        <View style={{flex: 1}}/>
+                    </RTLView>
+                </View>}
             </View>
         );
     }
@@ -126,13 +185,11 @@ export default class LoginPopUp extends Component<Props, State> {
                             <View style={{}}>
                                 <SliderBox
                                     sliderBoxHeight={windowHeight - 250}
-                                    images={food_images}
+                                    images={offers}
                                     onCurrentImagePressed={index => {
                                     }}
                                     currentImageEmitter={index => {
                                     }}
-                                    autoplay
-                                    circleLoop
                                     resizeMethod={'resize'}
                                     resizeMode={'cover'}
                                     dotColor={ColorTheme.appTheme}
@@ -168,12 +225,13 @@ export default class LoginPopUp extends Component<Props, State> {
                         </View>
                         <View style={[StaticStyles.top_shadow, {
                             flex: 1,
-                            height: 300,
+                            height: 200,
                             backgroundColor: "#F9F7F7",
                             borderTopRightRadius: Constants.viewCornerRadius,
                             borderTopLeftRadius: Constants.viewCornerRadius,
                             position: "absolute",
-                            bottom: 0
+                            bottom: 0,
+                            width: windowWidth
                         }]}>
                             <ScrollView style={{marginHorizontal: Constants.defaultPaddingMax}}>
                                 {this.renderGuestUser()}
