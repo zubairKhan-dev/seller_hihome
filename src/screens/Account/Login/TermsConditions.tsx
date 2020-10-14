@@ -1,15 +1,12 @@
 import React, {Component} from "react";
 import Modal from "react-native-modal";
-import {Text, TouchableOpacity, View, Dimensions, StyleSheet} from "react-native";
+import {Text, TouchableOpacity, View, Dimensions, StyleSheet, ScrollView} from "react-native";
 import {getCurrentLocale, strings} from "../../../components/Translations";
 import Constants from "../../../theme/Constants";
 import ColorTheme from "../../../theme/Colors";
 import {CommonIcons} from "../../../icons/Common";
 import {RTLView} from "react-native-rtl-layout";
 import {AppIcon} from "../../../common/IconUtils";
-import Pdf from 'react-native-pdf';
-
-const iosSource = require('./terms-seller.pdf');  // ios only
 
 interface Props {
     show: boolean;
@@ -78,21 +75,13 @@ export default class TermsConditions extends Component<Props, State> {
                                      size={25}/>
                         </TouchableOpacity>
                     </RTLView>
-                    <Pdf
-                        source={iosSource}
-                        onLoadComplete={(numberOfPages,filePath)=>{
-                            console.log(`number of pages: ${numberOfPages}`);
-                        }}
-                        onPageChanged={(page,numberOfPages)=>{
-                            console.log(`current page: ${page}`);
-                        }}
-                        onError={(error)=>{
-                            console.log(error);
-                        }}
-                        onPressLink={(uri)=>{
-                            console.log(`Link presse: ${uri}`)
-                        }}
-                        style={styles.pdf}/>
+                    <ScrollView style={{paddingHorizontal: Constants.defaultPadding, marginTop: Constants.defaultPaddingMax}}>
+                        <Text style={[{
+                            textAlign: "right", color: "black",
+                            fontWeight: "500",
+                            fontSize: 14,
+                        }]}> {strings("terms_conditions_text")}</Text>
+                    </ScrollView>
                 </View>
             </Modal>
         );
