@@ -26,7 +26,6 @@ import {showMessage} from "react-native-flash-message";
 import {combineTime, splitTime} from "../../lib/DateUtil";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
-import analytics from "@react-native-firebase/analytics";
 
 const removeItem = (items, i) =>
     items.slice(0, i-1).concat(items.slice(i, items.length))
@@ -421,9 +420,9 @@ export default class AddFoodItem extends Component<Props, State> {
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response && response.code === 200 && resp) {
-                        analytics().logEvent('Product_Added', {
-                            product_id: response.response_data.id,
-                        });
+                        // analytics().logEvent('Product_Added', {
+                        //     product_id: response.response_data.id,
+                        // });
                         showMessage({
                             message: strings("food_created_success"),
                             type: "success",

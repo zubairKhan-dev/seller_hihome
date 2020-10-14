@@ -20,7 +20,6 @@ import LoginPopUp from "../../components/LoginPopUp";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import RejectPopUp from "../../components/RejectPopUp";
-import analytics from "@react-native-firebase/analytics";
 import {getUser} from "../../lib/user";
 import { parseDate } from "../../lib/DateUtil";
 
@@ -652,11 +651,15 @@ export default class Dashboard extends Component<Props, State> {
                     paddingHorizontal: Constants.defaultPadding,
                     borderColor: index === this.state.selCategory ? ColorTheme.appTheme : ColorTheme.appThemeLight,
                     borderWidth: 1,
-                    borderRadius: 3
+                    borderRadius: 3,
+                    justifyContent: "center",
+                    alignItems: "center"
                 }]}>
                     <View style={[{
                         backgroundColor: "white",
                         paddingHorizontal: Constants.defaultPadding,
+                        justifyContent: "center",
+                        alignItems: "center"
                     }]}>
                         <Text numberOfLines={1} style={[StaticStyles.regularFont, {
                             color: index === this.state.selCategory ? ColorTheme.appTheme : ColorTheme.appThemeLight,

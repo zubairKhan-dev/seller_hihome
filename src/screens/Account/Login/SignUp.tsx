@@ -23,7 +23,6 @@ import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import VerifyOTPPopUp from "../../../components/VerifyOTPPopUp";
 import {parseDate} from "../../../lib/DateUtil";
 import { getDeviceId } from "../../../lib/user";
-import analytics from "@react-native-firebase/analytics";
 import TermsConditions from "./TermsConditions"
 const licensePhoto = [
     {name: "", uri: "", data: undefined},
@@ -250,9 +249,9 @@ export default class SignUp extends Component<Props, State> {
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response && response.code === 200 && resp) {
-                        analytics().logEvent('Register_Seller', {
-                            user_id: response.response_data.id,
-                        });
+                        // analytics().logEvent('Register_Seller', {
+                        //     user_id: response.response_data.id,
+                        // });
                         this.setState({loading: false, showMessagePopup: true});
                     }
                 }, (errors, errorMessage) => {

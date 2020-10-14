@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import ColorTheme from "../../../theme/Colors";
 import {StaticStyles} from "../../../theme/Styles";
 import Constants from "../../../theme/Constants";
@@ -9,19 +9,16 @@ import {getCurrentLocale, isRTLMode, strings} from "../../../components/Translat
 import ActionButton from "../../../components/ActionButton";
 import {RTLView} from "react-native-rtl-layout";
 import HFTextHeading from "../../../components/HFText/HFTextHeading";
-import {TouchableOpacity} from "react-native";
 import ForgotPassword from "../../../components/ForgotPassword";
 import * as Api from "../../../lib/api";
 import LoadingOverlay from "../../../components/Loading";
 import {showMessageAlert} from "../../../common";
-import {setProfile, getDeviceId} from "../../../lib/user";
+import {getDeviceId, setProfile} from "../../../lib/user";
 import Modal from "react-native-modal";
 import {AppIcon} from "../../../common/IconUtils";
 import {CommonIcons} from "../../../icons/Common";
 import SignUp from "./SignUp";
 import DeviceInfo from "react-native-device-info";
-import analytics from "@react-native-firebase/analytics";
-import { showMessage } from "react-native-flash-message";
 
 interface Props {
     navigation: any;
@@ -50,8 +47,8 @@ export default class Login extends Component<Props, State> {
             showSignUp: false,
             forgotPassword: false,
             loading: false,
-            username: "",
-            password: ""
+            username: "mostafa@hihome.app",
+            password: "123456"
         }
     }
 
@@ -91,9 +88,9 @@ export default class Login extends Component<Props, State> {
                     switch (response.code) {
                         case 200 :
                             if (resp) {
-                                analytics().logEvent('Login_Success', {
-                                    user_id: resp.id,
-                                });
+                                // analytics().logEvent('Login_Success', {
+                                //     user_id: resp.id,
+                                // });
                                 setProfile(resp);
                                 this.props.onLoginSuccess();
                             }

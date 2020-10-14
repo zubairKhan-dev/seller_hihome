@@ -5,6 +5,7 @@ export const windowHeight = Dimensions.get('window').height;
 export const windowWidth = Dimensions.get('window').width;
 
 export function showMessageAlert(message) {
+    console.log("ALERT", message);
     Alert.alert(
         strings("app_name"),
         message,

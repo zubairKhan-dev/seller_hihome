@@ -78,7 +78,7 @@ class AppConfigImpl implements AppConfig {
                 break;
 
             default:
-                this._config = LiveConfig;
+                this._config = DevConfig;
         }
         this.configs = {};
     }

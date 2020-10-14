@@ -243,7 +243,7 @@ export default class LoginPopUp extends Component<Props, State> {
                                onDismiss={() => this.setState({showLogin: false})}
                                onLoginSuccess={() => {
                                    Events.trigger(XEvents.USER_LOGGED_IN);
-                                   this.setState({showLogin: false, show: false});
+                                   // this.setState({showLogin: false, show: false});
                                    this.dismiss();
                                }}/>
                     </View>

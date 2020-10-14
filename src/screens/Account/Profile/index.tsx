@@ -22,7 +22,6 @@ import ImagePicker from "react-native-image-picker";
 import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import FastImage from "react-native-fast-image";
 import ImageUploadView from "../../../components/ImageUpload";
-import analytics from "@react-native-firebase/analytics";
 
 const logoPhoto = [
     {name: "", uri: "", data: undefined},
@@ -206,9 +205,9 @@ export default class Profile extends Component<Props, State> {
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response.code === 200) {
-                        analytics().logEvent('Update_Profile', {
-                            user_id: response.response_data.id,
-                        });
+                        // analytics().logEvent('Update_Profile', {
+                        //     user_id: response.response_data.id,
+                        // });
                         showMessage({
                             message: strings("profile_update_success"),
                             type: "success",

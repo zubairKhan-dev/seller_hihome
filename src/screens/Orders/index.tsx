@@ -10,7 +10,6 @@ import {SafeAreaView} from "react-navigation";
 import FastImage from "react-native-fast-image";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
-import analytics from "@react-native-firebase/analytics";
 import * as Api from "../../lib/api";
 import LoadingOverlay from "../../components/Loading";
 import NoDataFound from "../../components/NoDataFound";
@@ -79,7 +78,7 @@ export default class Orders extends Component<Props, State> {
             this.getOrderStatusLookup();
         });
         Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
-        analytics().setCurrentScreen("Dashboard", "Dashboard");
+        // analytics().setCurrentScreen("Dashboard", "Dashboard");
     }
 
     // private filterData() {

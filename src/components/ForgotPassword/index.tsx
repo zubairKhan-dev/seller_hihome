@@ -10,7 +10,6 @@ import ActionButton from "../ActionButton";
 import {getCurrentLocale, strings} from "../Translations";
 import {RTLView} from "react-native-rtl-layout";
 import * as Api from "../../lib/api";
-import analytics from "@react-native-firebase/analytics";
 import { showMessageAlert } from "../../common";
 
 interface Props {
@@ -77,9 +76,9 @@ export default class ForgotPassword extends Component<Props, State> {
                             } else {
                                 this.setState({resultCode: "1", resultMessage: strings("reset_link_sent")});
                             }
-                            analytics().logEvent('Forget_Password', {
-                                email: this.state.email,
-                            });
+                            // analytics().logEvent('Forget_Password', {
+                            //     email: this.state.email,
+                            // });
                             break;
                     }
                     this.setState({loading: false});

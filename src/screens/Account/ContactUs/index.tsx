@@ -20,7 +20,6 @@ import { showMessageAlert } from "../../../common";
 import * as Api from "../../../lib/api";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import { showMessage } from "react-native-flash-message";
-import analytics from "@react-native-firebase/analytics";
 
 const photo = {uri: "", data: {}, add: false};
 
@@ -144,9 +143,9 @@ export default class ContactUs extends Component<Props, State> {
                 Api.checkValidationError(response, resp => {
                     if (response.status === 1) {
                         this.setState({message: ""});
-                        analytics().logEvent('Contact_Us', {
-                            data: formData,
-                        });
+                        // analytics().logEvent('Contact_Us', {
+                        //     data: formData,
+                        // });
                         this.removeMainPhoto();
                         setTimeout(() => {
                             showMessageAlert(response.message);

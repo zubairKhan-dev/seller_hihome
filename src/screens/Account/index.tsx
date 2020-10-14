@@ -135,7 +135,7 @@ export default class Account extends Component<Props, State> {
         this.apiExHandler = (reason) => {
             showMessageAlert(reason);
         };
-        Api.getProfile(formData)
+        Api.getProfile({})
             .then((response) => {
                     this.apiHandler(response);
                 },
@@ -262,7 +262,6 @@ export default class Account extends Component<Props, State> {
             }
         );
     }
-
 
     initUser = (accessToken) => {
 
@@ -448,13 +447,13 @@ export default class Account extends Component<Props, State> {
                                      fontSize: isRTLMode() ? 13 : Constants.regularSmallFontSize
                                  }]}>{strings("sign_out")}</RTLText>
                         <View style={{flex: 1}}/>
-                        <RTLText fontSize={Constants.regularSmallFontSize} locale={getCurrentLocale()}
-                                 style={[{
-                                     fontWeight: "500",
-                                     color: ColorTheme.grey,
-                                     textAlign: isRTLMode() ? "left" : "right",
-                                     fontSize: isRTLMode() ? 13 : Constants.regularSmallFontSize
-                                 }]}>{strings("version") + " " + this.state.appVersion}</RTLText>
+                        {this.state.appVersion && <RTLText fontSize={Constants.regularSmallFontSize} locale={getCurrentLocale()}
+                                                           style={[{
+                                                               fontWeight: "500",
+                                                               color: ColorTheme.grey,
+                                                               textAlign: isRTLMode() ? "left" : "right",
+                                                               fontSize: isRTLMode() ? 13 : Constants.regularSmallFontSize
+                                                           }]}>{strings("version") + " " + this.state.appVersion}</RTLText>}
                     </RTLView>
                 </TouchableOpacity>
             </View>

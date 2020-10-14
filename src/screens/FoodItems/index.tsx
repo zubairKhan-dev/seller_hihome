@@ -24,7 +24,6 @@ import {showMessage} from "react-native-flash-message";
 import {splitTime} from "../../lib/DateUtil";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
-import analytics from "@react-native-firebase/analytics";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
@@ -122,9 +121,9 @@ export default class FoodItems extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
-                    analytics().logEvent('Product_Deleted', {
-                        product_id: this.state.selectedFood.id,
-                    });
+                    // analytics().logEvent('Product_Deleted', {
+                    //     product_id: this.state.selectedFood.id,
+                    // });
                     showMessage({
                         message: strings("info_delete_success"),
                         type: "success",

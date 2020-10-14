@@ -1,12 +1,10 @@
 import * as React from "react";
 import {Component} from "react";
-import {Image, KeyboardTypeOptions, StyleSheet, TextInput, View} from "react-native";
+import {Image, KeyboardTypeOptions, Platform, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import {RTLView} from "react-native-rtl-layout";
 import {getCurrentLocale, isRTLMode} from "../Translations";
 import HFTextRegular from "../HFText/HFTextRegular";
-import {TouchableOpacity} from "react-native";
-import {StaticStyles} from "../../theme/Styles";
 
 interface Props {
     title: string,
@@ -54,7 +52,7 @@ export default class TextKVInput extends Component<Props, State> {
                                value={this.props.text}
                                style={{
                                    flex: 1,
-                                   height: 30,
+                                   height: Platform.OS === "ios" ? 30 : 35,
                                    color: this.props.editable ? ColorTheme.textDark: ColorTheme.grey ,
                                    textAlign: isRTLMode() ? "right" : "left"
                                }}
