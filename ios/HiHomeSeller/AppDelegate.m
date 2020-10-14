@@ -35,6 +35,12 @@ static void InitializeFlipper(UIApplication *application) {
   InitializeFlipper(application);
 #endif
 
+UIDatePicker *picker = [UIDatePicker appearance];
+  if (@available(iOS 13.4, *)) {
+    picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+  } else {
+    // Fallback on earlier versions
+  }
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"HiHomeSeller"
@@ -49,7 +55,7 @@ static void InitializeFlipper(UIApplication *application) {
   [self.window makeKeyAndVisible];
   [AppCenterReactNative register];
   [FIRApp configure];
-  
+
   return YES;
 }
 

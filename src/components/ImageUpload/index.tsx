@@ -47,7 +47,7 @@ export default class ImageUploadView extends Component<Props, State> {
                     justifyContent: "center"
                 }]}>
                     <Text numberOfLines={1} style={[StaticStyles.heavyFont, {color: ColorTheme.textGreyDark, textAlign: "center"}]}>
-                        {"Select image from "}
+                        {strings("select_action")}
                     </Text>
                     <View style={{height: Constants.defaultPaddingRegular}}/>
                     <RTLView locale={getCurrentLocale()}

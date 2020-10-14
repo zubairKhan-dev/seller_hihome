@@ -29,6 +29,7 @@ import CodePush from "react-native-code-push";
 import FastImage from "react-native-fast-image";
 import * as Api from "../../lib/api";
 import { showMessage } from "react-native-flash-message";
+import Moment from "moment";
 
 // {"icon": "subscription", "title": strings("subscription"), "screen": "Subscription"},
 // {"icon": "my_earnings", "title": strings("my_earnings"), "screen": "Earnings"},
@@ -46,6 +47,8 @@ interface State {
     logo?: string;
     address?: string;
     sellerProfile?: any;
+    licenseExpiryDate?: string;
+    validLicense?: boolean;
 }
 
 export default class Account extends Component<Props, State> {
@@ -85,6 +88,19 @@ export default class Account extends Component<Props, State> {
     componentWillUnmount() {
     }
 
+    validLicense(value) {
+        debugger;
+        Moment.locale('en');
+        let expDateValue = Moment(value).format('yyyy-MM-DD');
+        let dateToday = Moment(new Date()).format('yyyy-MM-DD'); ;
+        this.setState({validLicense: true});
+        if(expDateValue < dateToday) {
+            this.setState({validLicense: false});
+            return false;
+        }
+        return true;
+    }
+
     private getProfile() {
         let formData = new FormData();
         this.apiHandler = (response) => {
@@ -96,9 +112,11 @@ export default class Account extends Component<Props, State> {
                         logo: details.logo,
                         address: details.address,
                         sellerProfile: resp,
+                        licenseExpiryDate: details.license_end_date,
+                        isAccountEnabled: this.validLicense(details.license_end_date),
                         options: [
                             {"icon": "profile", "title": "my_profile", "screen": "Profile", "alertMessage": undefined},
-                            {"icon": "my_license", "title": "my_license", "screen": "License", "alertMessage": undefined},
+                            {"icon": "my_license", "title": "my_license", "screen": "License", "alertMessage": this.validLicense(details.license_end_date) ? " " : strings("license_expired")},
                             {
                                 "icon": "map_pin",
                                 "title": "my_address",
@@ -286,6 +304,7 @@ export default class Account extends Component<Props, State> {
 
     renderUserDetails() {
         let itemDimension = 70;
+        let expDate = this.state.licenseExpiryDate;
         return (
             <View style={{paddingHorizontal: Constants.defaultPadding, marginTop: Constants.defaultPaddingRegular}}>
                 <RTLView locale={getCurrentLocale()}>
@@ -309,9 +328,8 @@ export default class Account extends Component<Props, State> {
                             }}
                         />
                     </View>
-                    {/*<Image style={{width: 90, height: 90}} source={require('../../../assets/images/app-logo.png')}/>*/}
                     <View style={{width: Constants.defaultPadding}}/>
-                    <View style={{}}>
+                    <View style={{flex: 1}}>
                         <View style={{flex: 1}}/>
                         <Text style={{
                             fontWeight: "600",
@@ -326,7 +344,7 @@ export default class Account extends Component<Props, State> {
                             textAlign: isRTLMode() ? "right" : "left"
                         }}>{getUserEmail()}</Text>
                         <View style={{flex: 1}}/>
-                        <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
+                        {this.state.validLicense && <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                             <Switch
                                 style={{transform: [{scaleX: .7}, {scaleY: .7}]}}
                                 trackColor={{false: ColorTheme.white, true: ColorTheme.appThemeSecond}}
@@ -345,10 +363,14 @@ export default class Account extends Component<Props, State> {
                                 }]}>
                                 {this.state.isAccountEnabled ? strings("account_active") : strings("account_inactive")}
                             </Text>
-                        </RTLView>
-                        {/*<View style={{ alignItems: isRTLMode() ? "flex-end" : "flex-start"}}>*/}
-                        {/*    */}
-                        {/*</View>*/}
+                        </RTLView>}
+                        <View style={{height: Constants.defaultPaddingMin}}/>
+                        {!this.state.validLicense && <Text style={{
+                            fontWeight: "400",
+                            fontSize: 11,
+                            color: ColorTheme.appTheme,
+                            textAlign: isRTLMode() ? "right" : "left"
+                        }}>{strings("license_expired_details")}</Text>}
                     </View>
                 </RTLView>
             </View>
@@ -476,72 +498,3 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
-
-{/*<AccountItem image={"login"} title={"Login"} onPress={() => {*/
-}
-{/*    this.props.navigation.navigate("Login");*/
-}
-{/*}}/>*/
-}
-{/*<View style={{height: Constants.defaultPaddingMax}}/>*/
-}
-{/*<AccountItem image={"enquiry"} title={"FAQs"} onPress={() => {*/
-}
-
-{/*}}/>*/
-}
-{/*<AccountItem image={"settings"} title={"Ar"} onPress={() => {*/
-}
-{/*    setLanguage("ar")*/
-}
-{/*}}/>*/
-}
-{/*<Text style={[StaticStyles.lightFont, {*/
-}
-{/*    textAlign: "center",*/
-}
-{/*    color: ColorTheme.textGrey,*/
-}
-{/*    marginTop: Constants.defaultPaddingMax*/
-}
-{/*}]}>{"Application Version : v1.0"}</Text>*/
-}
-
-
-{/*<LoginButton*/
-}
-{/*    onLoginFinished={*/
-}
-{/*        (error, result) => {*/
-}
-{/*            if (error) {*/
-}
-{/*                console.log("login has error: " + result.error);*/
-}
-{/*            } else if (result.isCancelled) {*/
-}
-{/*                console.log("login is cancelled.");*/
-}
-{/*            } else {*/
-}
-{/*                AccessToken.getCurrentAccessToken().then(*/
-}
-{/*                    (data) => {*/
-}
-{/*                        debugger;*/
-}
-{/*                        console.log(data.accessToken.toString())*/
-}
-{/*                    }*/
-}
-{/*                )*/
-}
-{/*            }*/
-}
-{/*        }*/
-}
-{/*    }*/
-}
-{/*    onLogoutFinished={() => console.log("logout.")}/>*/
-}
-

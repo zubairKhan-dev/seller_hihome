@@ -184,7 +184,7 @@ export default class LoginPopUp extends Component<Props, State> {
                         <View style={{flex: 1}}>
                             <View style={{}}>
                                 <SliderBox
-                                    sliderBoxHeight={windowHeight - 250}
+                                    sliderBoxHeight={windowHeight - 150}
                                     images={offers}
                                     onCurrentImagePressed={index => {
                                     }}
