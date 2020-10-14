@@ -44,7 +44,7 @@ export default class SplashScreen extends Component<Props, State> {
         });
         setTimeout(() => {
             this.checkForDone();
-        }, 400);
+        }, 4000);
     }
 
     startCodepush() {
@@ -111,7 +111,7 @@ export default class SplashScreen extends Component<Props, State> {
         setTimeout(() => {
             this.props.onFinishedLoading();
             // this.setState({showVersion: true});
-        }, 1000);
+        }, 4000);
     }
 
     checkForDone() {
@@ -120,7 +120,7 @@ export default class SplashScreen extends Component<Props, State> {
         else {
             setTimeout(() => {
                 this.checkForDone();
-            }, 1000);
+            }, 400);
         }
     }
 
