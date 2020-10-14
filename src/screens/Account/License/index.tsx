@@ -103,7 +103,7 @@ export default class License extends Component<Props, State> {
             showMessageAlert(reason);
             this.setState({loading: false});
         };
-        Api.getProfile(formData)
+        Api.getProfile({})
             .then((response) => {
                     this.apiHandler(response);
                 },

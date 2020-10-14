@@ -147,7 +147,7 @@ export default class Profile extends Component<Props, State> {
             showMessageAlert(reason);
             this.setState({loading: false});
         };
-        Api.getProfile(formData)
+        Api.getProfile({})
             .then((response) => {
                     this.apiHandler(response);
                 },
