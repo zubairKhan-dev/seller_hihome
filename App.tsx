@@ -49,6 +49,7 @@ import {getLanguage, isUserLoggedIn, setDeviceId} from "./src/lib/user";
 import SplashScreen from "./src/screens/Splash";
 import LoginPopUp from "./src/components/LoginPopUp";
 import * as Actions from "./src/reducers/User";
+import RNConfig from "react-native-config";
 
 let codePushOptions = {
   checkFrequency: codePush.CheckFrequency.MANUAL,
@@ -287,7 +288,7 @@ class App extends Component<Props, State> {
     super(props);
 
     // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
-    OneSignal.init(ONESIGNAL_APP_ID, {
+    OneSignal.init(RNConfig.ONESIGNAL_APP_ID, {
       kOSSettingsKeyAutoPrompt: false,
       kOSSettingsKeyInAppLaunchURL: false,
       kOSSettingsKeyInFocusDisplayOption: 2
