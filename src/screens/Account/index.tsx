@@ -89,7 +89,6 @@ export default class Account extends Component<Props, State> {
     }
 
     validLicense(value) {
-        debugger;
         Moment.locale('en');
         let expDateValue = Moment(value).format('yyyy-MM-DD');
         let dateToday = Moment(new Date()).format('yyyy-MM-DD'); ;
