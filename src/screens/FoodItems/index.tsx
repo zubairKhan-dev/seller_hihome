@@ -240,6 +240,7 @@ export default class FoodItems extends Component<Props, State> {
         let prep_time = splitTime(foodItem.prepration_time).days > 0 ? splitTime(foodItem.prepration_time).days + " " + strings("days") : "";
         prep_time = prep_time + (splitTime(foodItem.prepration_time).hours > 0 ? " " + splitTime(foodItem.prepration_time).hours + " " + strings("hours") : "");
         prep_time = prep_time + (splitTime(foodItem.prepration_time).minutes > 0 ? " " + splitTime(foodItem.prepration_time).minutes + " " + strings("minutes") : "");
+        let imageURL = foodItem.images[0];
 
         return (<View style={{marginTop: Constants.defaultPadding}}>
             <TouchableOpacity onPress={() => {
@@ -253,11 +254,11 @@ export default class FoodItems extends Component<Props, State> {
                         backgroundColor: ColorTheme.lightGrey,
                         borderRadius: 10
                     }}>
-                        <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>
+                        {imageURL && imageURL.includes("http") && <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>}
                         <FastImage
                             style={{width: 80, height: 80, borderRadius: 10}}
                             source={{
-                                uri: foodItem.images[0] ? foodItem.images[0] : "",
+                                uri: imageURL ? imageURL.includes("http") ? foodItem.main_image : "" : "",
                                 priority: FastImage.priority.normal,
                             }}
                             onLoadStart={() => {
