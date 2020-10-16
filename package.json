@@ -17,8 +17,7 @@
     "lint": "eslint .",
     "android:clean": "rimraf android/build && rimraf android/app/build",
     "android:bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "android:bundle:dev": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "android:assembleDebug": "./gradlew assembleDebug"
+    "android:assembleDebug": "./gradlew clean assembleDebug"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.9.0",

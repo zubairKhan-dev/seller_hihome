@@ -142,13 +142,13 @@ export default class SplashScreen extends Component<Props, State> {
                     <View style={{width: "100%", position: "absolute", bottom: DeviceInfo.hasNotch() ? 0 : -50}}>
                         <View style={{flexDirection: "row", width: "100%", padding: Constants.defaultPadding}}>
                             <View style={{flex: 1, alignItems: "center"}}>
-                                {this.state.label && <Text style={[{
-                                    textAlign: "center",
-                                    color: ColorTheme.appTheme,
-                                    fontWeight: "700",
-                                    fontSize: 13,
+                                {/*{this.state.label && <Text style={[{*/}
+                                {/*    textAlign: "center",*/}
+                                {/*    color: ColorTheme.appTheme,*/}
+                                {/*    fontWeight: "700",*/}
+                                {/*    fontSize: 13,*/}
 
-                                }]}> {strings("app_version") + this.state.label}</Text>}
+                                {/*}]}> {strings("app_version") + this.state.label}</Text>}*/}
                             </View>
                         </View>
                         <Animated.View style={{
