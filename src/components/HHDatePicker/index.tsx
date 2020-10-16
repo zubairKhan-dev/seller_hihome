@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {StyleSheet, TextInput, View} from "react-native";
+import {Platform, StyleSheet, TextInput, View} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import {RTLView} from "react-native-rtl-layout";
 import {getCurrentLocale, isRTLMode} from "../Translations";
@@ -44,7 +44,7 @@ export default class HHDatePicker extends Component<Props, State> {
                                    moment(this.props.date).format(Constants.dateFormat)}
                                style={{
                                    flex: 1,
-                                   height: 30,
+                                   height: Platform.OS === "ios" ? 30 : 40,
                                    color: this.props.editable ? ColorTheme.textDark : ColorTheme.grey,
                                    textAlign: isRTLMode() ? "right" : "left"
                                }}

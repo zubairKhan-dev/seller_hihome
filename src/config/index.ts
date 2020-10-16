@@ -3,6 +3,7 @@ import DevConfig from "./dev";
 import QaConfig from "./qa";
 import LiveConfig from "./production";
 import RNConfig from "react-native-config";
+import {APP_ENV} from "./Constants";
 
 type environment = "dev" | "qa" | "production";
 
@@ -78,12 +79,12 @@ class AppConfigImpl implements AppConfig {
                 break;
 
             default:
-                this._config = DevConfig;
+                this._config = LiveConfig;
         }
         this.configs = {};
     }
 }
 
-const config: AppConfig = new AppConfigImpl(RNConfig.APP_ENV);
+const config: AppConfig = new AppConfigImpl(APP_ENV);
 export default config;
 RemoteConfigs.push(config);

@@ -44,12 +44,11 @@ import ContactUs from "./src/screens/Account/ContactUs";
 import Language from "./src/screens/Account/Language";
 import MyAddress from "./src/screens/Account/MyAddress";
 import store, {persistedStore} from "./src/boot/store";
-import {ONESIGNAL_APP_ID} from "./src/config/Constants";
 import {getLanguage, isUserLoggedIn, setDeviceId} from "./src/lib/user";
 import SplashScreen from "./src/screens/Splash";
 import LoginPopUp from "./src/components/LoginPopUp";
 import * as Actions from "./src/reducers/User";
-import RNConfig from "react-native-config";
+import {ONESIGNAL_APP_ID} from "./src/config/Constants";
 
 let codePushOptions = {
   checkFrequency: codePush.CheckFrequency.MANUAL,
@@ -286,15 +285,12 @@ class App extends Component<Props, State> {
 
   constructor(props) {
     super(props);
-
-    // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
-    OneSignal.init(RNConfig.ONESIGNAL_APP_ID, {
+    OneSignal.init(ONESIGNAL_APP_ID, {
       kOSSettingsKeyAutoPrompt: false,
       kOSSettingsKeyInAppLaunchURL: false,
       kOSSettingsKeyInFocusDisplayOption: 2
     });
     OneSignal.inFocusDisplaying(2); // Controls what should happen if a notification is received while the app is open. 2 means that the notification will go directly to the device's notification center.
-
     // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
     OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
 
