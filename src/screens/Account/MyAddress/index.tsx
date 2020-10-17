@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import ColorTheme from "../../../theme/Colors";
 import {StaticStyles} from "../../../theme/Styles";
 import Constants from "../../../theme/Constants";
@@ -14,7 +14,7 @@ import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import ActionButton from "../../../components/ActionButton";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import LoadingOverlay from "../../../components/Loading";
-// import MapView, {Marker} from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import Geolocation from "react-native-geolocation-service";
 import TextFormInput from "../../../components/TextFormInput";
 import HHPickerView from "../../../components/HHPickerView";
@@ -22,6 +22,7 @@ import * as Api from "../../../lib/api";
 import { showMessageAlert } from "../../../common";
 import { showMessage } from "react-native-flash-message";
 import { setAddress } from "../../../lib/user";
+import { PermissionsAndroid } from 'react-native';
 
 const {width, height} = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -68,7 +69,7 @@ export default class MyAddress extends Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
-            isEdit: true,
+            isEdit: false,
             selectedCity: undefined,
             showCities: false,
             cities: [],
@@ -76,8 +77,37 @@ export default class MyAddress extends Component<Props, State> {
         };
     }
 
+    async requestLocationPermission()
+    {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    buttonPositive: "",
+                    'title': 'Example App',
+                    'message': 'Example App access to your location '
+                }
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("You can use the location")
+                this.getGeoLocation();
+                // alert("You can use the location");
+            } else {
+                console.log("location permission denied")
+               // alert("Location permission denied");
+            }
+        } catch (err) {
+            console.warn(err)
+        }
+    }
+
     componentDidMount(): void {
-        Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
+        if (Platform.OS === "ios") {
+            Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
+        } else {
+            this.requestLocationPermission().then(r => {});
+        }
+
         this.getCities();
     }
 
@@ -315,37 +345,41 @@ export default class MyAddress extends Component<Props, State> {
                     <HFTextRegular value={strings("set_on_map")}/>
                     <View style={{height: Constants.defaultPadding}}/>
                     <View style={{}}>
-                        {/*<MapView*/}
-                        {/*    style={{*/}
-                        {/*        height: 250,*/}
-                        {/*        borderRadius: Constants.defaultPaddingMin,*/}
-                        {/*        width: width - (2 * Constants.defaultPaddingRegular)*/}
-                        {/*    }}*/}
-                        {/*    initialRegion={this.state.initialRegion}>*/}
-                        {/*    {this.state.currentLocation && <Marker*/}
-                        {/*        onDragEnd={(e) => {*/}
-                        {/*            this.setState({*/}
-                        {/*                currentLocation: {*/}
-                        {/*                    latitude: e.nativeEvent.coordinate.latitude,*/}
-                        {/*                    longitude: e.nativeEvent.coordinate.longitude,*/}
-                        {/*                }*/}
-                        {/*            });*/}
-                        {/*        }}*/}
-                        {/*        pinColor={"red"}*/}
-                        {/*        draggable={true}*/}
-                        {/*        coordinate={{*/}
-                        {/*            'latitude': this.state.currentLocation.latitude,*/}
-                        {/*            'longitude': this.state.currentLocation.longitude*/}
-                        {/*        }}*/}
-                        {/*        title={strings("your_location")}*/}
-                        {/*        identifier={'mk1'}/>}*/}
-                        {/*</MapView>*/}
-                        {!this.state.currentLocation && <Text style={[{
-                            fontWeight: "200",
-                            color: ColorTheme.buttonBorderGrey,
-                            fontSize: 12,
-                            marginTop: Constants.defaultPaddingMin
-                        }]}>{strings("fetching_location")}</Text>}
+                        <MapView
+                            provider={PROVIDER_GOOGLE}
+                            style={{
+                                height: 250,
+                                borderRadius: Constants.defaultPaddingMin,
+                                width: width - (2 * Constants.defaultPaddingRegular)
+                            }}
+                            initialRegion={this.state.initialRegion}>
+                            {this.state.currentLocation && <Marker
+                                onDragEnd={(e) => {
+                                    this.setState({
+                                        currentLocation: {
+                                            latitude: e.nativeEvent.coordinate.latitude,
+                                            longitude: e.nativeEvent.coordinate.longitude,
+                                        }
+                                    });
+                                }}
+                                pinColor={"red"}
+                                draggable={true}
+                                coordinate={{
+                                    'latitude': this.state.currentLocation.latitude,
+                                    'longitude': this.state.currentLocation.longitude
+                                }}
+                                title={strings("your_location")}
+                                identifier={'mk1'}/>}
+                        </MapView>
+                        {!this.state.currentLocation && <RTLView locale={getCurrentLocale()}>
+                            <Text style={[{
+                                fontWeight: "200",
+                                color: ColorTheme.buttonBorderGrey,
+                                fontSize: 12,
+                                marginTop: Constants.defaultPaddingMin
+                            }]}>{strings("fetching_location")}</Text>
+                            <ActivityIndicator size={"small"} color={ColorTheme.appTheme}/>
+                        </RTLView>}
                         {this.state.currentLocation && <Text style={[{
                             fontWeight: "300",
                             color: ColorTheme.buttonBorderGrey,
@@ -354,7 +388,7 @@ export default class MyAddress extends Component<Props, State> {
                         }]}>{strings("pin_hold_drag")}</Text>}
                     </View>
                     {this.state.isEdit &&
-                    <RTLView style={{marginTop: Constants.defaultPaddingRegular, flex: 1, alignItems: "center"}}
+                    <RTLView style={{marginTop: Constants.defaultPaddingRegular, flex: 1, alignItems: "center",  paddingBottom: Constants.defaultPaddingMin}}
                              locale={getCurrentLocale()}>
                         <View style={{flex: 1}}>
                             <ActionButton variant={"alt"} title={strings("cancel")} onPress={() => {

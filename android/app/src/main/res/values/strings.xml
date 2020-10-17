@@ -2,4 +2,5 @@
     <string name="app_name">Seller</string>
     <string name="facebook_app_id">531680747547715</string>
     <string moduleConfig="true" name="CodePushDeploymentKey">IpAg2HEuKnsAOQRe4TeCrKju3biB1afxzA4Me</string>
+    <string moduleConfig="true" name="map_api_key">AIzaSyCpgjBfrEUZjzxHLEMn1PQQ8-jxTsHpQ3I</string>
 </resources>
