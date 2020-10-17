@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
@@ -8,23 +8,21 @@ import ColorTheme from "../../theme/Colors";
 import {RTLView} from "react-native-rtl-layout";
 import {CommonIcons} from "../../icons/Common";
 import {AppIcon} from "../../common/IconUtils";
-import {TouchableOpacity} from "react-native";
 import {SafeAreaView} from "react-navigation";
-import {showMessageAlert, windowWidth} from "../../common";
+import {windowWidth} from "../../common";
 import ActionButton from "../../components/ActionButton";
 import * as Api from "../../lib/api";
 import LoadingOverlay from "../../components/Loading";
 import {OrderStatus} from "../Orders";
 import NoDataFound from "../../components/NoDataFound";
-import LoginPopUp from "../../components/LoginPopUp";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import RejectPopUp from "../../components/RejectPopUp";
-import {getUser} from "../../lib/user";
-import { parseDate } from "../../lib/DateUtil";
+import {parseDate} from "../../lib/DateUtil";
+import DashboardActions from "../../components/DashboardActions";
 
 const categories = [{"name": "aed", "value": undefined, "title": "today_earnings", "id": 1},
-    {"name": "orders", "value": undefined, "title": "today_sales", "id": 2}];
+    {"name": "orders", "value": undefined, "title": "today_orders", "id": 2}];
 
 interface Props {
     navigation: any;
@@ -32,6 +30,7 @@ interface Props {
 
 interface State {
     loading?: boolean;
+    loadingStats?: boolean;
     showReject?: boolean;
     activity?: boolean;
     reload?: boolean;
@@ -46,6 +45,8 @@ interface State {
     currentPage: number;
     rejectOrder?: any;
     stats?: any;
+    showPeriodActions?: boolean;
+    period?: string;
 }
 
 export default class Dashboard extends Component<Props, State> {
@@ -57,8 +58,10 @@ export default class Dashboard extends Component<Props, State> {
         super(props);
         this.state = {
             loading: false,
+            loadingStats: false,
             activity: false,
             reload: false,
+            showPeriodActions: false,
             showFoodDetails: false,
             selCategory: 0,
             selStatus: 0,
@@ -72,6 +75,7 @@ export default class Dashboard extends Component<Props, State> {
             hasMorePages: false,
             currentPage: 1,
             stats: categories,
+            period: "day"
         }
     }
 
@@ -157,7 +161,7 @@ export default class Dashboard extends Component<Props, State> {
                     this.loadItems(this.state.orderStatus[this.state.selCategory], this.state.selCategory);
                 }
                 this.setState({loading: false});
-                this.getSellerStats();
+                this.getSellerStats(this.state.period);
             }, (errors, errorMessage) => {
                 // showMessage(errorMessage);
                 this.setState({loading: false});
@@ -215,16 +219,57 @@ export default class Dashboard extends Component<Props, State> {
         );
     }
 
-    getSellerStats() {
+    getTitleForEarning() {
+        let value;
+        switch (this.state.period) {
+            case "day":
+                value = "today_earnings";
+                break;
+            case "week":
+                value = "week_earnings";
+                break;
+            case "month":
+                value = "month_earnings";
+                break;
+            case "year":
+                value = "year_earnings";
+                break;
+        }
+        return value;
+    }
+
+    getTitleForOrders() {
+        let value;
+        switch (this.state.period) {
+            case "day":
+                value = "today_orders";
+                break;
+            case "week":
+                value = "week_orders";
+                break;
+            case "month":
+                value = "month_orders";
+                break;
+            case "year":
+                value = "year_earnings";
+                break;
+        }
+        return value;
+    }
+
+    getSellerStats(period) {
         let formData = new FormData();
         formData.append("date", parseDate(new Date(), "yyyy-MM-DD"))
-
+        formData.append("period", period)
+        this.setState({activity: true});
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (resp && resp.status === 1) {
                     let values = this.state.stats;
                     values[0].value = resp.data.revenue;
                     values[1].value = resp.data.today_orders;
+                    values[0].title = this.getTitleForEarning();
+                    values[1].title = this.getTitleForOrders();
                     this.setState({stats: values});
                 }
                 this.setState({activity: false});
@@ -255,15 +300,13 @@ export default class Dashboard extends Component<Props, State> {
                         alignItems: 'center',
                     }}
                     horizontal={true}
-                    style={[{paddingVertical: 0,
+                    style={[{
+                        paddingVertical: 0,
                         direction: isRTLMode() ? "rtl" : "ltr",
-                        flexDirection: isRTLMode() ? "row-reverse" : "row"}]}
+                        flexDirection: isRTLMode() ? "row-reverse" : "row"
+                    }]}
                     data={this.state.stats}
-                    renderItem={({item, index}) =>
-                        <TouchableOpacity onPress={() => {
-                        }}>
-                            {this.renderOptionItem(item, index)}
-                        </TouchableOpacity>
+                    renderItem={({item, index}) => this.renderOptionItem(item, index)
                     }
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -280,7 +323,7 @@ export default class Dashboard extends Component<Props, State> {
                     backgroundColor: "white",
                     paddingHorizontal: Constants.defaultPadding,
                     paddingVertical: Constants.defaultPaddingMin,
-                    width: (windowWidth/2 - (3 * Constants.defaultPadding)),
+                    width: (windowWidth / 2 - (3 * Constants.defaultPadding)),
                     height: 80,
                     borderRadius: Constants.defaultPaddingMin
                 }]}>
@@ -296,6 +339,8 @@ export default class Dashboard extends Component<Props, State> {
                                 fontWeight: "500"
                             }]}>{strings(category.name).toUpperCase()}</Text>
                             <View style={{height: Constants.defaultPaddingMin}}/>
+                            {this.state.activity && <ActivityIndicator size={"small"} color={ColorTheme.appThemeSecond}
+                                                                       style={[{transform: [{scale: 0.75}]}]}/>}
                             {category.value !== undefined && <Text numberOfLines={1} style={[StaticStyles.heavyFont, {
                                 color: ColorTheme.appThemeSecond,
                                 textAlign: isRTLMode() ? "right" : "left",
@@ -309,7 +354,7 @@ export default class Dashboard extends Component<Props, State> {
                             }]}>{strings(category.title).toUpperCase()}</Text>
                         </View>
                         <TouchableOpacity onPress={() => {
-                           // showMessageAlert("MORE");
+                            this.setState({showPeriodActions: true});
                         }}>
                             <AppIcon name={"more"}
                                      color={ColorTheme.grey}
@@ -363,7 +408,7 @@ export default class Dashboard extends Component<Props, State> {
                             <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                                 <View style={[{
                                     padding: 2,
-                                    backgroundColor: this.getStatusColor(order.status? order.status.id : undefined),
+                                    backgroundColor: this.getStatusColor(order.status ? order.status.id : undefined),
                                     paddingHorizontal: Constants.defaultPaddingMin,
                                     borderColor: ColorTheme.white,
                                     borderWidth: 1,
@@ -378,7 +423,7 @@ export default class Dashboard extends Component<Props, State> {
                                             textAlign: "center",
                                             fontSize: 11,
                                             fontWeight: "400"
-                                        }]}>{order.status? order.status.name : undefined}</Text>
+                                        }]}>{order.status ? order.status.name : undefined}</Text>
                                     </View>
                                 </View>
                                 <View style={{width: Constants.defaultPadding}}/>
@@ -403,7 +448,7 @@ export default class Dashboard extends Component<Props, State> {
                             }}>
 
                                 {/*--------ORDER DETAILS-------*/}
-                                {order.ordered_items  && order.ordered_items.map(item => (
+                                {order.ordered_items && order.ordered_items.map(item => (
                                     <View>
                                         <Text numberOfLines={1} style={[StaticStyles.regularFont, {
                                             color: ColorTheme.textDark,
@@ -560,7 +605,8 @@ export default class Dashboard extends Component<Props, State> {
             }}>
                 <RTLView locale={getCurrentLocale()}>
                     <View style={{flex: 1}}/>
-                    <Image resizeMode={"contain"} style={{width: 200, height: 20, marginTop: 0}} source={require('../../../assets/images/app-logo.png')}/>
+                    <Image resizeMode={"contain"} style={{width: 200, height: 20, marginTop: 0}}
+                           source={require('../../../assets/images/app-logo.png')}/>
                     <View style={{flex: 1}}/>
                 </RTLView>
                 {this.renderOptions()}
@@ -600,8 +646,7 @@ export default class Dashboard extends Component<Props, State> {
                 paddingHorizontal: Constants.defaultPaddingMin
             }}>
                 <FlatList
-                    contentContainerStyle={{
-                    }}
+                    contentContainerStyle={{}}
                     horizontal={true}
                     style={[StaticStyles.flexOne, {
                         direction: isRTLMode() ? "rtl" : "ltr",
@@ -724,6 +769,34 @@ export default class Dashboard extends Component<Props, State> {
                     }} onDismiss={() => {
                         this.setState({showReject: false})
                     }}/>}
+                    <DashboardActions show={this.state.showPeriodActions}
+                                      onToday={() => {
+                                          this.setState({showPeriodActions: false, period: "day"});
+                                          setTimeout(() => {
+                                              this.getSellerStats(this.state.period);
+                                          }, 400);
+                                      }}
+                                      onWeek={() => {
+                                          this.setState({showPeriodActions: false, period: "week"});
+                                          setTimeout(() => {
+                                              this.getSellerStats(this.state.period);
+                                          }, 400);
+                                      }}
+                                      onMonth={() => {
+                                          this.setState({showPeriodActions: false, period: "month"});
+                                          setTimeout(() => {
+                                              this.getSellerStats(this.state.period);
+                                          }, 400);
+                                      }}
+                                      onYear={() => {
+                                          this.setState({showPeriodActions: false, period: "year"});
+                                          setTimeout(() => {
+                                              this.getSellerStats(this.state.period);
+                                          }, 400);
+                                      }}
+                                      onDismiss={() => {
+                                          this.setState({showPeriodActions: false});
+                                      }}/>
                 </View>
             </SafeAreaView>
         );

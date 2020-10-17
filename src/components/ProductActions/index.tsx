@@ -1,16 +1,10 @@
 import React, {Component} from "react";
 import Modal from "react-native-modal";
-import {ScrollView, Text, View} from "react-native";
+import {Text, View} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
-import FastImage from "react-native-fast-image";
-import {windowWidth} from "../../common";
-import {SliderBox} from "react-native-image-slider-box";
-import BorderButton from "../ActionButton/BorderButton";
-import {RTLView} from "react-native-rtl-layout";
-import {isRTLMode, strings} from "../Translations";
-import RoundButton from "../ActionButton/RoundButton";
+import {strings} from "../Translations";
 import ActionButton from "../ActionButton";
 import ActionIconButton from "../ActionButton/ActionIconButton";
 
