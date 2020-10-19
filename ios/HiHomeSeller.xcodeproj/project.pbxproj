@@ -31,6 +31,7 @@
 		A05E8D4C2409358900B8976C /* Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Default.swift; sourceTree = "<group>"; };
 		A0BED86A243F4E00004B10A4 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		A0BED86B243F4E00004B10A4 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		A0DB7325253E14D900DE8793 /* SellerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SellerDebug.entitlements; path = HiHomeSeller/SellerDebug.entitlements; sourceTree = "<group>"; };
 		A0F6E69A25399BD600AC69BE /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = HiHomeSeller/Base.lproj; sourceTree = "<group>"; };
 		A0F6E69B25399BD600AC69BE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "HiHomeSeller/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A0F6E69C25399BD600AC69BE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = HiHomeSeller/Images.xcassets; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 		13B07FAE1A68108700A75B9A /* HiHomeSeller */ = {
 			isa = PBXGroup;
 			children = (
+				A0DB7325253E14D900DE8793 /* SellerDebug.entitlements */,
 				A0F6E69D25399BD600AC69BE /* AppDelegate.h */,
 				A0F6E6A025399BD600AC69BE /* AppDelegate.m */,
 				A0F6E69E25399BD600AC69BE /* ar.lproj */,
@@ -371,6 +373,7 @@
 				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = HiHomeSeller/SellerDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
@@ -390,7 +393,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.aziz.hihome.seller;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hihome.seller;
 				PRODUCT_NAME = Seller;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "HiHomeSeller-Bridging-Header.h";

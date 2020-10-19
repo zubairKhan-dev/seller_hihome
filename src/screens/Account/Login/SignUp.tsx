@@ -22,8 +22,11 @@ import ImageUploadView from "../../../components/ImageUpload";
 import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import VerifyOTPPopUp from "../../../components/VerifyOTPPopUp";
 import {parseDate} from "../../../lib/DateUtil";
-import { getDeviceId } from "../../../lib/user";
+import {getDeviceId, setDeviceId} from "../../../lib/user";
 import TermsConditions from "./TermsConditions"
+import {ONESIGNAL_APP_ID} from "../../../config/Constants";
+import OneSignal from 'react-native-onesignal';
+
 const licensePhoto = [
     {name: "", uri: "", data: undefined},
 ];
@@ -84,6 +87,7 @@ interface State {
     showMessagePopup?: boolean,
 
     verified_mobile?: string,
+    resendRequest?: boolean,
 }
 
 export default class SignUp extends Component<Props, State> {
@@ -123,7 +127,26 @@ export default class SignUp extends Component<Props, State> {
             // mobile_number_contact: "971507467251",
             license_start_date: new Date,
             license_end_date: new Date,
+            resendRequest: false
         }
+       // OneSignal.inFocusDisplaying(2);
+        OneSignal.addEventListener('ids', this.onIds.bind(this));
+    }
+
+    componentWillUnmount() {
+        OneSignal.removeEventListener('ids', this.onIds);
+    }
+
+    onIds = (device) => {
+        console.log('Device info: Seller', device);
+        setDeviceId(device.userId);
+        if (this.state.resendRequest) {
+            this.setState({resendRequest: false});
+            setTimeout(() => {
+                this.registerUser()
+            }, 300);
+        }
+
     }
 
     private validateInputs() {
@@ -323,8 +346,17 @@ export default class SignUp extends Component<Props, State> {
         formData.append("contact_us_last_name", this.state.last_name)
         formData.append("contact_us_email", this.state.email)
         formData.append("accept_orders", 0)
-        formData.append("device_udid", getDeviceId())
-
+        if (getDeviceId() && getDeviceId().length > 0) {
+            formData.append("device_udid", getDeviceId())
+        } else {
+            this.setState({resendRequest: true});
+            OneSignal.init(ONESIGNAL_APP_ID, {
+                kOSSettingsKeyAutoPrompt: false,
+                kOSSettingsKeyInAppLaunchURL: false,
+                kOSSettingsKeyInFocusDisplayOption: 2
+            });
+            return false;
+        }
         formData.append("logo", {
             name: "test",
             type: logo.data.type,

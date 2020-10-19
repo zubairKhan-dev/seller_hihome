@@ -47,7 +47,7 @@ export default class LoginPopUp extends Component<Props, State> {
             offers: offers,
             showSignUp: false,
             showLogin: false,
-            appVersion: "",
+            appVersion: undefined,
             language: undefined
         };
     }
@@ -132,12 +132,12 @@ export default class LoginPopUp extends Component<Props, State> {
                     <View style={{marginTop: Constants.defaultPadding}}>
                         {/*style={[{padding: 2 * Constants.defaultPadding + Constants.defaultPadding}]}*/}
                         {/*<Image resizeMode={"contain"} style={{width: 200, height: 40}} source={require('../../../assets/images/app-logo.png')}/>*/}
-                        <Text style={[{
+                        {this.state.appVersion && <Text style={[{
                             textAlign: "center",
                             color: ColorTheme.black,
                             fontWeight: "500",
                             fontSize: 12,
-                        }]}> {strings("version") + " " + this.state.appVersion}</Text>
+                        }]}> {strings("version") + " " + this.state.appVersion}</Text>}
                     </View>
                 </View>}
                 {this.state.language && <View style={{paddingTop: Constants.defaultPaddingRegular}}>

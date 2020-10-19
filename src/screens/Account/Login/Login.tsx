@@ -47,8 +47,8 @@ export default class Login extends Component<Props, State> {
             showSignUp: false,
             forgotPassword: false,
             loading: false,
-            username: "mostafa@hihome.app",
-            password: "123456"
+            username: "",
+            password: ""
         }
     }
 
