@@ -107,7 +107,7 @@ export default class SplashScreen extends Component<Props, State> {
     }
 
     componentDidMount() {
-       // this.startCodepush();
+        this.startCodepush();
         setTimeout(() => {
             this.props.onFinishedLoading();
             // this.setState({showVersion: true});
@@ -146,7 +146,6 @@ export default class SplashScreen extends Component<Props, State> {
                             {/*        color: ColorTheme.appTheme,*/}
                             {/*        fontWeight: "700",*/}
                             {/*        fontSize: 13,*/}
-
                             {/*    }]}> {strings("app_version") + this.state.label}</Text>*/}
                             {/*</View>*/}
                         </View>
