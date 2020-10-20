@@ -10,7 +10,7 @@ import {CommonIcons} from "../../icons/Common";
 import {AppIcon} from "../../common/IconUtils";
 import moment from "moment";
 import Constants from "../../theme/Constants";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 
 interface Props {
     title: string,

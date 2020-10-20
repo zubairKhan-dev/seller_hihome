@@ -1,15 +1,13 @@
 import React, {Component} from "react";
 import Modal from "react-native-modal";
-import {ScrollView, Text, TextInput, View} from "react-native";
+import {ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import ColorTheme from "../../theme/Colors";
-import {getCurrentLocale, isRTLMode} from "../../components/Translations";
-import {TouchableOpacity} from "react-native";
+import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
 import {AppIcon} from "../../common/IconUtils";
 import {CommonIcons} from "../../icons/Common";
 import {RTLView} from "react-native-rtl-layout";
-import {showMessageAlert} from "../../common";
 
 const offers = [require('../../../assets/images/chinese.jpg'),
     require('../../../assets/images/burger.jpeg'),
@@ -108,7 +106,7 @@ export default class RecipeIngredients extends Component<Props, State> {
                                            editable={true}
                                            multiline={true}
                                            placeholderTextColor={ColorTheme.placeholder}
-                                           placeholder={"Enter content here"}
+                                           placeholder={strings("enter_content_here")}
                                            keyboardType={"default"}
                                            value={this.state.text}
                                            style={{
