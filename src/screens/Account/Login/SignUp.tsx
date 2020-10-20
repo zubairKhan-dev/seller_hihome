@@ -466,6 +466,7 @@ export default class SignUp extends Component<Props, State> {
                         backgroundColor: ColorTheme.appTheme,
                     }} locale={getCurrentLocale()}>
                         <Text style={[{
+                            textAlign: isRTLMode() ? "right" : "left",
                             color: ColorTheme.white,
                             fontWeight: "600",
                             fontSize: 16,
@@ -484,11 +485,12 @@ export default class SignUp extends Component<Props, State> {
                     height: this.state.expandBusinessView ? undefined : 0,
                 }}>
                     <View style={{height: Constants.defaultPaddingRegular}}/>
-                    <RTLText fontSize={Constants.regularSmallFontSize} locale={getCurrentLocale()}
-                             style={[{
-                                 fontWeight: "400",
-                                 color: ColorTheme.textGreyDark,
-                             }]}>{strings("business_information_description")}</RTLText>
+                    <Text style={[{
+                        textAlign: isRTLMode() ? "right" : "left",
+                        color: ColorTheme.textGreyDark,
+                        fontWeight: "400",
+                        fontSize: Constants.regularSmallFontSize,
+                    }]}> {strings("business_information_description").toUpperCase()}</Text>
                     <View style={{height: Constants.defaultPaddingRegular}}/>
                     <TextKVInput title={strings("business_name")}
                                  placeholder={strings("enter_your_business_name")}
@@ -675,11 +677,12 @@ export default class SignUp extends Component<Props, State> {
                     height: this.state.expandAccountView ? undefined : 0,
                 }}>
                     <View style={{height: Constants.defaultPaddingRegular}}/>
-                    <RTLText fontSize={Constants.regularSmallFontSize} locale={getCurrentLocale()}
-                             style={[{
-                                 fontWeight: "400",
-                                 color: ColorTheme.textGreyDark,
-                             }]}>{strings("account_information_description")}</RTLText>
+                    <Text style={[{
+                        textAlign: isRTLMode() ? "right" : "left",
+                        color: ColorTheme.textGreyDark,
+                        fontWeight: "400",
+                        fontSize: Constants.regularSmallFontSize,
+                    }]}> {strings("account_information_description").toUpperCase()}</Text>
                     <View style={{height: Constants.defaultPaddingRegular}}/>
                     <HFTextRegular value={strings("upload_account_photo")}/>
                     <View style={{height: 120}}>
@@ -833,11 +836,12 @@ export default class SignUp extends Component<Props, State> {
                     height: this.state.expandContactView ? undefined : 0,
                 }}>
                     <View style={{height: Constants.defaultPaddingRegular}}/>
-                    <RTLText fontSize={Constants.regularSmallFontSize} locale={getCurrentLocale()}
-                             style={[{
-                                 fontWeight: "400",
-                                 color: ColorTheme.textGreyDark,
-                             }]}>{strings("contact_information_description")}</RTLText>
+                    <Text style={[{
+                        textAlign: isRTLMode() ? "right" : "left",
+                        color: ColorTheme.textGreyDark,
+                        fontWeight: "400",
+                        fontSize: Constants.regularSmallFontSize,
+                    }]}> {strings("contact_information_description").toUpperCase()}</Text>
                     <View style={{height: Constants.defaultPaddingRegular}}/>
                     <TextKVInput title={strings("first_name")}
                                  placeholder={strings("enter_first_name")}
@@ -944,19 +948,21 @@ export default class SignUp extends Component<Props, State> {
                             </TouchableOpacity>
                             <View style={{width: Constants.defaultPadding}}/>
                             <View>
-                                <RTLText locale={getCurrentLocale()} style={[{
+                                <Text style={[{
+                                    textAlign: isRTLMode() ? "right" : "left",
                                     color: ColorTheme.grey,
                                     fontWeight: "500",
                                     fontSize: 14,
-                                }]}> {strings("i_accept_terms")}</RTLText>
+                                }]}> {strings("i_accept_terms")}</Text>
                                 <TouchableOpacity onPress={() => {
                                     this.setState({showTermsConditions: true});
                                 }}>
-                                    <RTLText locale={getCurrentLocale()} style={[{
+                                    <Text style={[{
+                                        textAlign: isRTLMode() ? "right" : "left",
                                         color: ColorTheme.appTheme,
                                         fontWeight: "500",
                                         fontSize: 14,
-                                    }]}> {strings("view_terms")}</RTLText>
+                                    }]}> {strings("view_terms")}</Text>
                                 </TouchableOpacity>
                             </View>
                         </RTLView>
