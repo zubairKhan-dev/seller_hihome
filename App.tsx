@@ -49,6 +49,8 @@ import SplashScreen from "./src/screens/Splash";
 import LoginPopUp from "./src/components/LoginPopUp";
 import * as Actions from "./src/reducers/User";
 import {ONESIGNAL_APP_ID} from "./src/config/Constants";
+import {XEvents} from "./src/lib/EventBus";
+import Events from "react-native-simple-events";
 
 let codePushOptions = {
   checkFrequency: codePush.CheckFrequency.MANUAL,
@@ -316,7 +318,18 @@ class App extends Component<Props, State> {
     setLocale(getLanguage());
   }
 
+  componentDidMount(): void {
+    Events.on(XEvents.SESSION_EXPIRED, "session_expired", this.sessionExpired.bind(this));
+  }
+
+  sessionExpired() {
+    setTimeout(() => {
+      this.setState({showLogin: true});
+    }, 300);
+  }
+
   componentWillUnmount() {
+    Events.rm(XEvents.SESSION_EXPIRED, "session_expired");
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
     OneSignal.removeEventListener('ids', this.onIds);

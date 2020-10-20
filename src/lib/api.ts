@@ -1,8 +1,9 @@
 import {Alert, Platform} from "react-native";
 import {strings, getCurrentLocale} from "../components/Translations";
 import appConfig from "../config";
-import {getToken, setToken} from "./user";
-
+import {getToken, logout, setToken} from "./user";
+import {XEvents} from "./EventBus";
+import Events from "react-native-simple-events";
 //===========================================================
 // LOGIN & REGISTRATION APIs
 //===========================================================
@@ -179,6 +180,8 @@ function handleHttpResponse(response: any, responseJSON: any) {
                     {
                         text: strings("ok"), onPress: () => {
                             // notifySessionExpired();
+                            logout();
+                            Events.trigger(XEvents.SESSION_EXPIRED);
                         },
                     },
                 ],
@@ -209,6 +212,7 @@ function handleHttpResponse(response: any, responseJSON: any) {
 
 function buildHeaders(extra?: any) {
     let token = getToken();
+    console.log("TOKEN", token);
     let headers: any = {
         "Content-Type": "multipart/form-data",
         "Accept-Language": getCurrentLocale(),
