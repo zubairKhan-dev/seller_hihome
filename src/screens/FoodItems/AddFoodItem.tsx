@@ -120,9 +120,9 @@ export default class AddFoodItem extends Component<Props, State> {
             description: edit === 0 ? "" : product.description,
             edit: edit !== 0,
             product: edit === 1 ? product : undefined,
-            days:  edit === 1  ? "" + splitTime(product.prepration_time).days : "0",
-            hours:  edit === 1  ? "" + splitTime(product.prepration_time).hours : "0",
-            minutes:  edit === 1  ? "" + splitTime(product.prepration_time).minutes : "0"
+            days:  edit === 1  ? "" + splitTime(product.prepration_time).days : "",
+            hours:  edit === 1  ? "" + splitTime(product.prepration_time).hours : "",
+            minutes:  edit === 1  ? "" + splitTime(product.prepration_time).minutes : ""
         }
     }
 
