@@ -1,10 +1,19 @@
 import * as React from "react";
 import {Component} from "react";
-import {FlatList, Platform, ScrollView, StyleSheet, Text, View, ActivityIndicator} from "react-native";
+import {
+    ActivityIndicator,
+    Alert,
+    FlatList,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import Constants from "../../theme/Constants";
-import {getCurrentLocale, isRTL, isRTLMode, strings} from "../../components/Translations";
-import {TouchableOpacity} from "react-native";
+import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
 import {AppIcon} from "../../common/IconUtils";
 import {CommonIcons} from "../../icons/Common";
 import {RTLView} from "react-native-rtl-layout";
@@ -26,9 +35,10 @@ import {showMessage} from "react-native-flash-message";
 import {combineTime, splitTime} from "../../lib/DateUtil";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
+import {hasFeaturedProduct, setProfile} from "../../lib/user";
 
 const removeItem = (items, i) =>
-    items.slice(0, i-1).concat(items.slice(i, items.length))
+    items.slice(0, i - 1).concat(items.slice(i, items.length))
 
 const options = {
     title: 'Select Avatar',
@@ -60,6 +70,7 @@ const mainPhoto = [
 
 interface Props {
     navigation: any;
+    isFeatureProduct?: boolean;
 }
 
 interface State {
@@ -93,17 +104,24 @@ interface State {
 
     photoIndex?: number;
     product?: any;
+
+    showFeatureInfo?: boolean;
+    isFeatureProduct?: number;
 }
 
 export default class AddFoodItem extends Component<Props, State> {
     apiHandler: any;
     apiExHandler: any;
+    product: any;
 
     constructor(props) {
         super(props);
         const {edit, product} = props.route.params;
+        this.product = product;
         this.state = {
             loading: false,
+            showFeatureInfo: false,
+            isFeatureProduct: edit === 1 ? product.is_feature : 0,
             categories: [],
             photos: edit === 1 ? this.getMorePhotos(product) : morePhotos,
             mainPhoto: edit === 1 ? this.getMainPhoto(product) : mainPhoto,
@@ -114,20 +132,48 @@ export default class AddFoodItem extends Component<Props, State> {
             selectedCategory: undefined,
             showCategories: false,
             uploadImage: false,
-            foodName: edit === 0 ? "" : product.name,
+            foodName: edit === 0 ? "" : product.name ? product.name : "",
             costPrice: edit === 0 ? "" : "" + product.price,
-            ingredients: edit === 0 ? "" : product.ingredients,
-            description: edit === 0 ? "" : product.description,
+            ingredients: edit === 0 ? "" : product.ingredients ? product.ingredients : "",
+            description: edit === 0 ? "" : product.description ? product.description : "",
             edit: edit !== 0,
             product: edit === 1 ? product : undefined,
-            days:  edit === 1  ? "" + splitTime(product.prepration_time).days : "",
-            hours:  edit === 1  ? "" + splitTime(product.prepration_time).hours : "",
-            minutes:  edit === 1  ? "" + splitTime(product.prepration_time).minutes : ""
+            days: edit === 1 ? "" + splitTime(product.prepration_time).days : "",
+            hours: edit === 1 ? "" + splitTime(product.prepration_time).hours : "",
+            minutes: edit === 1 ? "" + splitTime(product.prepration_time).minutes : ""
         }
     }
 
     componentDidMount(): void {
         this.getCategories();
+    }
+
+    private updateLocalProfile() {
+        let formData = new FormData();
+        this.apiHandler = (response) => {
+            Api.checkValidationError(response, resp => {
+                switch (response.code) {
+                    case 200 :
+                        if (resp) {
+                            setProfile(resp);
+                        }
+                        break;
+                }
+            }, (errors, errorMessage) => {
+                showMessageAlert(errorMessage);
+            });
+        };
+        this.apiExHandler = (reason) => {
+            showMessageAlert(reason);
+        };
+        Api.getProfile({})
+            .then((response) => {
+                    this.apiHandler(response);
+                },
+            ).catch((reason => {
+                this.apiExHandler(reason);
+            }),
+        );
     }
 
     private getCategories() {
@@ -139,6 +185,7 @@ export default class AddFoodItem extends Component<Props, State> {
                         categories: response.response_data.data,
                         selectedCategory: response.response_data.data[0]
                     });
+                    this.updateLocalProfile();
                 }
                 this.setState({loading: false});
             }, (errors, errorMessage) => {
@@ -162,7 +209,7 @@ export default class AddFoodItem extends Component<Props, State> {
 
     getMorePhotos(product) {
         let newPhotos = morePhotos;
-        for(let i = 0; i < newPhotos.length; i++){
+        for (let i = 0; i < newPhotos.length; i++) {
             let pic = newPhotos[i];
             if (product.images_list && product.images_list.length > i) {
                 pic.uri = product.images_list[i].image;
@@ -175,7 +222,7 @@ export default class AddFoodItem extends Component<Props, State> {
 
     getMainPhoto(product) {
         let newPhoto = mainPhoto;
-        for(let i = 0; i < newPhoto.length; i++){
+        for (let i = 0; i < newPhoto.length; i++) {
             let pic = newPhoto[i];
             if (product.main_image && product.main_image.length > 0) {
                 pic.uri = product.main_image;
@@ -187,7 +234,7 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     getCategory(id) {
-        for(let i = 0; i < this.state.categories.length; i++){
+        for (let i = 0; i < this.state.categories.length; i++) {
             let category = this.state.categories[i];
             if (category.id === id) {
                 return category
@@ -257,12 +304,15 @@ export default class AddFoodItem extends Component<Props, State> {
                                         borderStyle: "dashed",
                                         overflow: "hidden"
                                     }}>
-                                        {!this.state.showActivity && item && item.uri.length === 0 && <AppIcon name={"upload"}
-                                                                           color={ColorTheme.grey_add}
-                                                                           provider={CommonIcons}
-                                                                           size={50}/>}
-                                        {item && item.uri.length > 0 && <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                                            <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.black}/>
+                                        {!this.state.showActivity && item && item.uri.length === 0 &&
+                                        <AppIcon name={"upload"}
+                                                 color={ColorTheme.grey_add}
+                                                 provider={CommonIcons}
+                                                 size={50}/>}
+                                        {item && item.uri.length > 0 &&
+                                        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+                                            <ActivityIndicator size={"small"} style={{position: "absolute"}}
+                                                               color={ColorTheme.black}/>
                                             <FastImage
                                                 style={{
                                                     width: itemDimension,
@@ -278,7 +328,9 @@ export default class AddFoodItem extends Component<Props, State> {
                                                 }}
                                             />
                                         </View>}
-                                        {this.state.showActivity && this.state.photoIndex === index && <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.black}/>}
+                                        {this.state.showActivity && this.state.photoIndex === index &&
+                                        <ActivityIndicator size={"small"} style={{position: "absolute"}}
+                                                           color={ColorTheme.black}/>}
                                         {item && item.uri.length > 0 && <View style={{
                                             position: "absolute",
                                             padding: 2,
@@ -319,7 +371,7 @@ export default class AddFoodItem extends Component<Props, State> {
         formData.append("product_id", this.state.product.id)
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
-                if (response && response.code === 200 ) {
+                if (response && response.code === 200) {
                     let mainPic = this.state.mainPhoto[0];
                     mainPic.uri = "";
                     mainPic.name = "";
@@ -389,6 +441,7 @@ export default class AddFoodItem extends Component<Props, State> {
             });
             return false;
         }
+
         if (combineTime(this.state.days, this.state.hours, this.state.minutes) === 0) {
             showMessage({
                 message: strings("invalid_time"),
@@ -397,6 +450,19 @@ export default class AddFoodItem extends Component<Props, State> {
             });
             return false;
         }
+
+        if (hasFeaturedProduct() === false) {
+            if (this.state.isFeatureProduct === 0) {
+                showMessage({
+                    message: strings("mandatory_feature_product"),
+                    type: "danger",
+                    icon: "info",
+                    duration: 4000
+                });
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -417,6 +483,7 @@ export default class AddFoodItem extends Component<Props, State> {
             formData.append("details[en][ingredients]", this.state.ingredients)
             formData.append("details[en][description]", this.state.description)
             formData.append("category_id", this.state.selectedCategory.id)
+            formData.append("is_feature", this.state.isFeatureProduct)
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response && response.code === 200 && resp) {
@@ -475,6 +542,7 @@ export default class AddFoodItem extends Component<Props, State> {
             formData.append("details[en][ingredients]", this.state.ingredients)
             formData.append("details[en][description]", this.state.description)
             formData.append("category_id", this.state.selectedCategory.id)
+            formData.append("is_feature", this.state.isFeatureProduct)
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response && response.code === 200 && resp) {
@@ -551,12 +619,15 @@ export default class AddFoodItem extends Component<Props, State> {
                                         borderStyle: "dashed",
                                         overflow: "hidden"
                                     }}>
-                                        {!this.state.showMainPhotoActivity && item && item.uri.length === 0 && <AppIcon name={"upload"}
-                                                                                                               color={ColorTheme.grey_add}
-                                                                                                               provider={CommonIcons}
-                                                                                                               size={50}/>}
-                                        {item && item.uri.length > 0 && <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                                            <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.black}/>
+                                        {!this.state.showMainPhotoActivity && item && item.uri.length === 0 &&
+                                        <AppIcon name={"upload"}
+                                                 color={ColorTheme.grey_add}
+                                                 provider={CommonIcons}
+                                                 size={50}/>}
+                                        {item && item.uri.length > 0 &&
+                                        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+                                            <ActivityIndicator size={"small"} style={{position: "absolute"}}
+                                                               color={ColorTheme.black}/>
                                             <FastImage
                                                 style={{
                                                     width: itemDimension,
@@ -572,7 +643,9 @@ export default class AddFoodItem extends Component<Props, State> {
                                                 }}
                                             />
                                         </View>}
-                                        {this.state.showMainPhotoActivity && this.state.photoIndex === index && <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.black}/>}
+                                        {this.state.showMainPhotoActivity && this.state.photoIndex === index &&
+                                        <ActivityIndicator size={"small"} style={{position: "absolute"}}
+                                                           color={ColorTheme.black}/>}
                                         {item.uri.length > 0 && <View style={{
                                             position: "absolute",
                                             padding: 2,
@@ -706,7 +779,7 @@ export default class AddFoodItem extends Component<Props, State> {
         // formData.append("image", "/data" + imgUrl[1])
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
-                if (response && response.code === 200 ) {
+                if (response && response.code === 200) {
                     this.state.product.images_list = removeItem(this.state.product.images_list, this.state.photoIndex + 1)
                     this.setState({photos: this.getMorePhotos(this.state.product)});
                 } else if (response.code === 400) {
@@ -777,7 +850,8 @@ export default class AddFoodItem extends Component<Props, State> {
                                      size={20}/>
                         </TouchableOpacity>
                         <View style={{flex: 1}}/>
-                        <Text style={StaticStyles.nav_title}>{this.state.edit ? strings("update_menu") : strings("add_menu")}</Text>
+                        <Text
+                            style={StaticStyles.nav_title}>{this.state.edit ? strings("update_menu") : strings("add_menu")}</Text>
                         <View style={{flex: 1}}/>
                         {/*<EditButton onPress={() => {*/}
                         {/*}}/>*/}
@@ -816,7 +890,8 @@ export default class AddFoodItem extends Component<Props, State> {
                 <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                     <View style={{flex: 1}}>
                         <HFTextLight textColor={ColorTheme.appTheme} fontSize={10} value={strings("costing_price")}/>
-                        <TextFormInput text={this.state.costPrice} keyboard={"numeric"} placeholder={strings("add_price")} value={value => {
+                        <TextFormInput text={this.state.costPrice} keyboard={"numeric"}
+                                       placeholder={strings("add_price")} value={value => {
                             this.setState({costPrice: value});
                         }}/>
                     </View>
@@ -828,7 +903,7 @@ export default class AddFoodItem extends Component<Props, State> {
                         }}
                                        dropdown={true}
                                        placeholder={strings("add_price")}
-                                       text={this.state.selectedCategory? this.state.selectedCategory.name : ""}
+                                       text={this.state.selectedCategory ? this.state.selectedCategory.name : ""}
                                        value={value => {
                                        }}/>
                     </View>
@@ -839,23 +914,26 @@ export default class AddFoodItem extends Component<Props, State> {
                 <HFTextRegular fontSize={Constants.regularSmallFontSize} value={strings("time_to_make")}/>
                 <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                     <View style={{flex: 1}}>
-                        <TextFormInput keyboard={"numeric"} text={this.state.days} placeholder={strings("days")} value={value => {
-                            this.setState({days: value});
-                        }}/>
+                        <TextFormInput keyboard={"numeric"} text={this.state.days} placeholder={strings("days")}
+                                       value={value => {
+                                           this.setState({days: value});
+                                       }}/>
                     </View>
                     <View style={{width: Constants.defaultPadding}}/>
                     <View style={{flex: 1}}>
-                        <TextFormInput keyboard={"numeric"} text={this.state.hours} placeholder={strings("hours")} value={value => {
-                            this.setState({hours: value});
-                        }}/>
+                        <TextFormInput keyboard={"numeric"} text={this.state.hours} placeholder={strings("hours")}
+                                       value={value => {
+                                           this.setState({hours: value});
+                                       }}/>
                     </View>
                     <View style={{width: Constants.defaultPaddingMin}}/>
                     <HFTextRegular fontSize={Constants.regularSmallFontSize} value={":"}/>
                     <View style={{width: Constants.defaultPaddingMin}}/>
                     <View style={{flex: 1}}>
-                        <TextFormInput keyboard={"numeric"} text={this.state.minutes} placeholder={strings("minutes")} value={value => {
-                            this.setState({minutes: value});
-                        }}/>
+                        <TextFormInput keyboard={"numeric"} text={this.state.minutes} placeholder={strings("minutes")}
+                                       value={value => {
+                                           this.setState({minutes: value});
+                                       }}/>
                     </View>
                 </RTLView>
 
@@ -872,8 +950,8 @@ export default class AddFoodItem extends Component<Props, State> {
                     text={this.state.ingredients}
                     placeholder={strings("enter_content_here")}
                     value={value => {
-                    this.setState({ingredients: value});
-                }}/>
+                        this.setState({ingredients: value});
+                    }}/>
 
                 <View style={{height: Constants.defaultPaddingRegular}}/>
 
@@ -888,16 +966,131 @@ export default class AddFoodItem extends Component<Props, State> {
                     textView={true} placeholder={strings("enter_content_here")} value={value => {
                     this.setState({description: value});
                 }}/>
+                <RTLView locale={getCurrentLocale()} style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: Constants.defaultPaddingRegular,
+                    marginBottom: Constants.defaultPaddingRegular
+                }}>
+                    <TouchableOpacity onPress={() => {
+                        this.validateFeatureProduct();
+                    }}>
+                        <AppIcon name={this.state.isFeatureProduct === 1 ? "check_box" : "blank_check_box"}
+                                 color={this.getCheckboxColor()}
+                                 provider={CommonIcons}
+                                 size={25}/>
+                    </TouchableOpacity>
+                    <View style={{width: Constants.defaultPadding}}/>
+                    <View>
+                        <Text style={[{
+                            textAlign: isRTLMode() ? "right" : "left",
+                            color: ColorTheme.grey,
+                            fontWeight: "500",
+                            fontSize: 14,
+                        }]}> {strings("make_this_feature")}</Text>
+                        <TouchableOpacity onPress={() => {
+                            if (hasFeaturedProduct() === true) {
+                                if (this.product) {
+                                    // EDIT
+                                    if (this.state.isFeatureProduct === 0) {
+                                        showMessageAlert(strings("feature_product_info"));
+                                    } else {
+                                        showMessageAlert(strings("exist_feature_product_info"));
+                                    }
+                                } else {
+                                    // NEW
+                                    showMessageAlert(strings("feature_product_info"));
+                                }
+                            } else {
+                                showMessageAlert(strings("feature_product_info"));
+                            }
+                        }}>
+                            <Text style={[{
+                                textAlign: isRTLMode() ? "right" : "left",
+                                color: ColorTheme.appTheme,
+                                fontWeight: "500",
+                                fontSize: 14,
+                            }]}> {strings("more_info")}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </RTLView>
 
                 <View style={{height: Constants.defaultPaddingRegular}}/>
                 <View style={{paddingHorizontal: Constants.defaultPaddingMax}}>
-                    <ActionButton title={this.state.edit ? strings("update_menu") : strings("add_menu")} variant={"normal"} onPress={() => {
+                    <ActionButton title={this.state.edit ? strings("update_menu") : strings("add_menu")}
+                                  variant={"normal"} onPress={() => {
                         this.state.edit ? this.updateProduct() : this.addProduct();
                     }}/>
                 </View>
                 <View style={{height: 50}}/>
             </View>
         );
+    }
+
+    confirmFeatureProduct() {
+        Alert.alert(
+            strings("app_name"),
+            strings("already_feature_product"),
+            [
+                {
+                    text: strings("yes"), onPress: () => {
+                        this.setState({isFeatureProduct: this.state.isFeatureProduct === 0 ? 1 : 0});
+                    }
+                },
+                {
+                    text: strings("no")
+                }
+            ],
+            {cancelable: false},
+        );
+    }
+
+    validateFeatureProduct() {
+        if (hasFeaturedProduct() === true) {
+            if (this.product) {
+                // EDIT
+                if (this.state.isFeatureProduct === 0) {
+                    this.confirmFeatureProduct();
+                } else {
+
+                }
+            } else {
+                // NEW
+                if (this.state.isFeatureProduct === 0) {
+                    this.confirmFeatureProduct();
+                } else {
+                    this.setState({isFeatureProduct: this.state.isFeatureProduct === 0 ? 1 : 0});
+                }
+            }
+        } else {
+            if (this.product) {
+                // EDIT
+                this.setState({isFeatureProduct: this.state.isFeatureProduct === 0 ? 1 : 0});
+            } else {
+                // NEW
+                this.setState({isFeatureProduct: this.state.isFeatureProduct === 0 ? 1 : 0});
+            }
+        }
+    }
+
+    getCheckboxColor() {
+        if (hasFeaturedProduct() === true) {
+            if (this.product) {
+                // EDIT
+                switch (this.product.is_feature) {
+                    case 0:
+                        return ColorTheme.appTheme;
+                    case 1:
+                        return ColorTheme.grey;
+                }
+            } else {
+                // NEW
+                return ColorTheme.appTheme;
+            }
+        } else {
+            return ColorTheme.appTheme;
+        }
+        return ColorTheme.appTheme;
     }
 
     render() {

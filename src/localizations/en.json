@@ -278,5 +278,15 @@
   "today_earnings": "Today Earnings",
   "week_earnings": "This Week Earnings",
   "month_earnings": "This Month Earnings",
-  "year_earnings": "This Year Earnings"
+  "year_earnings": "This Year Earnings",
+  "featured": "FEATURED",
+  "make_this_feature": "Make this item as a featured product.",
+  "more_info": "More Info",
+  "already_feature_product": "You already has a featured product. Do you want to make this as feature product ?",
+  "mandatory_feature_product": "Please make this product as featured product. You can change the feature product later by editing it.",
+  "feature_product_info": "A featured product will be shown to the customer as the best food item of the seller. A featured product is required and you can make only one food item as a featured product. \n\n We advise you to make the best of your food item as featured product.",
+  "exist_feature_product_info": "This is your feature product. One featured product is mandatory. If you want to remove this product as featured, just add/edit another product and make it featured.",
+  "inactive_feature_product_info": "This is your feature product. One featured product is mandatory. If you want to make this product out-of-stock, just edit another product and make it featured.",
+  "delete_feature_product_info": "This is your feature product. One featured product is required to show your store to customer. If you want to delete this product, just change your featured product by edit/add. \n\n  Or you can delete this product anyway, but your store will get removed from customer application.",
+  "delete_anyway": "Delete Anyway!"
 }

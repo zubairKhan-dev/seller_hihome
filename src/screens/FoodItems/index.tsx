@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View} from "react-native";
+import {ActivityIndicator, Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
@@ -9,7 +9,6 @@ import {RTLView} from "react-native-rtl-layout";
 import {CommonIcons} from "../../icons/Common";
 import {AppIcon} from "../../common/IconUtils";
 import AddButton from "../../components/AddButton";
-import {TouchableOpacity} from "react-native";
 import * as Api from "../../lib/api";
 import StockSwitch from "../../components/StockSwitch";
 import {isValidString} from "../../lib/StringUtil";
@@ -24,6 +23,7 @@ import {showMessage} from "react-native-flash-message";
 import {splitTime} from "../../lib/DateUtil";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
+import {setProfile} from "../../lib/user";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
@@ -83,11 +83,42 @@ export default class FoodItems extends Component<Props, State> {
     componentDidMount(): void {
         this.getFoodList();
         Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.refreshFoodList.bind(this));
+        Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.updateLocalProfile.bind(this));
+    }
+
+    private updateLocalProfile() {
+        let formData = new FormData();
+        this.apiHandler = (response) => {
+            Api.checkValidationError(response, resp => {
+                switch (response.code) {
+                    case 200 :
+                        if (resp) {
+                            setProfile(resp);
+                        }
+                        break;
+                }
+            }, (errors, errorMessage) => {
+                showMessageAlert(errorMessage);
+            });
+        };
+        this.apiExHandler = (reason) => {
+            showMessageAlert(reason);
+        };
+        Api.getProfile({})
+            .then((response) => {
+                    this.apiHandler(response);
+                },
+            ).catch((reason => {
+                this.apiExHandler(reason);
+            }),
+        );
     }
 
     private refreshFoodList() {
-        this.setState({currentPage: 1, hasMorePages: false, foodItems: [], outOfStockItems: 0,
-            inStockItems: 0, searchedFoodItems: [], isSearch: false,});
+        this.setState({
+            currentPage: 1, hasMorePages: false, foodItems: [], outOfStockItems: 0,
+            inStockItems: 0, searchedFoodItems: [], isSearch: false,
+        });
         setTimeout(() => {
             this.getFoodList();
         }, 200)
@@ -254,18 +285,37 @@ export default class FoodItems extends Component<Props, State> {
                         backgroundColor: ColorTheme.lightGrey,
                         borderRadius: 10
                     }}>
-                        {imageURL && imageURL.includes("http") && <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>}
+                        {imageURL && imageURL.includes("http") &&
+                        <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>}
                         <FastImage
                             style={{width: 80, height: 80, borderRadius: 10}}
                             source={{
                                 uri: imageURL ? imageURL.includes("http") ? foodItem.main_image : "" : "",
-                                priority: FastImage.priority.normal,
+                                priority: FastImage.priority.high,
                             }}
                             onLoadStart={() => {
                             }}
                             onLoadEnd={() => {
                             }}
                         />
+                        {foodItem.is_feature === 1 && <View style={{
+                            height: 16,
+                            width: 70,
+                            backgroundColor: ColorTheme.white,
+                            borderRadius: 8,
+                            paddingHorizontal: 4,
+                            justifyContent: "center",
+                            position: "absolute",
+                            top: 5
+                        }}>
+                            <Text numberOfLines={1} style={[StaticStyles.heavyFont, {
+                                textAlign: "center",
+                                color: ColorTheme.appTheme,
+                                fontSize: Constants.regularSmallestFontSize
+                            }]}>
+                                {strings("featured")}
+                            </Text>
+                        </View>}
                     </View>
                     <View style={{flex: 1, paddingHorizontal: Constants.defaultPadding}}>
                         <Text numberOfLines={2} style={[StaticStyles.regularFont, {
@@ -304,7 +354,31 @@ export default class FoodItems extends Component<Props, State> {
                         <StockSwitch initialState={this.itemOutOfStock(index)} onActive={() => {
                             this.performProductAction(1, foodItem, index);
                         }} onInActive={() => {
-                            this.performProductAction(0, foodItem, index);
+                            if (foodItem.is_feature === 1) {
+                                Alert.alert(
+                                    strings("app_name"),
+                                    strings("inactive_feature_product_info"),
+                                    [
+                                        {
+                                            text: strings("ok"), onPress: () => {
+                                                this.setState({
+                                                    currentPage: 1,
+                                                    hasMorePages: true,
+                                                    foodItems: [],
+                                                    outOfStockItems: 0,
+                                                    inStockItems: 0
+                                                });
+                                                setTimeout(() => {
+                                                    this.getFoodList();
+                                                }, 100);
+                                            }
+                                        },
+                                    ],
+                                    {cancelable: false},
+                                );
+                            } else {
+                                this.performProductAction(0, foodItem, index);
+                            }
                         }}/>
                         <View style={{flex: 1}}/>
                     </View>
@@ -380,9 +454,32 @@ export default class FoodItems extends Component<Props, State> {
                                 }}
                                 onDelete={() => {
                                     this.setState({showProductActions: false});
-                                    setTimeout(() => {
-                                        this.removeProduct();
-                                    }, 400);
+                                    if (this.state.selectedFood.is_feature === 1) {
+                                        setTimeout(() => {
+                                            Alert.alert(
+                                                strings("app_name"),
+                                                strings("delete_feature_product_info"),
+                                                [
+                                                    {
+                                                        text: strings("ok"), onPress: () => {
+                                                        }
+                                                    },
+                                                    {
+                                                        text: strings("delete_anyway"), onPress: () => {
+                                                            setTimeout(() => {
+                                                                this.removeProduct();
+                                                            }, 400);
+                                                        }
+                                                    },
+                                                ],
+                                                {cancelable: false},
+                                            );
+                                        }, 400);
+                                    } else {
+                                        setTimeout(() => {
+                                            this.removeProduct();
+                                        }, 400);
+                                    }
                                 }}
                                 onDismiss={() => {
                                     this.setState({showProductActions: false});

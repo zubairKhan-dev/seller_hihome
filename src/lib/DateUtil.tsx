@@ -17,6 +17,10 @@ export function splitTime(numberOfHours) {
 }
 
 export function combineTime(days, hours, minutes) {
+    days = days.length === 0 ? "0" : days;
+    hours = hours.length === 0 ? "0" : hours;
+    minutes = minutes.length === 0 ? "0" : minutes;
+
     let newHours = parseInt(days) * 24
     newHours = newHours + parseInt(hours)
     newHours = newHours + (parseInt(minutes)/60)

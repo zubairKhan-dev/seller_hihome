@@ -63,6 +63,10 @@ export function getUserEmail() {
     return store.getState().User.user.profile.email ;
 }
 
+export function hasFeaturedProduct() {
+    return store.getState().User.user.profile.has_featured_product ;
+}
+
 export function getToken() {
     return store.getState().User.token;
 }
