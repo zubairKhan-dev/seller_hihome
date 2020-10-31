@@ -41,7 +41,7 @@ export function updateProfile(request: any) {
 }
 
 export function sendFeedback(request: any) {
-    return httpPostForm(appConfig.authAPI().endPoint() + "sellers/feedbacks", request);
+    return httpPostForm(appConfig.authAPI().endPoint() + "sellers/contact-us", request);
 }
 
 export function getProfile(request: any) {
