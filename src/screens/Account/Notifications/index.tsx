@@ -10,8 +10,8 @@ import {TouchableOpacity} from "react-native";
 import {AppIcon} from "../../../common/IconUtils";
 import {CommonIcons} from "../../../icons/Common";
 import {SafeAreaView} from "react-navigation";
-import FastImage from "react-native-fast-image";
 import {formatDate} from "../../../lib/DateUtil";
+import FeaturedImage from "../../../components/FeaturedImage";
 
 const notifications = {
     "Code": 200,
@@ -104,17 +104,10 @@ export default class Notifications extends Component<Props, State> {
             }}>
                 <RTLView locale={getCurrentLocale()}
                          style={{paddingHorizontal: Constants.defaultPadding}}>
-                    {notification.id === 1 && <FastImage
-                        style={{width: 30, height: 30, borderRadius: 15}}
-                        source={{
-                            uri: notification.image,
-                            priority: FastImage.priority.normal,
-                        }}
-                        onLoadStart={() => {
-                        }}
-                        onLoadEnd={() => {
-                        }}
-                    />}
+                    {notification.id === 1 && <View style={{borderRadius: 15, overflow: "hidden"}}>
+                        <FeaturedImage width={30} height={30} uri={notification.image}/>
+                    </View>
+                    }
                     {notification.id === 2 && <AppIcon name={"message"}
                                                        color={ColorTheme.appTheme}
                                                        provider={CommonIcons}

@@ -1,10 +1,9 @@
 import React, {Component} from "react";
 import Modal from "react-native-modal";
-import {ScrollView, Text, View} from "react-native";
+import {Image, ScrollView, Text, View} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
-import FastImage from "react-native-fast-image";
 import {windowWidth} from "../../common";
 import {SliderBox} from "react-native-image-slider-box";
 import BorderButton from "../ActionButton/BorderButton";
@@ -54,7 +53,7 @@ export default class FoodDetails extends Component<Props, State> {
                 }]}>
                     <SliderBox
                         parentWidth={windowWidth - 2 * Constants.defaultPadding}
-                        ImageComponent={FastImage}
+                        ImageComponent={Image}
                         sliderBoxHeight={300}
                         sliderBoxWidth={windowWidth - 2 * Constants.defaultPadding}
                         images={this.props.details?.images}

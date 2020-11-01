@@ -10,14 +10,13 @@ import ActionButton from "../../../components/ActionButton";
 import {RTLText, RTLView} from "react-native-rtl-layout";
 import * as Api from "../../../lib/api";
 import LoadingOverlay from "../../../components/Loading";
-import {showMessageAlert} from "../../../common";
+import {showMessageAlert, windowWidth} from "../../../common";
 import MessagePopUp from "../../../components/MessagePopUp";
 import Modal from "react-native-modal";
 import {AppIcon} from "../../../common/IconUtils";
 import {CommonIcons} from "../../../icons/Common";
 import HHDatePicker from "../../../components/HHDatePicker";
 import ImagePicker from "react-native-image-picker";
-import FastImage from "react-native-fast-image";
 import ImageUploadView from "../../../components/ImageUpload";
 import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import VerifyOTPPopUp from "../../../components/VerifyOTPPopUp";
@@ -26,6 +25,7 @@ import {getDeviceId, setDeviceId} from "../../../lib/user";
 import TermsConditions from "./TermsConditions"
 import {ONESIGNAL_APP_ID} from "../../../config/Constants";
 import OneSignal from 'react-native-onesignal';
+import FeaturedImage from "../../../components/FeaturedImage";
 
 const licensePhoto = [
     {name: "", uri: "", data: undefined},
@@ -574,20 +574,11 @@ export default class SignUp extends Component<Props, State> {
                                                                                color={ColorTheme.grey_add}
                                                                                provider={CommonIcons}
                                                                                size={50}/>}
-                                            {item.uri.length > 0 && <FastImage
-                                                style={{
-                                                    width: itemDimension,
-                                                    height: itemDimension,
-                                                }}
-                                                source={{
-                                                    uri: item.uri,
-                                                    priority: FastImage.priority.normal,
-                                                }}
-                                                onLoadStart={() => {
-                                                }}
-                                                onLoadEnd={() => {
-                                                }}
-                                            />}
+                                            {item.uri.length > 0 &&
+                                            <View style={{borderRadius: 15, overflow: "hidden", width: itemDimension, height: itemDimension}}>
+                                                <FeaturedImage width={itemDimension} height={itemDimension} uri={item.uri}/>
+                                            </View>
+                                            }
                                             {item.uri.length > 0 && <View style={{
                                                 position: "absolute",
                                                 padding: 2,
@@ -722,20 +713,11 @@ export default class SignUp extends Component<Props, State> {
                                                                                color={ColorTheme.grey_add}
                                                                                provider={CommonIcons}
                                                                                size={50}/>}
-                                            {item.uri.length > 0 && <FastImage
-                                                style={{
-                                                    width: itemDimension,
-                                                    height: itemDimension,
-                                                }}
-                                                source={{
-                                                    uri: item.uri,
-                                                    priority: FastImage.priority.normal,
-                                                }}
-                                                onLoadStart={() => {
-                                                }}
-                                                onLoadEnd={() => {
-                                                }}
-                                            />}
+                                            {item.uri.length > 0 &&
+                                            <View style={{borderRadius: 15, overflow: "hidden", width: itemDimension, height: itemDimension}}>
+                                                <FeaturedImage width={itemDimension} height={itemDimension} uri={item.uri}/>
+                                            </View>
+                                            }
                                             {item.uri.length > 0 && <View style={{
                                                 position: "absolute",
                                                 padding: 2,

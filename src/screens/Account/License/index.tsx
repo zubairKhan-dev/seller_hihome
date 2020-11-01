@@ -14,7 +14,6 @@ import HHDatePicker from "../../../components/HHDatePicker";
 import HHPicker from "../../../components/HHPickerView/HHPicker";
 import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import {windowWidth, showMessageAlert} from "../../../common";
-import FastImage from "react-native-fast-image";
 import ImageUploadView from "../../../components/ImageUpload";
 import DocumentsViewer from "../../../components/DocumentsViewer";
 import ImagePicker from "react-native-image-picker";
@@ -24,6 +23,7 @@ import * as Api from "../../../lib/api";
 import { showMessage } from "react-native-flash-message";
 import { parseDate, formatDate } from "../../../lib/DateUtil";
 import LoadingOverlay from "../../../components/Loading";
+import FeaturedImage from "../../../components/FeaturedImage";
 
 const defaultPhoto = {name: "", uri: "", data: undefined};
 
@@ -405,22 +405,9 @@ export default class License extends Component<Props, State> {
                                 alignItems: "center",
                             }}>
                                 {this.state.showActivity && <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>}
-                                <FastImage
-                                    style={{
-                                        width: windowWidth - (2 * Constants.defaultPaddingRegular),
-                                        height: 150
-                                    }}
-                                    source={{
-                                        uri: this.state.licensePhoto.uri,
-                                        priority: FastImage.priority.normal,
-                                    }}
-                                    onLoadStart={() => {
-                                        this.setState({showActivity: true});
-                                    }}
-                                    onLoadEnd={() => {
-                                        this.setState({showActivity: false});
-                                    }}
-                                />
+                                <View style={{overflow: "hidden", width: windowWidth - (2 * Constants.defaultPaddingRegular), height: 150}}>
+                                    <FeaturedImage width={windowWidth - (2 * Constants.defaultPaddingRegular)} height={150} uri={this.state.licensePhoto.uri}/>
+                                </View>
                             </View>
                             {this.state.isEdit && <View style={{
                                 position: "absolute",

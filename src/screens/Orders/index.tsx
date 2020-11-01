@@ -7,12 +7,12 @@ import {getCurrentLocale, isRTLMode, strings} from "../../components/Translation
 import ColorTheme from "../../theme/Colors";
 import {RTLView} from "react-native-rtl-layout";
 import {SafeAreaView} from "react-navigation";
-import FastImage from "react-native-fast-image";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import * as Api from "../../lib/api";
 import LoadingOverlay from "../../components/Loading";
 import NoDataFound from "../../components/NoDataFound";
+import FeaturedImage from "../../components/FeaturedImage";
 
 export enum OrderStatus {
     RECEIVED = 1,
@@ -199,19 +199,15 @@ export default class Orders extends Component<Props, State> {
                         backgroundColor: ColorTheme.white,
                         borderRadius: 10
                     }}>
-                        <ActivityIndicator size={"small"} style={{position: "absolute"}}
-                                           color={ColorTheme.appThemeLight}/>
-                        <FastImage
-                            style={{width: 50, height: 50, borderRadius: 10}}
-                            source={{
-                                uri: foodItem.product_details.main_image,
-                                priority: FastImage.priority.normal,
-                            }}
-                            onLoadStart={() => {
-                            }}
-                            onLoadEnd={() => {
-                            }}
-                        />
+                        <View style={{
+                            borderRadius: 10,
+                            width: 50,
+                            height: 50,
+                            overflow: "hidden"
+                        }}>
+                            <FeaturedImage width={50} height={50}
+                                           uri={foodItem.product_details.main_image}/>
+                        </View>
                     </View>
                     <View style={{flex: 1, paddingHorizontal: Constants.defaultPadding}}>
                         <Text numberOfLines={2} style={[StaticStyles.regularFont, {

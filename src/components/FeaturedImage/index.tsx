@@ -1,7 +1,6 @@
 import React, {Component} from "react";
-import {View} from "react-native";
-import FastImage from "react-native-fast-image";
-import ActivityIndicator from "../Loading/ActivityIndicator";
+import {Image, View, ActivityIndicator} from "react-native";
+import ColorTheme from "../../theme/Colors";
 
 interface Props {
     uri?: string,
@@ -21,21 +20,14 @@ export default class FeaturedImage extends Component <Props, State> {
 
     render() {
         return (
-            <View>
-                <FastImage
-                    style={{width: this.props.width, height: this.props.height}}
-                    source={{
-                        uri: this.props.uri,
-                        priority: FastImage.priority.normal,
-                    }}
-                    onLoadStart={() => {
-                        this.setState({loading: true})
-                    }}
-                    onLoadEnd={() => {
-                        this.setState({loading: false})
-                    }}
-                />
-                {this.state.loading && <ActivityIndicator/>}
+            <View style={{alignItems: "center", justifyContent: "center", }}>
+                <Image style={{width: this.props.width, height: this.props.height, resizeMode: "cover"}}
+                       source={{uri: this.props.uri}}
+                       onLoadStart={() => this.setState({loading: true})}
+                       onLoadEnd={() => this.setState({loading: false})}/>
+                {this.state.loading &&
+                <ActivityIndicator size={"small"} style={{position: "absolute", transform: [{scale: 0.65}]}}
+                                   color={ColorTheme.appTheme}/>}
             </View>
         );
 

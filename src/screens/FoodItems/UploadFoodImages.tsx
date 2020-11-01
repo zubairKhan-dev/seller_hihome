@@ -12,10 +12,10 @@ import {windowWidth} from "../../common";
 import ImageUploadView from "../../components/ImageUpload";
 import ImagePicker from "react-native-image-picker";
 import {SafeAreaView} from "react-navigation";
-import FastImage from "react-native-fast-image";
 import * as Api from "../../lib/api";
 import DocumentsViewer from "../../components/DocumentsViewer";
 import {getToken} from "../../lib/user";
+import FeaturedImage from "../../components/FeaturedImage";
 
 const createFormData = (photo) => {
     let data = new FormData();
@@ -231,20 +231,16 @@ export default class UploadFoodImages extends Component<Props, State> {
                                                                        color={ColorTheme.grey_add}
                                                                        provider={CommonIcons}
                                                                        size={50}/>}
-                                    {item.uri.length > 0 && <FastImage
-                                        style={{
-                                            width: itemDimension - 10,
-                                            height: itemDimension - 10,
-                                        }}
-                                        source={{
-                                            uri: item.uri,
-                                            priority: FastImage.priority.normal,
-                                        }}
-                                        onLoadStart={() => {
-                                        }}
-                                        onLoadEnd={() => {
-                                        }}
-                                    />}
+                                    {item.uri.length > 0 && <View style={{
+                                        borderRadius: Constants.defaultPadding,
+                                        width: itemDimension - 10,
+                                        height: itemDimension - 10,
+                                        overflow: "hidden"
+                                    }}>
+                                        <FeaturedImage width={itemDimension - 10} height={itemDimension - 10}
+                                                       uri={item.uri}/>
+                                    </View>
+                                    }
                                 </View>
                             </TouchableOpacity>}
                             <ImageUploadView show={this.state.uploadImage}

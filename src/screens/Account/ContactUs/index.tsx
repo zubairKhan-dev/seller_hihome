@@ -13,13 +13,13 @@ import {SafeAreaView} from "react-navigation";
 import ActionButton from "../../../components/ActionButton";
 import ImageUploadView from "../../../components/ImageUpload";
 import ImagePicker from "react-native-image-picker";
-import FastImage from "react-native-fast-image";
 import DocumentsViewer from "../../../components/DocumentsViewer";
 import LoadingOverlay from "../../../components/Loading";
 import { showMessageAlert } from "../../../common";
 import * as Api from "../../../lib/api";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import { showMessage } from "react-native-flash-message";
+import FeaturedImage from "../../../components/FeaturedImage";
 
 const photo = {uri: "", data: {}, add: false};
 
@@ -259,20 +259,9 @@ export default class ContactUs extends Component<Props, State> {
                                     borderStyle: "dashed",
                                     backgroundColor: ColorTheme.lightGrey
                                 }}>
-                                    <FastImage
-                                        style={{
-                                            width: 100,
-                                            height: 100
-                                        }}
-                                        source={{
-                                            uri: this.state.photo.uri,
-                                            priority: FastImage.priority.normal,
-                                        }}
-                                        onLoadStart={() => {
-                                        }}
-                                        onLoadEnd={() => {
-                                        }}
-                                    />
+                                    <View style={{ overflow: "hidden", width: 100, height: 100}}>
+                                        <FeaturedImage width={100} height={100} uri={this.state.photo.uri}/>
+                                    </View>
                                 </View>}
                             </TouchableOpacity>
                             <View style={{

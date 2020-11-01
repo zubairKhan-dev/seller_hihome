@@ -24,7 +24,6 @@ import HFTextLight from "../../components/HFText/HFTextLight";
 import ActionButton from "../../components/ActionButton";
 import HHPickerView from "../../components/HHPickerView";
 import {SafeAreaView} from "react-navigation";
-import FastImage from "react-native-fast-image";
 import ImageUploadView from "../../components/ImageUpload";
 import ImagePicker from "react-native-image-picker";
 import * as Api from "../../lib/api";
@@ -36,6 +35,7 @@ import {combineTime, splitTime} from "../../lib/DateUtil";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import {hasFeaturedProduct, setProfile} from "../../lib/user";
+import FeaturedImage from "../../components/FeaturedImage";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
@@ -311,26 +311,16 @@ export default class AddFoodItem extends Component<Props, State> {
                                                  size={50}/>}
                                         {item && item.uri.length > 0 &&
                                         <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                                            <ActivityIndicator size={"small"} style={{position: "absolute"}}
-                                                               color={ColorTheme.black}/>
-                                            <FastImage
-                                                style={{
-                                                    width: itemDimension,
-                                                    height: itemDimension,
-                                                }}
-                                                source={{
-                                                    uri: item.uri,
-                                                    priority: FastImage.priority.high,
-                                                }}
-                                                onLoadStart={() => {
-                                                }}
-                                                onLoadEnd={() => {
-                                                }}
-                                            />
+                                            <View style={{
+                                                borderRadius: Constants.defaultPadding,
+                                                width: itemDimension,
+                                                height: itemDimension,
+                                                overflow: "hidden"
+                                            }}>
+                                                <FeaturedImage width={itemDimension} height={itemDimension}
+                                                               uri={item.uri}/>
+                                            </View>
                                         </View>}
-                                        {this.state.showActivity && this.state.photoIndex === index &&
-                                        <ActivityIndicator size={"small"} style={{position: "absolute"}}
-                                                           color={ColorTheme.black}/>}
                                         {item && item.uri.length > 0 && <View style={{
                                             position: "absolute",
                                             padding: 2,
@@ -626,26 +616,16 @@ export default class AddFoodItem extends Component<Props, State> {
                                                  size={50}/>}
                                         {item && item.uri.length > 0 &&
                                         <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                                            <ActivityIndicator size={"small"} style={{position: "absolute"}}
-                                                               color={ColorTheme.black}/>
-                                            <FastImage
-                                                style={{
-                                                    width: itemDimension,
-                                                    height: itemDimension,
-                                                }}
-                                                source={{
-                                                    uri: item.uri,
-                                                    priority: FastImage.priority.high,
-                                                }}
-                                                onLoadStart={() => {
-                                                }}
-                                                onLoadEnd={() => {
-                                                }}
-                                            />
+                                            <View style={{
+                                                borderRadius: Constants.defaultPadding,
+                                                width: itemDimension,
+                                                height: itemDimension,
+                                                overflow: "hidden"
+                                            }}>
+                                                <FeaturedImage width={itemDimension} height={itemDimension}
+                                                               uri={item.uri}/>
+                                            </View>
                                         </View>}
-                                        {this.state.showMainPhotoActivity && this.state.photoIndex === index &&
-                                        <ActivityIndicator size={"small"} style={{position: "absolute"}}
-                                                           color={ColorTheme.black}/>}
                                         {item.uri.length > 0 && <View style={{
                                             position: "absolute",
                                             padding: 2,

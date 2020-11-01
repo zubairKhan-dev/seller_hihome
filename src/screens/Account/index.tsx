@@ -26,10 +26,10 @@ import LoginPopUp from "../../components/LoginPopUp";
 import {StaticStyles} from "../../theme/Styles";
 import {SafeAreaView} from "react-navigation";
 import CodePush from "react-native-code-push";
-import FastImage from "react-native-fast-image";
 import * as Api from "../../lib/api";
 import { showMessage } from "react-native-flash-message";
 import Moment from "moment";
+import FeaturedImage from "../../components/FeaturedImage";
 
 // {"icon": "subscription", "title": strings("subscription"), "screen": "Subscription"},
 // {"icon": "my_earnings", "title": strings("my_earnings"), "screen": "Earnings"},
@@ -307,24 +307,17 @@ export default class Account extends Component<Props, State> {
             <View style={{paddingHorizontal: Constants.defaultPadding, marginTop: Constants.defaultPaddingRegular}}>
                 <RTLView locale={getCurrentLocale()}>
                     <View style={{alignItems: "center", justifyContent: "center"}}>
-                        <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.black}/>
-                        <FastImage
-                            style={{
-                                width: itemDimension,
-                                height: itemDimension,
-                                borderWidth: 0.5,
-                                borderRadius: Constants.defaultPadding,
-                                borderColor: ColorTheme.grey,
-                            }}
-                            source={{
-                                uri: this.state.logo,
-                                priority: FastImage.priority.normal,
-                            }}
-                            onLoadStart={() => {
-                            }}
-                            onLoadEnd={() => {
-                            }}
-                        />
+                        <View style={{
+                            borderWidth: 0.5,
+                            borderRadius: Constants.defaultPadding,
+                            borderColor: ColorTheme.grey,
+                            width: itemDimension,
+                            height: itemDimension,
+                            overflow: "hidden"
+                        }}>
+                            <FeaturedImage width={itemDimension} height={itemDimension}
+                                           uri={this.state.logo}/>
+                        </View>
                     </View>
                     <View style={{width: Constants.defaultPadding}}/>
                     <View style={{flex: 1}}>

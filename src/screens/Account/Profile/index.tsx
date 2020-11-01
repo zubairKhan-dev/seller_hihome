@@ -17,11 +17,11 @@ import ChangePasswordView from "../../../components/ChangePassword";
 import {showMessageAlert} from "../../../common";
 import * as Api from "../../../lib/api";
 import LoadingOverlay from "../../../components/Loading";
-import { showMessage } from "react-native-flash-message";
+import {showMessage} from "react-native-flash-message";
 import ImagePicker from "react-native-image-picker";
 import HFTextRegular from "../../../components/HFText/HFTextRegular";
-import FastImage from "react-native-fast-image";
 import ImageUploadView from "../../../components/ImageUpload";
+import FeaturedImage from "../../../components/FeaturedImage";
 
 const logoPhoto = [
     {name: "", uri: "", data: undefined},
@@ -35,6 +35,7 @@ const options = {
     },
     quality: 0.5
 };
+
 interface Props {
     navigation: any;
 }
@@ -340,24 +341,17 @@ export default class Profile extends Component<Props, State> {
                                                                                size={50}/>}
                                             {item.uri.length > 0 &&
                                             <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                                                <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.black}/>
-                                                <FastImage
-                                                    style={{
-                                                        width: itemDimension,
-                                                        height: itemDimension,
-                                                        borderWidth: 0.5,
-                                                        borderRadius: Constants.defaultPaddingRegular,
-                                                        borderColor: ColorTheme.grey,
-                                                    }}
-                                                    source={{
-                                                        uri: item.uri,
-                                                        priority: FastImage.priority.normal,
-                                                    }}
-                                                    onLoadStart={() => {
-                                                    }}
-                                                    onLoadEnd={() => {
-                                                    }}
-                                                />
+                                                <View style={{
+                                                    borderWidth: 0.5,
+                                                    borderRadius: Constants.defaultPaddingRegular,
+                                                    borderColor: ColorTheme.grey,
+                                                    overflow: "hidden",
+                                                    width: itemDimension,
+                                                    height: itemDimension
+                                                }}>
+                                                    <FeaturedImage width={itemDimension} height={itemDimension}
+                                                                   uri={item.uri}/>
+                                                </View>
                                             </View>
                                             }
                                             {this.state.isEdit && item.uri.length > 0 && <View style={{

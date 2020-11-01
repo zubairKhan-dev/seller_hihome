@@ -1,9 +1,8 @@
 import React, {Component} from "react";
-import {TouchableOpacity, View} from "react-native";
+import {Image, TouchableOpacity, View} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import {StaticStyles} from "../../theme/Styles";
 import {SliderBox} from "react-native-image-slider-box";
-import FastImage from "react-native-fast-image";
 import Modal from "react-native-modal";
 import {AppIcon} from "../../common/IconUtils";
 import {CommonIcons} from "../../icons/Common";
@@ -62,7 +61,7 @@ export default class DocumentsViewer extends Component<Props, State> {
                         <View style={{height: Constants.defaultPadding}}/>
                         <View style={[StaticStyles.flexOne, {marginHorizontal: Constants.defaultPaddingMin, borderRadius: Constants.defaultPaddingMin, overflow: "hidden"}]}>
                             <SliderBox
-                                ImageComponent={FastImage}
+                                ImageComponent={Image}
                                 sliderBoxHeight={windowHeight - 200}
                                 sliderBoxWidth={200}
                                 images={this.props.documents}

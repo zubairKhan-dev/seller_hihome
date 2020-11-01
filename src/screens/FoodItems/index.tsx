@@ -15,7 +15,6 @@ import {isValidString} from "../../lib/StringUtil";
 import {SafeAreaView} from "react-navigation";
 import {showMessageAlert} from "../../common";
 import FoodDetails from "../../components/FoodDetails";
-import FastImage from "react-native-fast-image";
 import NoDataFound from "../../components/NoDataFound";
 import LoadingOverlay from "../../components/Loading";
 import ProductActions from "../../components/ProductActions";
@@ -24,6 +23,7 @@ import {splitTime} from "../../lib/DateUtil";
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import {setProfile} from "../../lib/user";
+import FeaturedImage from "../../components/FeaturedImage";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
@@ -285,19 +285,15 @@ export default class FoodItems extends Component<Props, State> {
                         backgroundColor: ColorTheme.lightGrey,
                         borderRadius: 10
                     }}>
-                        {imageURL && imageURL.includes("http") &&
-                        <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>}
-                        <FastImage
-                            style={{width: 80, height: 80, borderRadius: 10}}
-                            source={{
-                                uri: imageURL ? imageURL.includes("http") ? foodItem.main_image : "" : "",
-                                priority: FastImage.priority.high,
-                            }}
-                            onLoadStart={() => {
-                            }}
-                            onLoadEnd={() => {
-                            }}
-                        />
+                        <View style={{
+                            borderRadius: Constants.defaultPadding,
+                            width: 80,
+                            height: 80,
+                            overflow: "hidden"
+                        }}>
+                            <FeaturedImage width={80} height={80}
+                                           uri={imageURL ? imageURL.includes("http") ? foodItem.main_image : "" : ""}/>
+                        </View>
                         {foodItem.is_feature === 1 && <View style={{
                             height: 16,
                             width: 70,

@@ -178,7 +178,7 @@ export default class MyAddress extends Component<Props, State> {
         let formData = new FormData();
         formData.append("lat", this.state.currentLocation.latitude);
         formData.append("long", this.state.currentLocation.longitude);
-        formData.append("address", this.state.address);
+        formData.append("address", this.state.address + "," + this.state.selectedCity.name);
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
@@ -346,7 +346,6 @@ export default class MyAddress extends Component<Props, State> {
                     <View style={{height: Constants.defaultPadding}}/>
                     <View style={{}}>
                         <MapView
-                            provider={PROVIDER_GOOGLE}
                             style={{
                                 height: 250,
                                 borderRadius: Constants.defaultPaddingMin,

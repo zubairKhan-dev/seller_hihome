@@ -10,9 +10,9 @@ import {TouchableOpacity} from "react-native";
 import {AppIcon} from "../../../common/IconUtils";
 import {CommonIcons} from "../../../icons/Common";
 import {SafeAreaView} from "react-navigation";
-import FastImage from "react-native-fast-image";
 import {formatDate} from "../../../lib/DateUtil";
 import {Rating} from "react-native-ratings";
+import FeaturedImage from "../../../components/FeaturedImage";
 
 const reviews = {
     "Code": 200,
@@ -197,17 +197,17 @@ export default class Reviews extends Component<Props, State> {
             </RTLView>
             <View style={{height: Constants.defaultPadding}}/>
             <RTLView locale={getCurrentLocale()}>
-                {review.image && review.image.length > 0 && <FastImage
-                    style={{width: 40, height: 40, borderRadius: 5}}
-                    source={{
-                        uri: review.image,
-                        priority: FastImage.priority.normal,
-                    }}
-                    onLoadStart={() => {
-                    }}
-                    onLoadEnd={() => {
-                    }}
-                />}
+                {review.image && review.image.length > 0 &&
+                <View style={{
+                    borderRadius: 5,
+                    overflow: "hidden",
+                    width: 40,
+                    height: 40
+                }}>
+                    <FeaturedImage width={40} height={40}
+                                   uri={review.image}/>
+                </View>
+                }
                 {!review.image && <View style={{width: 40, height: 40, borderRadius: 5, backgroundColor: ColorTheme.lightGrey, alignItems: "center", justifyContent: "center"}}>
                     <AppIcon name={"default_user_male"}
                              color={ColorTheme.grey}
