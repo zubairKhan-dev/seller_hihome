@@ -606,7 +606,7 @@ export default class Dashboard extends Component<Props, State> {
                 <RTLView locale={getCurrentLocale()}>
                     <View style={{flex: 1}}/>
                     <Image resizeMode={"contain"} style={{width: 200, height: 20, marginTop: 0}}
-                           source={require('../../../assets/images/app-logo.png')}/>
+                           source={require('../../../assets/images/app-logo.jpg')}/>
                     <View style={{flex: 1}}/>
                 </RTLView>
                 {this.renderOptions()}

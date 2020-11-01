@@ -19,7 +19,8 @@
     "android:clean": "rimraf android/build && rimraf android/app/build",
     "android:bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "android:assembleDebug": "./gradlew clean assembleDebug",
-    "android:assembleRelease": "./gradlew clean assembleRelease"
+    "android:assembleRelease": "./gradlew clean assembleRelease",
+    "android:bundleReleaseJsAndAssets": "./gradlew assembleRelease -x bundleReleaseJsAndAssets"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.9.0",

@@ -1,20 +1,9 @@
 import * as React from "react";
 import {Component} from "react";
-import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TouchableOpacity,
-    View,
-    Platform
-} from "react-native";
+import {Alert, FlatList, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import Constants from "../../theme/Constants";
-import {getAddress, getUserEmail, getUserFullName, isUserLoggedIn, logout} from "../../lib/user";
+import {getUserEmail, getUserFullName, isUserLoggedIn, logout} from "../../lib/user";
 import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
 import {RTLText, RTLView} from "react-native-rtl-layout";
 import {showMessageAlert} from "../../common";
@@ -27,7 +16,7 @@ import {StaticStyles} from "../../theme/Styles";
 import {SafeAreaView} from "react-navigation";
 import CodePush from "react-native-code-push";
 import * as Api from "../../lib/api";
-import { showMessage } from "react-native-flash-message";
+import {showMessage} from "react-native-flash-message";
 import Moment from "moment";
 import FeaturedImage from "../../components/FeaturedImage";
 
@@ -44,6 +33,8 @@ interface State {
     showLogin: boolean;
     isAccountEnabled: boolean;
     appVersion?: string;
+    label?: string;
+    description?: string;
     logo?: string;
     address?: string;
     sellerProfile?: any;
@@ -76,13 +67,18 @@ export default class Account extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getProfile();
         });
+
         CodePush.getUpdateMetadata().then((metadata) => {
+            debugger;
             if (metadata) {
                 this.setState({
                     appVersion: metadata.appVersion,
+                    label: metadata.label,
+                    description: metadata.description,
                 });
             }
         });
+
     }
 
     componentWillUnmount() {
@@ -91,9 +87,10 @@ export default class Account extends Component<Props, State> {
     validLicense(value) {
         Moment.locale('en');
         let expDateValue = Moment(value).format('yyyy-MM-DD');
-        let dateToday = Moment(new Date()).format('yyyy-MM-DD'); ;
+        let dateToday = Moment(new Date()).format('yyyy-MM-DD');
+        ;
         this.setState({validLicense: true});
-        if(expDateValue < dateToday) {
+        if (expDateValue < dateToday) {
             this.setState({validLicense: false});
             return false;
         }
@@ -115,7 +112,12 @@ export default class Account extends Component<Props, State> {
                         isAccountEnabled: this.validLicense(details.license_end_date),
                         options: [
                             {"icon": "profile", "title": "my_profile", "screen": "Profile", "alertMessage": undefined},
-                            {"icon": "my_license", "title": "my_license", "screen": "License", "alertMessage": this.validLicense(details.license_end_date) ? " " : strings("license_expired")},
+                            {
+                                "icon": "my_license",
+                                "title": "my_license",
+                                "screen": "License",
+                                "alertMessage": this.validLicense(details.license_end_date) ? " " : strings("license_expired")
+                            },
                             {
                                 "icon": "map_pin",
                                 "title": "my_address",
@@ -123,7 +125,12 @@ export default class Account extends Component<Props, State> {
                                 "alertMessage": (address && address.length !== 0) ? " " : strings("missing_address")
                             },
                             {"icon": "language", "title": "language", "screen": "Language", "alertMessage": undefined},
-                            {"icon": "contact", "title": "contact_us", "screen": "ContactUs", "alertMessage": undefined},
+                            {
+                                "icon": "contact",
+                                "title": "contact_us",
+                                "screen": "ContactUs",
+                                "alertMessage": undefined
+                            },
                             {"icon": "contact", "title": "contact_us", "screen": "ContactUs", "alertMessage": undefined}
                         ]
                     });
@@ -440,13 +447,13 @@ export default class Account extends Component<Props, State> {
                                      fontSize: isRTLMode() ? 13 : Constants.regularSmallFontSize
                                  }]}>{strings("sign_out")}</RTLText>
                         <View style={{flex: 1}}/>
-                        {this.state.appVersion && <RTLText fontSize={Constants.regularSmallFontSize} locale={getCurrentLocale()}
-                                                           style={[{
-                                                               fontWeight: "500",
-                                                               color: ColorTheme.grey,
-                                                               textAlign: isRTLMode() ? "left" : "right",
-                                                               fontSize: isRTLMode() ? 13 : Constants.regularSmallFontSize
-                                                           }]}>{strings("version") + " " + this.state.appVersion}</RTLText>}
+                        <RTLText fontSize={Constants.regularSmallFontSize} locale={getCurrentLocale()}
+                                 style={[{
+                                     fontWeight: "500",
+                                     color: ColorTheme.grey,
+                                     textAlign: isRTLMode() ? "left" : "right",
+                                     fontSize: isRTLMode() ? 13 : Constants.regularSmallFontSize
+                                 }]}>{strings("version") + " " + this.state.label}</RTLText>
                     </RTLView>
                 </TouchableOpacity>
             </View>
