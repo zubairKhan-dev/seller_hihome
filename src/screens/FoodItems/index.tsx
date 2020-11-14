@@ -82,12 +82,10 @@ export default class FoodItems extends Component<Props, State> {
 
     componentDidMount(): void {
         this.getFoodList();
-        Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.refreshFoodList.bind(this));
         Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.updateLocalProfile.bind(this));
     }
 
     private updateLocalProfile() {
-        let formData = new FormData();
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 switch (response.code) {
@@ -97,6 +95,7 @@ export default class FoodItems extends Component<Props, State> {
                         }
                         break;
                 }
+                this.refreshFoodList();
             }, (errors, errorMessage) => {
                 showMessageAlert(errorMessage);
             });
