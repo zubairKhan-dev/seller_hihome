@@ -121,7 +121,7 @@ export default class AddFoodItem extends Component<Props, State> {
         this.state = {
             loading: false,
             showFeatureInfo: false,
-            isFeatureProduct: edit === 1 ? product.is_feature : 0,
+            isFeatureProduct: 0, //edit === 1 ? product.is_feature : 0
             categories: [],
             photos: edit === 1 ? this.getMorePhotos(product) : morePhotos,
             mainPhoto: edit === 1 ? this.getMainPhoto(product) : mainPhoto,
@@ -441,17 +441,17 @@ export default class AddFoodItem extends Component<Props, State> {
             return false;
         }
 
-        if (hasFeaturedProduct() === false) {
-            if (this.state.isFeatureProduct === 0) {
-                showMessage({
-                    message: strings("mandatory_feature_product"),
-                    type: "danger",
-                    icon: "info",
-                    duration: 4000
-                });
-                return false;
-            }
-        }
+        // if (hasFeaturedProduct() === false) {
+        //     if (this.state.isFeatureProduct === 0) {
+        //         showMessage({
+        //             message: strings("mandatory_feature_product"),
+        //             type: "danger",
+        //             icon: "info",
+        //             duration: 4000
+        //         });
+        //         return false;
+        //     }
+        // }
 
         return true;
     }
@@ -946,54 +946,54 @@ export default class AddFoodItem extends Component<Props, State> {
                     textView={true} placeholder={strings("enter_content_here")} value={value => {
                     this.setState({description: value});
                 }}/>
-                <RTLView locale={getCurrentLocale()} style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: Constants.defaultPaddingRegular,
-                    marginBottom: Constants.defaultPaddingRegular
-                }}>
-                    <TouchableOpacity onPress={() => {
-                        this.validateFeatureProduct();
-                    }}>
-                        <AppIcon name={this.state.isFeatureProduct === 1 ? "check_box" : "blank_check_box"}
-                                 color={this.getCheckboxColor()}
-                                 provider={CommonIcons}
-                                 size={25}/>
-                    </TouchableOpacity>
-                    <View style={{width: Constants.defaultPadding}}/>
-                    <View>
-                        <Text style={[{
-                            textAlign: isRTLMode() ? "right" : "left",
-                            color: ColorTheme.grey,
-                            fontWeight: "500",
-                            fontSize: 14,
-                        }]}> {strings("make_this_feature")}</Text>
-                        <TouchableOpacity onPress={() => {
-                            if (hasFeaturedProduct() === true) {
-                                if (this.product) {
-                                    // EDIT
-                                    if (this.state.isFeatureProduct === 0) {
-                                        showMessageAlert(strings("feature_product_info"));
-                                    } else {
-                                        showMessageAlert(strings("exist_feature_product_info"));
-                                    }
-                                } else {
-                                    // NEW
-                                    showMessageAlert(strings("feature_product_info"));
-                                }
-                            } else {
-                                showMessageAlert(strings("feature_product_info"));
-                            }
-                        }}>
-                            <Text style={[{
-                                textAlign: isRTLMode() ? "right" : "left",
-                                color: ColorTheme.appTheme,
-                                fontWeight: "500",
-                                fontSize: 14,
-                            }]}> {strings("more_info")}</Text>
-                        </TouchableOpacity>
-                    </View>
-                </RTLView>
+                {/*<RTLView locale={getCurrentLocale()} style={{*/}
+                {/*    flexDirection: "row",*/}
+                {/*    alignItems: "center",*/}
+                {/*    marginTop: Constants.defaultPaddingRegular,*/}
+                {/*    marginBottom: Constants.defaultPaddingRegular*/}
+                {/*}}>*/}
+                {/*    <TouchableOpacity onPress={() => {*/}
+                {/*        this.validateFeatureProduct();*/}
+                {/*    }}>*/}
+                {/*        <AppIcon name={this.state.isFeatureProduct === 1 ? "check_box" : "blank_check_box"}*/}
+                {/*                 color={this.getCheckboxColor()}*/}
+                {/*                 provider={CommonIcons}*/}
+                {/*                 size={25}/>*/}
+                {/*    </TouchableOpacity>*/}
+                {/*    <View style={{width: Constants.defaultPadding}}/>*/}
+                {/*    <View>*/}
+                {/*        <Text style={[{*/}
+                {/*            textAlign: isRTLMode() ? "right" : "left",*/}
+                {/*            color: ColorTheme.grey,*/}
+                {/*            fontWeight: "500",*/}
+                {/*            fontSize: 14,*/}
+                {/*        }]}> {strings("make_this_feature")}</Text>*/}
+                {/*        <TouchableOpacity onPress={() => {*/}
+                {/*            if (hasFeaturedProduct() === true) {*/}
+                {/*                if (this.product) {*/}
+                {/*                    // EDIT*/}
+                {/*                    if (this.state.isFeatureProduct === 0) {*/}
+                {/*                        showMessageAlert(strings("feature_product_info"));*/}
+                {/*                    } else {*/}
+                {/*                        showMessageAlert(strings("exist_feature_product_info"));*/}
+                {/*                    }*/}
+                {/*                } else {*/}
+                {/*                    // NEW*/}
+                {/*                    showMessageAlert(strings("feature_product_info"));*/}
+                {/*                }*/}
+                {/*            } else {*/}
+                {/*                showMessageAlert(strings("feature_product_info"));*/}
+                {/*            }*/}
+                {/*        }}>*/}
+                {/*            <Text style={[{*/}
+                {/*                textAlign: isRTLMode() ? "right" : "left",*/}
+                {/*                color: ColorTheme.appTheme,*/}
+                {/*                fontWeight: "500",*/}
+                {/*                fontSize: 14,*/}
+                {/*            }]}> {strings("more_info")}</Text>*/}
+                {/*        </TouchableOpacity>*/}
+                {/*    </View>*/}
+                {/*</RTLView>*/}
 
                 <View style={{height: Constants.defaultPaddingRegular}}/>
                 <View style={{paddingHorizontal: Constants.defaultPaddingMax}}>

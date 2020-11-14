@@ -294,24 +294,24 @@ export default class FoodItems extends Component<Props, State> {
                             <FeaturedImage width={80} height={80}
                                            uri={imageURL ? imageURL.includes("http") ? foodItem.main_image : "" : ""}/>
                         </View>
-                        {foodItem.is_feature === 1 && <View style={{
-                            height: 16,
-                            width: 70,
-                            backgroundColor: ColorTheme.white,
-                            borderRadius: 8,
-                            paddingHorizontal: 4,
-                            justifyContent: "center",
-                            position: "absolute",
-                            top: 5
-                        }}>
-                            <Text numberOfLines={1} style={[StaticStyles.heavyFont, {
-                                textAlign: "center",
-                                color: ColorTheme.appTheme,
-                                fontSize: Constants.regularSmallestFontSize
-                            }]}>
-                                {strings("featured")}
-                            </Text>
-                        </View>}
+                        {/*{foodItem.is_feature === 1 && <View style={{*/}
+                        {/*    height: 16,*/}
+                        {/*    width: 70,*/}
+                        {/*    backgroundColor: ColorTheme.white,*/}
+                        {/*    borderRadius: 8,*/}
+                        {/*    paddingHorizontal: 4,*/}
+                        {/*    justifyContent: "center",*/}
+                        {/*    position: "absolute",*/}
+                        {/*    top: 5*/}
+                        {/*}}>*/}
+                        {/*    <Text numberOfLines={1} style={[StaticStyles.heavyFont, {*/}
+                        {/*        textAlign: "center",*/}
+                        {/*        color: ColorTheme.appTheme,*/}
+                        {/*        fontSize: Constants.regularSmallestFontSize*/}
+                        {/*    }]}>*/}
+                        {/*        {strings("featured")}*/}
+                        {/*    </Text>*/}
+                        {/*</View>}*/}
                     </View>
                     <View style={{flex: 1, paddingHorizontal: Constants.defaultPadding}}>
                         <Text numberOfLines={2} style={[StaticStyles.regularFont, {
@@ -350,31 +350,32 @@ export default class FoodItems extends Component<Props, State> {
                         <StockSwitch initialState={this.itemOutOfStock(index)} onActive={() => {
                             this.performProductAction(1, foodItem, index);
                         }} onInActive={() => {
-                            if (foodItem.is_feature === 1) {
-                                Alert.alert(
-                                    strings("app_name"),
-                                    strings("inactive_feature_product_info"),
-                                    [
-                                        {
-                                            text: strings("ok"), onPress: () => {
-                                                this.setState({
-                                                    currentPage: 1,
-                                                    hasMorePages: true,
-                                                    foodItems: [],
-                                                    outOfStockItems: 0,
-                                                    inStockItems: 0
-                                                });
-                                                setTimeout(() => {
-                                                    this.getFoodList();
-                                                }, 100);
-                                            }
-                                        },
-                                    ],
-                                    {cancelable: false},
-                                );
-                            } else {
-                                this.performProductAction(0, foodItem, index);
-                            }
+                            this.performProductAction(0, foodItem, index);
+                            // if (foodItem.is_feature === 1) {
+                            //     Alert.alert(
+                            //         strings("app_name"),
+                            //         strings("inactive_feature_product_info"),
+                            //         [
+                            //             {
+                            //                 text: strings("ok"), onPress: () => {
+                            //                     this.setState({
+                            //                         currentPage: 1,
+                            //                         hasMorePages: true,
+                            //                         foodItems: [],
+                            //                         outOfStockItems: 0,
+                            //                         inStockItems: 0
+                            //                     });
+                            //                     setTimeout(() => {
+                            //                         this.getFoodList();
+                            //                     }, 100);
+                            //                 }
+                            //             },
+                            //         ],
+                            //         {cancelable: false},
+                            //     );
+                            // } else {
+                            //     this.performProductAction(0, foodItem, index);
+                            // }
                         }}/>
                         <View style={{flex: 1}}/>
                     </View>
@@ -450,32 +451,35 @@ export default class FoodItems extends Component<Props, State> {
                                 }}
                                 onDelete={() => {
                                     this.setState({showProductActions: false});
-                                    if (this.state.selectedFood.is_feature === 1) {
-                                        setTimeout(() => {
-                                            Alert.alert(
-                                                strings("app_name"),
-                                                strings("delete_feature_product_info"),
-                                                [
-                                                    {
-                                                        text: strings("ok"), onPress: () => {
-                                                        }
-                                                    },
-                                                    {
-                                                        text: strings("delete_anyway"), onPress: () => {
-                                                            setTimeout(() => {
-                                                                this.removeProduct();
-                                                            }, 400);
-                                                        }
-                                                    },
-                                                ],
-                                                {cancelable: false},
-                                            );
-                                        }, 400);
-                                    } else {
-                                        setTimeout(() => {
-                                            this.removeProduct();
-                                        }, 400);
-                                    }
+                                    setTimeout(() => {
+                                        this.removeProduct();
+                                    }, 400);
+                                    // if (this.state.selectedFood.is_feature === 1) {
+                                    //     setTimeout(() => {
+                                    //         Alert.alert(
+                                    //             strings("app_name"),
+                                    //             strings("delete_feature_product_info"),
+                                    //             [
+                                    //                 {
+                                    //                     text: strings("ok"), onPress: () => {
+                                    //                     }
+                                    //                 },
+                                    //                 {
+                                    //                     text: strings("delete_anyway"), onPress: () => {
+                                    //                         setTimeout(() => {
+                                    //                             this.removeProduct();
+                                    //                         }, 400);
+                                    //                     }
+                                    //                 },
+                                    //             ],
+                                    //             {cancelable: false},
+                                    //         );
+                                    //     }, 400);
+                                    // } else {
+                                    //     setTimeout(() => {
+                                    //         this.removeProduct();
+                                    //     }, 400);
+                                    // }
                                 }}
                                 onDismiss={() => {
                                     this.setState({showProductActions: false});
