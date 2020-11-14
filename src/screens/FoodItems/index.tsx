@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {ActivityIndicator, Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
@@ -346,41 +346,28 @@ export default class FoodItems extends Component<Props, State> {
                             {prep_time}
                         </Text>
                     </View>
-                    <View>
-                        <StockSwitch initialState={this.itemOutOfStock(index)} onActive={() => {
-                            this.performProductAction(1, foodItem, index);
-                        }} onInActive={() => {
-                            this.performProductAction(0, foodItem, index);
-                            // if (foodItem.is_feature === 1) {
-                            //     Alert.alert(
-                            //         strings("app_name"),
-                            //         strings("inactive_feature_product_info"),
-                            //         [
-                            //             {
-                            //                 text: strings("ok"), onPress: () => {
-                            //                     this.setState({
-                            //                         currentPage: 1,
-                            //                         hasMorePages: true,
-                            //                         foodItems: [],
-                            //                         outOfStockItems: 0,
-                            //                         inStockItems: 0
-                            //                     });
-                            //                     setTimeout(() => {
-                            //                         this.getFoodList();
-                            //                     }, 100);
-                            //                 }
-                            //             },
-                            //         ],
-                            //         {cancelable: false},
-                            //     );
-                            // } else {
-                            //     this.performProductAction(0, foodItem, index);
-                            // }
-                        }}/>
-                        <View style={{flex: 1}}/>
+                    <View style={{}}>
+                        {foodItem.status === 1 && <View>
+                            <View style={{flex: 1}}/>
+                            <StockSwitch initialState={!foodItem.out_of_stock} onActive={() => {
+                                this.performProductAction(1, foodItem, index);
+                            }} onInActive={() => {
+                                this.performProductAction(0, foodItem, index);
+                            }}/>
+                            <View style={{flex: 1}}/>
+                        </View>}
+                        {foodItem.status === 0 && <View>
+                            <View style={{flex: 1}}/>
+                            <Text style={[StaticStyles.regularFont, {
+                                color: ColorTheme.textGreyDark,
+                                textAlign: "center",
+                                fontSize: 10,
+                            }]}>{strings("waiting_for_approval")}</Text>
+                            <View style={{flex: 1}}/>
+                        </View>}
                     </View>
                     <View>
-                        <View style={{height: 8}}/>
+                        <View style={{flex: 1}}/>
                         <TouchableOpacity style={{paddingHorizontal: Constants.defaultPadding}} onPress={() => {
                             this.setState({showProductActions: true, selectedFood: foodItem, selFoodIndex: index});
                         }}>
@@ -662,3 +649,29 @@ const styles = StyleSheet.create({
         backgroundColor: ColorTheme.white
     },
 });
+
+// if (foodItem.is_feature === 1) {
+//     Alert.alert(
+//         strings("app_name"),
+//         strings("inactive_feature_product_info"),
+//         [
+//             {
+//                 text: strings("ok"), onPress: () => {
+//                     this.setState({
+//                         currentPage: 1,
+//                         hasMorePages: true,
+//                         foodItems: [],
+//                         outOfStockItems: 0,
+//                         inStockItems: 0
+//                     });
+//                     setTimeout(() => {
+//                         this.getFoodList();
+//                     }, 100);
+//                 }
+//             },
+//         ],
+//         {cancelable: false},
+//     );
+// } else {
+//     this.performProductAction(0, foodItem, index);
+// }
