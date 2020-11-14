@@ -276,7 +276,7 @@ export default class MyAddress extends Component<Props, State> {
                     paddingHorizontal: Constants.defaultPaddingRegular,
                 }}>
                     <View style={{height: Constants.defaultPadding}}/>
-                    <RTLView locale={getCurrentLocale()}>
+                    <RTLView style={{padding: Constants.defaultPadding}} locale={getCurrentLocale()}>
                         <TouchableOpacity onPress={() => {
                             this.props.navigation.goBack();
                         }}>

@@ -61,7 +61,7 @@ export default class RecipeIngredients extends Component<Props, State> {
                 }}>
                     <View style={{height: 3 * Constants.defaultPaddingRegular}}/>
                     <RTLView locale={getCurrentLocale()}>
-                        <TouchableOpacity onPress={() => {
+                        <TouchableOpacity style={{padding: Constants.defaultPadding}} onPress={() => {
                             this.props.onDismiss(this.state.text);
                         }}>
                             <AppIcon name={isRTLMode() ? "back_ar" : "back"}

@@ -821,7 +821,7 @@ export default class AddFoodItem extends Component<Props, State> {
                 }}>
                     <View style={{height: Constants.defaultPadding}}/>
                     <RTLView locale={getCurrentLocale()}>
-                        <TouchableOpacity onPress={() => {
+                        <TouchableOpacity style={{padding: Constants.defaultPadding}}  onPress={() => {
                             this.props.navigation.goBack();
                         }}>
                             <AppIcon name={isRTLMode() ? "back_ar" : "back"}
