@@ -69,7 +69,6 @@ export default class Account extends Component<Props, State> {
         });
 
         CodePush.getUpdateMetadata().then((metadata) => {
-            debugger;
             if (metadata) {
                 this.setState({
                     appVersion: metadata.appVersion,
@@ -97,6 +96,7 @@ export default class Account extends Component<Props, State> {
         return true;
     }
 
+    // this.validLicense(details.license_end_date)
     private getProfile() {
         let formData = new FormData();
         this.apiHandler = (response) => {
@@ -109,7 +109,7 @@ export default class Account extends Component<Props, State> {
                         address: details.address,
                         sellerProfile: resp,
                         licenseExpiryDate: details.license_end_date,
-                        isAccountEnabled: this.validLicense(details.license_end_date),
+                        isAccountEnabled: true,
                         options: [
                             {"icon": "profile", "title": "my_profile", "screen": "Profile", "alertMessage": undefined},
                             {
@@ -342,7 +342,7 @@ export default class Account extends Component<Props, State> {
                             textAlign: isRTLMode() ? "right" : "left"
                         }}>{getUserEmail()}</Text>
                         <View style={{flex: 1}}/>
-                        {this.state.validLicense && <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
+                        <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                             <Switch
                                 style={{transform: [{scaleX: .7}, {scaleY: .7}]}}
                                 trackColor={{false: ColorTheme.white, true: ColorTheme.appThemeSecond}}
@@ -361,14 +361,14 @@ export default class Account extends Component<Props, State> {
                                 }]}>
                                 {this.state.isAccountEnabled ? strings("account_active") : strings("account_inactive")}
                             </Text>
-                        </RTLView>}
+                        </RTLView>
                         <View style={{height: Constants.defaultPaddingMin}}/>
-                        {!this.state.validLicense && <Text style={{
-                            fontWeight: "400",
-                            fontSize: 11,
-                            color: ColorTheme.appTheme,
-                            textAlign: isRTLMode() ? "right" : "left"
-                        }}>{strings("license_expired_details")}</Text>}
+                        {/*{!this.state.validLicense && <Text style={{*/}
+                        {/*    fontWeight: "400",*/}
+                        {/*    fontSize: 11,*/}
+                        {/*    color: ColorTheme.appTheme,*/}
+                        {/*    textAlign: isRTLMode() ? "right" : "left"*/}
+                        {/*}}>{strings("license_expired_details")}</Text>}*/}
                     </View>
                 </RTLView>
             </View>
