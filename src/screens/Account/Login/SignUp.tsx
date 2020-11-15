@@ -1,6 +1,15 @@
 import * as React from "react";
 import {Component} from "react";
-import {FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {
+    ActivityIndicator, Dimensions,
+    FlatList, PermissionsAndroid,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
 import {StaticStyles} from "../../../theme/Styles";
 import Constants from "../../../theme/Constants";
 import ColorTheme from "../../../theme/Colors";
@@ -26,6 +35,17 @@ import TermsConditions from "./TermsConditions"
 import {ONESIGNAL_APP_ID} from "../../../config/Constants";
 import OneSignal from 'react-native-onesignal';
 import FeaturedImage from "../../../components/FeaturedImage";
+import MapView, {Marker} from "react-native-maps";
+import Geolocation from "react-native-geolocation-service";
+import TextFormInput from "../../../components/TextFormInput";
+import HHPickerView from "../../../components/HHPickerView";
+
+const {width, height} = Dimensions.get('window')
+const SCREEN_HEIGHT = height
+const SCREEN_WIDTH = width
+const ASPECT_RATIO = width / height
+const LATITUDE_DELTA = 0.0922
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 const licensePhoto = [
     {name: "", uri: "", data: undefined},
@@ -73,6 +93,9 @@ interface State {
     licensePhoto: any[];
     logoPhoto: any[];
     photoIndex?: number;
+    cities: any[];
+    selectedCity: any;
+    showCities?: boolean;
 
     email?: string,
     mobile_number?: string,
@@ -88,6 +111,20 @@ interface State {
 
     verified_mobile?: string,
     resendRequest?: boolean,
+
+    initialRegion?: {
+        latitude: number,
+        longitude: number,
+        latitudeDelta: number,
+        longitudeDelta: number,
+    },
+    currentLocation?: {
+        latitude: number,
+        longitude: number,
+        address?: string,
+        city?: string,
+        country?: string,
+    },
 }
 
 export default class SignUp extends Component<Props, State> {
@@ -95,6 +132,7 @@ export default class SignUp extends Component<Props, State> {
     apiExHandler: any;
     scrollView: any;
     account_email: any;
+    watchID: number = null;
 
     constructor(props) {
         super(props);
@@ -127,14 +165,100 @@ export default class SignUp extends Component<Props, State> {
             // mobile_number_contact: "971507467251",
             license_start_date: new Date,
             license_end_date: new Date,
-            resendRequest: false
+            resendRequest: false,
+            selectedCity: undefined,
+            showCities: false,
+            cities: [],
         }
-       // OneSignal.inFocusDisplaying(2);
+        // OneSignal.inFocusDisplaying(2);
         OneSignal.addEventListener('ids', this.onIds.bind(this));
+    }
+
+    async requestLocationPermission() {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    buttonPositive: "",
+                    'title': 'Example App',
+                    'message': 'Example App access to your location '
+                }
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("You can use the location")
+                this.getGeoLocation();
+                // alert("You can use the location");
+            } else {
+                console.log("location permission denied")
+                // alert("Location permission denied");
+            }
+        } catch (err) {
+            console.warn(err)
+        }
+    }
+
+    getGeoLocation() {
+        Geolocation.getCurrentPosition(
+            (position) => {
+                console.log(position);
+                this.setState({
+                    currentLocation: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    },
+                    initialRegion: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA
+                    },
+                });
+                // setTimeout(() => {
+                //     this.getReverseGeoCodeAddress();
+                // }, 200);
+            },
+            (error) => {
+                // See error code charts below.
+                console.log(error.code, error.message);
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
+        );
+
+        this.watchID = Geolocation.watchPosition(
+            (position) => {
+                const newRegion = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA
+                }
+                this.onRegionChange(newRegion);
+            },
+            (error) => {
+                // See error code charts below.
+                console.log(error.code, error.message);
+            },
+            {enableHighAccuracy: true}
+        );
+    }
+
+    onRegionChange(region) {
+        console.log("REGION CHANGED");
+        this.setState({initialRegion: region});
     }
 
     componentWillUnmount() {
         OneSignal.removeEventListener('ids', this.onIds);
+    }
+
+    componentDidMount(): void {
+        if (Platform.OS === "ios") {
+            Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
+        } else {
+            this.requestLocationPermission().then(r => {
+            });
+        }
+        this.getCities();
     }
 
     onIds = (device) => {
@@ -147,6 +271,36 @@ export default class SignUp extends Component<Props, State> {
             }, 300);
         }
 
+    }
+
+    private getCities() {
+        this.setState({loading: true});
+        this.apiHandler = (response) => {
+            Api.checkValidationError(response, resp => {
+                if (response && response.code === 200 && resp.data) {
+                    this.setState({
+                        cities: response.response_data.data,
+                        selectedCity: response.response_data.data[2]
+                    });
+                }
+                this.setState({loading: false});
+            }, (errors, errorMessage) => {
+                // showMessage(errorMessage);
+                this.setState({loading: false});
+            });
+        };
+        this.apiExHandler = (reason) => {
+            // showError(reason);
+            this.setState({loading: false});
+        };
+        Api.getCities()
+            .then((response) => {
+                    this.apiHandler(response);
+                },
+            ).catch((reason => {
+                this.apiExHandler(reason);
+            }),
+        );
     }
 
     private validateInputs() {
@@ -259,7 +413,7 @@ export default class SignUp extends Component<Props, State> {
             return false;
         }
 
-        if (!this.state.termsChecked ) {
+        if (!this.state.termsChecked) {
             showMessageAlert(strings("please_accept_terms"));
             return false;
         }
@@ -346,6 +500,9 @@ export default class SignUp extends Component<Props, State> {
         formData.append("contact_us_last_name", this.state.last_name)
         formData.append("contact_us_email", this.state.email)
         formData.append("accept_orders", 0)
+        formData.append("lat", this.state.currentLocation.latitude);
+        formData.append("long", this.state.currentLocation.longitude);
+        formData.append("emirates_id", this.state.selectedCity.id);
         if (getDeviceId() && getDeviceId().length > 0) {
             formData.append("device_udid", getDeviceId())
         } else {
@@ -575,8 +732,14 @@ export default class SignUp extends Component<Props, State> {
                                                                                provider={CommonIcons}
                                                                                size={50}/>}
                                             {item.uri.length > 0 &&
-                                            <View style={{borderRadius: 15, overflow: "hidden", width: itemDimension, height: itemDimension}}>
-                                                <FeaturedImage width={itemDimension} height={itemDimension} uri={item.uri}/>
+                                            <View style={{
+                                                borderRadius: 15,
+                                                overflow: "hidden",
+                                                width: itemDimension,
+                                                height: itemDimension
+                                            }}>
+                                                <FeaturedImage width={itemDimension} height={itemDimension}
+                                                               uri={item.uri}/>
                                             </View>
                                             }
                                             {item.uri.length > 0 && <View style={{
@@ -613,11 +776,59 @@ export default class SignUp extends Component<Props, State> {
                                      this.setState({address: value})
                                  }}/>
                     <View style={{height: Constants.defaultPadding}}/>
-                    <TextKVInput title={strings("city")} placeholder={strings("enter_your_city")}
-                                 text={this.state.city}
-                                 value={value => {
-                                     this.setState({city: value})
-                                 }}/>
+                    <HFTextRegular value={strings("city")}/>
+                    <View style={{height: 5}}/>
+                    <TextFormInput showOptions={() => {
+                        this.setState({showCities: true});
+                    }}
+                                   dropdown={true}
+                                   placeholder={strings("add_price")}
+                                   text={this.state.selectedCity ? this.state.selectedCity.name : ""}
+                                   value={value => {
+                                   }}/>
+                    <View style={{height: Constants.defaultPadding}}/>
+                    <View style={{}}>
+                        <MapView
+                            style={{
+                                height: 250,
+                                borderRadius: Constants.defaultPaddingMin,
+                                width: width - (2 * 30) - (2 * Constants.defaultPadding)
+                            }}
+                            initialRegion={this.state.initialRegion}>
+                            {this.state.currentLocation && <Marker
+                                onDragEnd={(e) => {
+                                    this.setState({
+                                        currentLocation: {
+                                            latitude: e.nativeEvent.coordinate.latitude,
+                                            longitude: e.nativeEvent.coordinate.longitude,
+                                        }
+                                    });
+                                }}
+                                pinColor={"red"}
+                                draggable={true}
+                                coordinate={{
+                                    'latitude': this.state.currentLocation.latitude,
+                                    'longitude': this.state.currentLocation.longitude
+                                }}
+                                title={strings("your_location")}
+                                identifier={'mk1'}/>}
+                        </MapView>
+                        {!this.state.currentLocation && <RTLView locale={getCurrentLocale()}>
+                            <Text style={[{
+                                fontWeight: "200",
+                                color: ColorTheme.buttonBorderGrey,
+                                fontSize: 12,
+                                marginTop: Constants.defaultPaddingMin
+                            }]}>{strings("fetching_location")}</Text>
+                            <ActivityIndicator size={"small"} color={ColorTheme.appTheme}/>
+                        </RTLView>}
+                        {this.state.currentLocation && <Text style={[{
+                            fontWeight: "300",
+                            color: ColorTheme.buttonBorderGrey,
+                            fontSize: 12,
+                            marginTop: Constants.defaultPaddingMin
+                        }]}>{strings("pin_hold_drag")}</Text>}
+                    </View>
                     <View style={{height: Constants.defaultPadding}}/>
                     {/*<TextKVInput title={strings("pin")} placeholder={strings("enter_your_pin")}*/}
                     {/*             text={this.state.pin}*/}
@@ -714,8 +925,14 @@ export default class SignUp extends Component<Props, State> {
                                                                                provider={CommonIcons}
                                                                                size={50}/>}
                                             {item.uri.length > 0 &&
-                                            <View style={{borderRadius: 15, overflow: "hidden", width: itemDimension, height: itemDimension}}>
-                                                <FeaturedImage width={itemDimension} height={itemDimension} uri={item.uri}/>
+                                            <View style={{
+                                                borderRadius: 15,
+                                                overflow: "hidden",
+                                                width: itemDimension,
+                                                height: itemDimension
+                                            }}>
+                                                <FeaturedImage width={itemDimension} height={itemDimension}
+                                                               uri={item.uri}/>
                                             </View>
                                             }
                                             {item.uri.length > 0 && <View style={{
@@ -745,7 +962,9 @@ export default class SignUp extends Component<Props, State> {
                             keyExtractor={(item, index) => "" + index}
                         />
                     </View>
-                    <TextKVInput ref={ref => {this.account_email = ref}} title={strings("email")}
+                    <TextKVInput ref={ref => {
+                        this.account_email = ref
+                    }} title={strings("email")}
                                  placeholder={strings("enter_email_address")}
                                  keyboard={"email-address"}
                                  text={this.state.email}
@@ -778,6 +997,13 @@ export default class SignUp extends Component<Props, State> {
                                  }}/>
                     <View style={{height: Constants.defaultPadding}}/>
                 </View>
+                <HHPickerView show={this.state.showCities}
+                              onDismiss={() => this.setState({showCities: false})}
+                              onValueChange={(value, index) => {
+                                  this.setState({showCities: false, selectedCity: value})
+                              }}
+                              selectedValue={this.state.selectedCity}
+                              values={this.state.cities}/>
             </View>
         );
     }
@@ -898,8 +1124,10 @@ export default class SignUp extends Component<Props, State> {
                                      size={25}/>
                         </TouchableOpacity>
                     </RTLView>
-                    <ScrollView ref={ref => {this.scrollView = ref}}
-                                // onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
+                    <ScrollView ref={ref => {
+                        this.scrollView = ref
+                    }}
+                        // onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
                                 style={{marginTop: 40}} showsVerticalScrollIndicator={false}>
                         <Text style={[StaticStyles.heading, {textAlign: isRTLMode() ? "right" : "left"}]}>
                             {strings("create_account")}
