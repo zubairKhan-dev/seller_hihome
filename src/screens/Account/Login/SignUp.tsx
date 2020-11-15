@@ -318,7 +318,7 @@ export default class SignUp extends Component<Props, State> {
 
         // EMIRATES ID
         if (!this.state.emirates_id || (this.state.emirates_id && this.state.emirates_id.length === 0)) {
-            showMessageAlert(strings("invalid_emirates_id"));
+            showMessageAlert(strings("invalid_emiractes_id"));
             return false;
         } else {
             if (this.state.emirates_id.length !== 15) {
@@ -354,10 +354,10 @@ export default class SignUp extends Component<Props, State> {
         }
 
         // CITY
-        if (!this.state.city || (this.state.city && this.state.city.length === 0)) {
-            showMessageAlert(strings("invalid_city"));
-            return false;
-        }
+        // if (!this.state.city || (this.state.city && this.state.city.length === 0)) {
+        //     showMessageAlert(strings("invalid_city"));
+        //     return false;
+        // }
 
         // EMAIL
         if (!this.state.email || (this.state.email && this.state.email.length === 0)) {
@@ -421,6 +421,10 @@ export default class SignUp extends Component<Props, State> {
     }
 
     private registerUser() {
+        if (!this.state.currentLocation) {
+            this.requestLocationPermission().then(r => {
+            });
+        }
         if (this.validateInputs()) {
             this.setState({loading: true});
             this.apiHandler = (response) => {
@@ -494,7 +498,7 @@ export default class SignUp extends Component<Props, State> {
         formData.append("license_id", this.state.license_id)
         formData.append("license_start_date", parseDate(this.state.license_start_date, "yyyy-MM-DD"))
         formData.append("license_end_date", parseDate(this.state.license_end_date, "yyyy-MM-DD"))
-        formData.append("city", this.state.city)
+        formData.append("city", this.state.selectedCity.name)
         formData.append("pincode", this.state.pin)
         formData.append("contact_us_first_name", this.state.first_name)
         formData.append("contact_us_last_name", this.state.last_name)
@@ -1177,11 +1181,6 @@ export default class SignUp extends Component<Props, State> {
                             </View>
                         </RTLView>
                         <ActionButton variant={"normal"} title={strings("register")} onPress={() => {
-                            // if (this.state.verified_mobile !== this.state.mobile_number_contact) {
-                            //     {this.setState({showOTP: true})};
-                            // } else {
-                            //     this.registerUser();
-                            // }
                             this.registerUser();
                         }}/>
                     </View>
