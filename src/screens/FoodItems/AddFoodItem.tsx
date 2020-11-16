@@ -423,14 +423,15 @@ export default class AddFoodItem extends Component<Props, State> {
             });
             return false;
         }
-        if (this.state.description.length === 0) {
-            showMessage({
-                message: strings("invalid_description"),
-                type: "danger",
-                icon: "info"
-            });
-            return false;
-        }
+
+        // if (this.state.description.length === 0) {
+        //     showMessage({
+        //         message: strings("invalid_description"),
+        //         type: "danger",
+        //         icon: "info"
+        //     });
+        //     return false;
+        // }
 
         if (combineTime(this.state.days, this.state.hours, this.state.minutes) === 0) {
             showMessage({
@@ -471,7 +472,9 @@ export default class AddFoodItem extends Component<Props, State> {
             formData.append("prepration_time", combineTime(this.state.days, this.state.hours, this.state.minutes))
             formData.append("details[en][name]", this.state.foodName)
             formData.append("details[en][ingredients]", this.state.ingredients)
-            formData.append("details[en][description]", this.state.description)
+            if (this.state.description.length > 0) {
+                formData.append("details[en][description]", this.state.description)
+            }
             formData.append("category_id", this.state.selectedCategory.id)
             formData.append("is_feature", this.state.isFeatureProduct)
             this.apiHandler = (response) => {
