@@ -289,5 +289,9 @@
   "inactive_feature_product_info": "This is your feature product. One featured product is mandatory. If you want to make this product out-of-stock, just edit another product and make it featured.",
   "delete_feature_product_info": "This is your feature product. One featured product is required to show your store to customer. If you want to delete this product, just change your featured product by edit/add. \n\n  Or you can delete this product anyway, but your store will get removed from customer application.",
   "delete_anyway": "Delete Anyway!",
-  "waiting_for_approval": "Waiting for approval"
+  "waiting_for_approval": "Waiting for approval",
+  "delivery_date": "Delivery Date",
+  "select_pickup_time": "Select PickUp Time",
+  "pickup_time": "PickUp Time",
+  "select_pickup_time_error": "Please select a pickup time. This will be the time when food will be ready for delivery."
 }

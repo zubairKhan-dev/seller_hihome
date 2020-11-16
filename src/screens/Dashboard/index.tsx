@@ -20,6 +20,9 @@ import Events from "react-native-simple-events";
 import RejectPopUp from "../../components/RejectPopUp";
 import {parseDate} from "../../lib/DateUtil";
 import DashboardActions from "../../components/DashboardActions";
+import HHPickerView from "../../components/HHPickerView";
+import TextFormInput from "../../components/TextFormInput";
+import {showMessage} from "react-native-flash-message";
 
 const categories = [{"name": "aed", "value": undefined, "title": "today_earnings", "id": 1},
     {"name": "orders", "value": undefined, "title": "today_orders", "id": 2}];
@@ -47,6 +50,10 @@ interface State {
     stats?: any;
     showPeriodActions?: boolean;
     period?: string;
+    showSlots?: boolean;
+    selectedSlot?: any;
+    timeSlots?: any[];
+    pickupTime?: string;
 }
 
 export default class Dashboard extends Component<Props, State> {
@@ -75,8 +82,22 @@ export default class Dashboard extends Component<Props, State> {
             hasMorePages: false,
             currentPage: 1,
             stats: categories,
-            period: "day"
+            period: "day",
+            selectedSlot: undefined,
+            timeSlots: this.getTimeSlot("")
         }
+    }
+
+    getTimeSlot(slotRange) {
+        let values = slotRange.split("-");
+        if (values[1] === "1PM") {
+            return [{name: "10:00 AM", id: 1}, {name: "11:00 AM", id: 2}, {name: "12:00 PM", id: 3}];
+        } else if (values[1] === "5PM") {
+            return [{name: "02:00 PM", id: 4}, {name: "03:00 PM", id: 5}, {name: "04:00 PM", id: 6}];
+        } else if (values[1] === "9PM") {
+            return [{name: "06:00 PM", id: 7}, {name: "07:00 PM", id: 8}, {name: "08:00 PM", id: 9}];
+        }
+        return [{name: "02:00 PM", id: 4}, {name: "03:00 PM", id: 5}, {name: "04:00 PM", id: 6}];
     }
 
     componentDidMount(): void {
@@ -124,6 +145,7 @@ export default class Dashboard extends Component<Props, State> {
                 if (response && response.code === 200 && resp) {
                     this.setState({
                         orderStatus: this.state.orderStatus.concat(response.response_data),
+                        currentPage: 1
                     });
                 }
                 this.setState({loading: false});
@@ -186,12 +208,19 @@ export default class Dashboard extends Component<Props, State> {
         let formData = new FormData();
         formData.append("order_id", order.order_id)
         formData.append("status", actionStatus)
+        formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
         if (rejectReason) {
             formData.append("cancellation_comment", rejectReason)
         }
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
+                    if (actionStatus === OrderStatus.RECEIVED) {
+                        order.pickup_time = order.delivery_date + " " + this.state.selectedSlot.name;
+                        setTimeout(() => {
+                            this.setState({pickupTime: undefined, selectedSlot: undefined});
+                        }, 100);
+                    }
                     order.status = resp.status;
                     // analytics().logEvent('Order_Action', {
                     //     action_status: actionStatus,
@@ -515,15 +544,66 @@ export default class Dashboard extends Component<Props, State> {
                                     fontWeight: "400"
                                 }]}>{order.customer.name + ", " + order.customer.address}</Text>
                                 <View style={{height: Constants.defaultPadding}}/>
+                                {/*--------DELIVERY DETAILS DETAILS-------*/}
+                                <View style={{height: Constants.defaultPadding}}/>
+                                <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
+                                    textAlign: isRTLMode() ? "right" : "left",
+                                    color: ColorTheme.textDark,
+                                    fontSize: Constants.regularSmallerFontSize
+                                }]}>
+                                    {strings("delivery_date")}
+                                </Text>
+                                <View style={{height: Constants.defaultPaddingMin}}/>
+                                <Text style={[StaticStyles.regularFont, {
+                                    color: ColorTheme.grey,
+                                    textAlign: isRTLMode() ? "right" : "left",
+                                    fontSize: 10,
+                                    fontWeight: "400"
+                                }]}>{order.delivery_date}</Text>
+                                {/*--------PICKUP TIME DETAILS-------*/}
+                                <View style={{height: Constants.defaultPadding}}/>
+                                <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
+                                    textAlign: isRTLMode() ? "right" : "left",
+                                    color: ColorTheme.textDark,
+                                    fontSize: Constants.regularSmallerFontSize
+                                }]}>
+                                    {strings("pickup_time")}
+                                </Text>
+                                <View style={{height: Constants.defaultPaddingMin}}/>
+                                {order.pickup_time && <Text style={[StaticStyles.regularFont, {
+                                    color: ColorTheme.grey,
+                                    textAlign: isRTLMode() ? "right" : "left",
+                                    fontSize: 10,
+                                    fontWeight: "400"
+                                }]}>{order.pickup_time}</Text>}
+                                {order.status.id === OrderStatus.RECEIVED && <TextFormInput showOptions={() => {
+                                    this.setState({
+                                        timeSlots: this.getTimeSlot(order.delivery_slot),
+                                        showSlots: true,
+                                        selectedSlot: undefined
+                                    });
+                                }}
+                                                                                            dropdown={true}
+                                                                                            placeholder={strings("select_pickup_time")}
+                                                                                            text={this.state.selectedSlot ? this.state.selectedSlot.name : ""}
+                                                                                            value={value => {
+                                                                                            }}/>}
+                                <View style={{height: Constants.defaultPaddingMin}}/>
                                 {this.state.activity && <ActivityIndicator size={"small"} color={ColorTheme.appTheme}/>}
                                 {this.renderOrderActions(order.status ? order.status.id : undefined, index, order)}
                             </View>}
                         </View>
                     </RTLView>
                     <View style={{height: Constants.defaultPadding}}/>
+                    <HHPickerView show={this.state.showSlots}
+                                  onDismiss={() => this.setState({showSlots: false})}
+                                  onValueChange={(value, index) => {
+                                      this.setState({showSlots: false, selectedSlot: value})
+                                  }}
+                                  selectedValue={this.state.selectedSlot}
+                                  values={this.state.timeSlots}/>
                 </View>
             </TouchableOpacity>
-
         </View>);
     }
 
@@ -534,7 +614,17 @@ export default class Dashboard extends Component<Props, State> {
                     <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                         <View style={{flex: 1}}>
                             <ActionButton title={strings("accept")} onPress={() => {
-                                this.performOrderAction(OrderStatus.ACCEPTED, item);
+                                if (this.state.selectedSlot) {
+                                    this.performOrderAction(OrderStatus.ACCEPTED, item);
+                                } else {
+                                    showMessage({
+                                        message: strings("select_pickup_time_error"),
+                                        type: "danger",
+                                        icon: "info",
+                                        duration: 4000
+                                    });
+                                }
+
                             }} variant={"normal"}/>
                         </View>
                         <View style={{width: Constants.defaultPadding}}/>
@@ -738,6 +828,7 @@ export default class Dashboard extends Component<Props, State> {
                             renderItem={({item, index}) =>
                                 <View>
                                     <TouchableOpacity onPress={() => {
+                                        this.setState({selectedSlot: undefined});
                                     }}>
                                         {this.renderOrder(item, index)}
                                     </TouchableOpacity>

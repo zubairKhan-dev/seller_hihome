@@ -23,12 +23,19 @@ interface Props {
 
 interface State {
     icon: any;
+    text?: string,
 }
 
 export default class TextFormInput extends Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {icon: "arrow_down"}
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any) {
+        this.setState({
+            text: nextProps.text,
+        });
     }
 
     render() {
@@ -44,7 +51,7 @@ export default class TextFormInput extends Component<Props, State> {
                                 color: ColorTheme.black,
                                 fontWeight: "300",
                                 textAlign: isRTLMode() ? "right" : "left",
-                            }}>{this.props.text}
+                            }}>{this.state.text ? this.state.text : this.props.placeholder}
                             </Text>
                             <View style={{flex: 1}}/>
                         </View>}

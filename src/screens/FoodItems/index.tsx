@@ -229,7 +229,7 @@ export default class FoodItems extends Component<Props, State> {
         this.setState({loading: true});
         let formData = new FormData();
         formData.append("product_id", product.id)
-        formData.append("status", actionStatus)
+        formData.append("out_of_stock", actionStatus)
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
