@@ -36,19 +36,10 @@ import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import {hasFeaturedProduct, setProfile} from "../../lib/user";
 import FeaturedImage from "../../components/FeaturedImage";
+import {photoOptions} from "../../config/Constants";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
-
-const options = {
-    title: 'Select Avatar',
-    customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
-    quality: 0.5
-};
 
 export enum TextViewType {
     INGREDIENTS = 1,
@@ -669,7 +660,7 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     launchCamera() {
-        ImagePicker.launchCamera(options, (response) => {
+        ImagePicker.launchCamera(photoOptions, (response) => {
             if (!response.didCancel) {
                 this.setState({showMainPhotoActivity: true});
                 if (this.state.photoIndex === -1) {
@@ -692,7 +683,7 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(options, (response) => {
+        ImagePicker.launchImageLibrary(photoOptions, (response) => {
             if (!response.didCancel) {
                 if (this.state.photoIndex === -1) {
                     // Main Photo

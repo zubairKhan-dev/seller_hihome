@@ -20,23 +20,13 @@ import * as Api from "../../../lib/api";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import { showMessage } from "react-native-flash-message";
 import FeaturedImage from "../../../components/FeaturedImage";
+import {photoOptions} from "../../../config/Constants";
 
 const photo = {uri: "", data: {}, add: false};
 
 interface Props {
     navigation: any;
 }
-
-
-const options = {
-    title: 'Select Avatar',
-    customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
-    quality: 0.5
-};
 
 interface State {
     loading?: boolean;
@@ -93,7 +83,7 @@ export default class ContactUs extends Component<Props, State> {
     }
 
     launchCamera() {
-        ImagePicker.launchCamera(options, (response) => {
+        ImagePicker.launchCamera(photoOptions, (response) => {
             if (!response.didCancel) {
                 let photo = this.state.photo;
                 if (photo.uri.length === 0 && !photo.add) {
@@ -106,7 +96,7 @@ export default class ContactUs extends Component<Props, State> {
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(options, (response) => {
+        ImagePicker.launchImageLibrary(photoOptions, (response) => {
             if (!response.didCancel) {
                 let photo = this.state.photo;
                 if (photo.uri.length === 0 && !photo.add) {

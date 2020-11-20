@@ -22,19 +22,11 @@ import ImagePicker from "react-native-image-picker";
 import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import ImageUploadView from "../../../components/ImageUpload";
 import FeaturedImage from "../../../components/FeaturedImage";
+import {photoOptions} from "../../../config/Constants";
 
 const logoPhoto = [
     {name: "", uri: "", data: undefined},
 ];
-const options = {
-    title: 'Select Avatar',
-    customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
-    quality: 0.5
-};
 
 interface Props {
     navigation: any;
@@ -75,7 +67,7 @@ export default class Profile extends Component<Props, State> {
     }
 
     launchCamera() {
-        ImagePicker.launchCamera(options, (response) => {
+        ImagePicker.launchCamera(photoOptions, (response) => {
             if (!response.didCancel) {
                 // Logo Photo
                 for (let i = 0; i < this.state.logoPhoto.length; i++) {
@@ -93,7 +85,7 @@ export default class Profile extends Component<Props, State> {
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(options, (response) => {
+        ImagePicker.launchImageLibrary(photoOptions, (response) => {
             if (!response.didCancel) {
                 // Logo Photo
                 for (let i = 0; i < this.state.logoPhoto.length; i++) {

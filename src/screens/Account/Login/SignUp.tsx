@@ -32,7 +32,7 @@ import VerifyOTPPopUp from "../../../components/VerifyOTPPopUp";
 import {parseDate} from "../../../lib/DateUtil";
 import {getDeviceId, setDeviceId} from "../../../lib/user";
 import TermsConditions from "./TermsConditions"
-import {ONESIGNAL_APP_ID} from "../../../config/Constants";
+import {ONESIGNAL_APP_ID, photoOptions} from "../../../config/Constants";
 import OneSignal from 'react-native-onesignal';
 import FeaturedImage from "../../../components/FeaturedImage";
 import MapView, {Marker} from "react-native-maps";
@@ -55,15 +55,6 @@ const logoPhoto = [
     {name: "", uri: "", data: undefined},
 ];
 
-const options = {
-    title: 'Select Avatar',
-    customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
-    quality: 0.5
-};
 
 interface Props {
     navigation: any;
@@ -533,7 +524,7 @@ export default class SignUp extends Component<Props, State> {
     }
 
     launchCamera() {
-        ImagePicker.launchCamera(options, (response) => {
+        ImagePicker.launchCamera(photoOptions, (response) => {
             if (!response.didCancel) {
                 if (this.state.photoIndex === 0) {
                     // License Photo
@@ -563,7 +554,7 @@ export default class SignUp extends Component<Props, State> {
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(options, (response) => {
+        ImagePicker.launchImageLibrary(photoOptions, (response) => {
             if (!response.didCancel) {
                 if (this.state.photoIndex === 0) {
                     // Main Photo

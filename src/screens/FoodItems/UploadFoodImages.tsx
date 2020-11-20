@@ -16,6 +16,7 @@ import * as Api from "../../lib/api";
 import DocumentsViewer from "../../components/DocumentsViewer";
 import {getToken} from "../../lib/user";
 import FeaturedImage from "../../components/FeaturedImage";
+import {photoOptions} from "../../config/Constants";
 
 const createFormData = (photo) => {
     let data = new FormData();
@@ -35,16 +36,6 @@ const createFormData = (photo) => {
     // });
 
     return data;
-};
-
-const options = {
-    title: 'Select Avatar',
-    customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
-    quality: 0.5
 };
 
 const photos = [{uri: "", data: {}, add: false},
@@ -92,13 +83,13 @@ export default class UploadFoodImages extends Component<Props, State> {
 
     launchCamera() {
         this.setState({uploadImage: false})
-        ImagePicker.launchCamera(options, (response) => {
+        ImagePicker.launchCamera(photoOptions, (response) => {
             this.setState({uploadImage: false})
         });
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(options, (response) => {
+        ImagePicker.launchImageLibrary(photoOptions, (response) => {
             for (let i = 0; i < this.state.photos.length; i++) {
                 let photo = this.state.photos[i];
                 if (photo.uri.length === 0 && !photo.add) {
