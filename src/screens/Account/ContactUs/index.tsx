@@ -131,14 +131,20 @@ export default class ContactUs extends Component<Props, State> {
             formData.append("body", this.state.message);
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
-                    if (response.status === 1) {
+                    if (response.status === "1") {
                         this.setState({message: ""});
                         // analytics().logEvent('Contact_Us', {
                         //     data: formData,
                         // });
                         this.removeMainPhoto();
                         setTimeout(() => {
-                            showMessageAlert(response.message);
+                            showMessage({
+                                message: response.success_msg,
+                                type: "success",
+                                icon: "success",
+                                duration: 4000
+                            });
+                            this.props.navigation.pop();
                         }, 400);
                     }
                     this.setState({loading: false});

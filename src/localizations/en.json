@@ -48,7 +48,7 @@
   "profile" : "Profile",
   "email_login" : "Log in using email",
   "mobile_login" : "Log in using mobile number",
-  "email_mobile_login" : "Log in using email or mobile number",
+  "email_mobile_login" : "Log in using email",
   "facebook" : "Facebook",
   "google" : "Google",
 

@@ -1126,7 +1126,7 @@ export default class SignUp extends Component<Props, State> {
                                 style={{marginTop: 40}} showsVerticalScrollIndicator={false}>
                         <Text style={[StaticStyles.heading, {textAlign: isRTLMode() ? "right" : "left"}]}>
                             {strings("create_account")}
-                            <Text style={{color: ColorTheme.appTheme}}> {strings("app_name")}</Text>
+                            <Text style={{color: ColorTheme.appTheme}}> {strings("app_name") + " "}</Text>
                             {strings("account")}
                         </Text>
                         <View style={{height: 2 * Constants.defaultPadding}}/>
