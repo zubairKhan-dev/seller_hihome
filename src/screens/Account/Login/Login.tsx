@@ -79,7 +79,7 @@ export default class Login extends Component<Props, State> {
 
     loginUser() {
         this.hideErrorMessage();
-      
+
         if (this.validInputs()) {
             this.setState({loading: true, errorOccurred: false});
             this.apiHandler = (response) => {
@@ -150,6 +150,11 @@ export default class Login extends Component<Props, State> {
     }
 
     private dismiss() {
+        this.hideErrorMessage();
+        this.setState({
+          username: "",
+          password: ""
+        });
         this.props.onDismiss();
     }
 
@@ -184,6 +189,7 @@ export default class Login extends Component<Props, State> {
                         }]}> {strings("login")}</Text>
                         <View style={{flex: 1}}/>
                         <TouchableOpacity onPress={() => {
+                            this.hideErrorMessage();
                             this.dismiss();
                         }}>
                             <AppIcon name={"ic_close"}
