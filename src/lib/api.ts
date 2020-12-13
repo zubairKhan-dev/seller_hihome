@@ -100,7 +100,7 @@ export function getCategories() {
 }
 
 export function getCities() {
-    return  httpGet("http://shop.hihoome.com/api/locations?per_page=10&with_sub_locations=false&must_has_sub_locations=false");
+    return  httpGet(appConfig.sellerAPI().endPoint() + "locations?per_page=10&with_sub_locations=false&must_has_sub_locations=false");
 }
 
 export function saveAddress(request: any) {
@@ -246,4 +246,3 @@ export function checkValidationError(apiResponse: any,
 function updateToken(token: string) {
     setToken(token);
 }
-
