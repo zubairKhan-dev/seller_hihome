@@ -290,5 +290,6 @@
   "delivery_date": "Delivery Date",
   "select_pickup_time": "Select PickUp Time",
   "pickup_time": "PickUp Time",
-  "select_pickup_time_error": "Please select a pickup time. This will be the time when food will be ready for delivery."
+  "select_pickup_time_error": "Please select a pickup time. This will be the time when food will be ready for delivery.",
+  "select_city": "اختر مدينة",
 }

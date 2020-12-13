@@ -777,7 +777,7 @@ export default class SignUp extends Component<Props, State> {
                         this.setState({showCities: true});
                     }}
                                    dropdown={true}
-                                   placeholder={strings("add_price")}
+                                   placeholder={strings("select_city")}
                                    text={this.state.selectedCity ? this.state.selectedCity.name : ""}
                                    value={value => {
                                    }}/>
