@@ -295,7 +295,7 @@ export default class SignUp extends Component<Props, State> {
 
         // EMIRATES ID
         if (!this.state.emirates_id || (this.state.emirates_id && this.state.emirates_id.length === 0)) {
-            showMessageAlert(strings("invalid_emiractes_id"));
+            showMessageAlert(strings("invalid_emirates_id"));
             return false;
         } else {
             if (this.state.emirates_id.length !== 15) {
