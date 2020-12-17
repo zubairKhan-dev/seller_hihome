@@ -117,10 +117,12 @@ export default class MyAddress extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response.code === 200 && resp && resp.seller_details) {
-                    this.setState({
-                        sellerProfile: resp.seller_details,
-                        address: resp.seller_details.address,
+                  this.setState({
+                      sellerProfile: resp.seller_details
+                    }, () => {
+                        this.loadAddressData();
                     });
+
                 }
                 this.setState({loading: false});
             }, (errors, errorMessage) => {
@@ -141,6 +143,25 @@ export default class MyAddress extends Component<Props, State> {
             }),
         );
     }
+
+    private loadAddressData() {
+      let { sellerProfile } = this.state;
+      this.setState({
+          isEdit: false,
+          address: sellerProfile.address,
+          currentLocation: {
+              latitude: sellerProfile.lat,
+              longitude: sellerProfile.long,
+          },
+          initialRegion: {
+              latitude: sellerProfile.lat,
+              longitude: sellerProfile.long,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+          },
+      });
+    }
+
 
     private getCities() {
         this.setState({loading: true});
@@ -391,7 +412,7 @@ export default class MyAddress extends Component<Props, State> {
                              locale={getCurrentLocale()}>
                         <View style={{flex: 1}}>
                             <ActionButton variant={"alt"} title={strings("cancel")} onPress={() => {
-                                this.setState({isEdit: false});
+                                this.loadAddressData();
                             }}/>
                         </View>
                         <View style={{width: Constants.defaultPadding}}/>
