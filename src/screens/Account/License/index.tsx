@@ -171,11 +171,11 @@ export default class License extends Component<Props, State> {
         formData.append("contact_us_last_name", this.state.sellerProfile.seller_details.contact_us_last_name)
         formData.append("contact_us_email", this.state.sellerProfile.seller_details.contact_us_email)
         formData.append("logo", this.state.sellerProfile.seller_details.logo)
+        formData.append("city", this.state.sellerProfile.seller_details.city)
 
         formData.append("license_id", this.state.licenseId)
         formData.append("license_start_date", parseDate(this.state.licenseStartDate, "yyyy-MM-DD"))
         formData.append("license_end_date", parseDate(this.state.licenseExpiryDate, "yyyy-MM-DD"))
-        formData.append("city", this.state.city)
         formData.append("pincode", this.state.pincode)
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
@@ -316,13 +316,19 @@ export default class License extends Component<Props, State> {
                                           date={this.state.licenseStartDate}
                                           editable={this.state.isEdit}
                                           value={(dateValue) => {
-                                              this.setState({licenseStartDate: dateValue});
+                                            this.setState({licenseStartDate: dateValue},
+                                            ()=>{
+                                              let endDate = new Date(dateValue);
+                                              endDate = new Date(endDate.setFullYear(endDate.getFullYear() + 1));
+                                              this.setState({licenseExpiryDate: endDate});
+                                            });
                                           }}/>
                         </View>
                         <View style={{width: Constants.defaultPaddingRegular}}/>
                         <View style={{flex: 1}}>
                             <HHDatePicker title={strings("license_expiry_date")}
                                           date={this.state.licenseExpiryDate}
+                                          minimumDate={this.state.licenseExpiryDate}
                                           editable={this.state.isEdit}
                                           value={(dateValue) => {
                                               this.setState({licenseExpiryDate: dateValue});
