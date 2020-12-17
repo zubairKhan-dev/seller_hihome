@@ -229,6 +229,7 @@
   "invalid_email_contact": "Enter a valid email for contact.",
   "invalid_mobile_number_contact": "Enter a valid mobile for contact.",
   "invalid_business_email": "Enter a valid business email id.",
+  "invalid_business_phone": "Enter a valid business phone number.",
   "account_under_review" : "Your registration has been successful. We are currently validating your account details. Once approved, you will receive a notification of approval and can login into your account.",
   "security_information": "Security Information",
   "change_password": "Change Password",

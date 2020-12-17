@@ -23,6 +23,7 @@ import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import ImageUploadView from "../../../components/ImageUpload";
 import FeaturedImage from "../../../components/FeaturedImage";
 import {photoOptions} from "../../../config/Constants";
+import { validEmail, validMobile } from "../../../lib/Validation";
 
 const logoPhoto = [
     {name: "", uri: "", data: undefined},
@@ -122,17 +123,6 @@ export default class Profile extends Component<Props, State> {
                     ()=>{
                       this.loadProfileInForm();
                     });
-                    // this.setState({
-                    //     isEdit: false, sellerProfile: resp,
-                    //     business_email: details.legal_business_email,
-                    //     business_name: details.title,
-                    //     business_phone: details.legal_business_phone,
-                    //     first_name: details.contact_us_first_name,
-                    //     last_name: details.contact_us_last_name,
-                    //     contact_email: details.contact_us_email,
-                    //     logoPhoto: logoPhoto,
-                    //     contact_mobile_number: details.legal_business_phone,
-                    // });
                 }
                 this.setState({loading: false});
             }, (errors, errorMessage) => {
@@ -176,6 +166,49 @@ export default class Profile extends Component<Props, State> {
             showMessageAlert(strings("invalid_logo_image"));
             return false;
         }
+
+        // BUSINESS NAME
+        if (!this.state.business_name || (this.state.business_name && this.state.business_name.length === 0)) {
+            showMessageAlert(strings("invalid_business_name"));
+            return false;
+        }
+
+        // BUSINESS EMAIL
+        if (!this.state.business_email || (this.state.business_email && this.state.business_email.length === 0) || !validEmail(this.state.business_email)) {
+            showMessageAlert(strings("invalid_business_email"));
+            return false;
+        }
+
+        // BUSINESS PHONE
+        if (!this.state.business_phone || (this.state.business_phone && this.state.business_phone.length === 0) || !validMobile(this.state.business_phone)) {
+            showMessageAlert(strings("invalid_business_phone"));
+            return false;
+        }
+
+        // FIRST NAME
+        if (!this.state.first_name || (this.state.first_name && this.state.first_name.length === 0)) {
+            showMessageAlert(strings("invalid_first_name"));
+            return false;
+        }
+
+        // LAST NAME
+        if (!this.state.last_name || (this.state.last_name && this.state.last_name.length === 0)) {
+            showMessageAlert(strings("invalid_last_name"));
+            return false;
+        }
+
+        //EMAIL CONTACT
+        if (!this.state.contact_email || (this.state.contact_email && this.state.contact_email.length === 0) || !validEmail(this.state.contact_email)) {
+            showMessageAlert(strings("invalid_email_contact"));
+            return false;
+        }
+
+        // MOBILE CONTACT
+        if (!this.state.contact_mobile_number || (this.state.contact_mobile_number && this.state.contact_mobile_number.length === 0) || !validMobile(this.state.contact_mobile_number)) {
+            showMessageAlert(strings("invalid_mobile_number_contact"));
+            return false;
+        }
+
         return true;
     }
 
