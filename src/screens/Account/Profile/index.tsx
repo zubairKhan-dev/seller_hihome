@@ -281,6 +281,31 @@ export default class Profile extends Component<Props, State> {
         );
     }
 
+    renderSecurityInformation(){
+      if(!this.state.isEdit){
+        return (
+          <>
+            <View style={{
+                backgroundColor: ColorTheme.appThemeLightest,
+                paddingHorizontal: Constants.defaultPadding,
+                paddingVertical: Constants.defaultPadding,
+            }}>
+                <HFTextHeavy value={strings("security_information")}/>
+              </View>
+              <View style={{
+                  paddingHorizontal: Constants.defaultPaddingRegular,
+                  paddingVertical: Constants.defaultPaddingRegular
+              }}>
+                  <ActionButton variant={"normal"} title={strings("change_password")} onPress={() => {
+                      this.setState({changePassword: true})
+                  }}/>
+            </View>
+          </>
+        )
+      }
+      return null;
+    }
+
     render() {
         let itemDimension = 100;
         return (
@@ -374,21 +399,8 @@ export default class Profile extends Component<Props, State> {
                         />
                     </View>
 
-                    <View style={{
-                        backgroundColor: ColorTheme.appThemeLightest,
-                        paddingHorizontal: Constants.defaultPadding,
-                        paddingVertical: Constants.defaultPadding,
-                    }}>
-                        <HFTextHeavy value={strings("security_information")}/>
-                    </View>
-                    <View style={{
-                        paddingHorizontal: Constants.defaultPaddingRegular,
-                        paddingVertical: Constants.defaultPaddingRegular
-                    }}>
-                        <ActionButton variant={"normal"} title={strings("change_password")} onPress={() => {
-                            this.setState({changePassword: true})
-                        }}/>
-                    </View>
+                    {this.renderSecurityInformation()}
+
                     <View style={{
                         backgroundColor: ColorTheme.appThemeLightest,
                         paddingHorizontal: Constants.defaultPadding,
