@@ -71,18 +71,13 @@ export default class License extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response.code === 200 && resp && resp.seller_details) {
-                    let details = resp.seller_details;
-                    let licPic = defaultPhoto;
-                    licPic.uri = details.license_photo;
+
                     this.setState({
-                        isEdit: false, sellerProfile: resp,
-                        licenseId: details.license_id,
-                        licenseStartDate: new Date(formatDate(details.license_start_date, "yyyy-MM-DD")) ,
-                        licenseExpiryDate: new Date(formatDate(details.license_end_date, "yyyy-MM-DD")),
-                        licensePhoto: licPic,
-                        city: details.city,
-                        pincode: details.pincode
+                        sellerProfile: resp
+                    }, () => {
+                      this.loadLicenseData();
                     });
+
                 }
                 this.setState({loading: false});
             }, (errors, errorMessage) => {
@@ -104,6 +99,21 @@ export default class License extends Component<Props, State> {
         );
     }
 
+    private loadLicenseData(){
+      let { seller_details } = this.state.sellerProfile;
+      let licPic = defaultPhoto;
+      licPic.uri = seller_details.license_photo;
+      this.setState({
+          isEdit: false,
+          licenseId: seller_details.license_id,
+          licenseStartDate: new Date(formatDate(seller_details.license_start_date, "yyyy-MM-DD")) ,
+          licenseExpiryDate: new Date(formatDate(seller_details.license_end_date, "yyyy-MM-DD")),
+          licensePhoto: licPic,
+          city: seller_details.city,
+          pincode: seller_details.pincode
+      });
+
+    }
     private validateInputs() {
         // LICESE ID
         if (!this.state.licenseId || (this.state.licenseId && this.state.licenseId.length === 0)) {
@@ -319,29 +329,7 @@ export default class License extends Component<Props, State> {
                                           }}/>
                         </View>
                     </RTLView>
-                    <View style={{height: Constants.defaultPaddingMax}}/>
-                    <RTLView locale={getCurrentLocale()}>
-                        <View style={{flex: 1}}>
-                            <TextKVInput title={strings("city")}
-                                         text={this.state.city}
-                                         placeholder={strings("enter_value")}
-                                         editable={this.state.isEdit}
-                                         value={value => {
-                                             this.setState({city: value})
-                                         }}/>
-                        </View>
-                        <View style={{width: Constants.defaultPaddingRegular}}/>
-                        {/*<View style={{flex: 1}}>*/}
-                        {/*    <TextKVInput title={strings("pincode")}*/}
-                        {/*                 text={this.state.pincode}*/}
-                        {/*                 placeholder={strings("enter_value")}*/}
-                        {/*                 keyboard={"numeric"}*/}
-                        {/*                 editable={this.state.isEdit}*/}
-                        {/*                 value={value => {*/}
-                        {/*                     this.setState({pincode: value})*/}
-                        {/*                 }}/>*/}
-                        {/*</View>*/}
-                    </RTLView>
+
                     <View style={{height: Constants.defaultPaddingMax}}/>
                     <HFTextRegular value={strings("license_photo")}/>
                     <View style={{height: Constants.defaultPadding}}/>
@@ -424,7 +412,7 @@ export default class License extends Component<Props, State> {
                              locale={getCurrentLocale()}>
                         <View style={{flex: 1}}>
                             <ActionButton variant={"alt"} title={strings("cancel")} onPress={() => {
-                                this.setState({isEdit: false});
+                                this.loadLicenseData();
                             }}/>
                         </View>
                         <View style={{width: Constants.defaultPadding}}/>
