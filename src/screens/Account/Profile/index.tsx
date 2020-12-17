@@ -118,17 +118,21 @@ export default class Profile extends Component<Props, State> {
                     let details = resp.seller_details;
                     let logoPic = logoPhoto[0];
                     logoPic.uri = details.logo;
-                    this.setState({
-                        isEdit: false, sellerProfile: resp,
-                        business_email: details.legal_business_email,
-                        business_name: details.title,
-                        business_phone: details.legal_business_phone,
-                        first_name: details.contact_us_first_name,
-                        last_name: details.contact_us_last_name,
-                        contact_email: details.contact_us_email,
-                        logoPhoto: logoPhoto,
-                        contact_mobile_number: details.legal_business_phone,
+                    this.setState({sellerProfile: resp},
+                    ()=>{
+                      this.loadProfileInForm();
                     });
+                    // this.setState({
+                    //     isEdit: false, sellerProfile: resp,
+                    //     business_email: details.legal_business_email,
+                    //     business_name: details.title,
+                    //     business_phone: details.legal_business_phone,
+                    //     first_name: details.contact_us_first_name,
+                    //     last_name: details.contact_us_last_name,
+                    //     contact_email: details.contact_us_email,
+                    //     logoPhoto: logoPhoto,
+                    //     contact_mobile_number: details.legal_business_phone,
+                    // });
                 }
                 this.setState({loading: false});
             }, (errors, errorMessage) => {
@@ -148,6 +152,23 @@ export default class Profile extends Component<Props, State> {
                 this.apiExHandler(reason);
             }),
         );
+    }
+
+    private loadProfileInForm(){
+      let {seller_details} = this.state.sellerProfile;
+      let logoPic = logoPhoto[0];
+      logoPic.uri = seller_details.logo;
+      this.setState({
+          isEdit: false,
+          business_email: seller_details.legal_business_email,
+          business_name: seller_details.title,
+          business_phone: seller_details.legal_business_phone,
+          first_name: seller_details.contact_us_first_name,
+          last_name: seller_details.contact_us_last_name,
+          contact_email: seller_details.contact_us_email,
+          logoPhoto: logoPhoto,
+          contact_mobile_number: seller_details.legal_business_phone,
+      });
     }
 
     private validateInputs() {
@@ -495,7 +516,7 @@ export default class Profile extends Component<Props, State> {
                              locale={getCurrentLocale()}>
                         <View style={{flex: 1}}>
                             <ActionButton variant={"alt"} title={strings("cancel")} onPress={() => {
-                                this.setState({isEdit: false});
+                                this.loadProfileInForm();
                             }}/>
                         </View>
                         <View style={{width: Constants.defaultPadding}}/>
