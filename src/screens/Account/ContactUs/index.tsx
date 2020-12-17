@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {KeyboardAvoidingView, StyleSheet, Text, TextInput, View, Platform} from "react-native";
+import {KeyboardAvoidingView, StyleSheet, Text, TextInput, View, Platform, Linking} from "react-native";
 import ColorTheme from "../../../theme/Colors";
 import {StaticStyles} from "../../../theme/Styles";
 import Constants from "../../../theme/Constants";
@@ -10,17 +10,7 @@ import {TouchableOpacity} from "react-native";
 import {AppIcon} from "../../../common/IconUtils";
 import {CommonIcons} from "../../../icons/Common";
 import {SafeAreaView} from "react-navigation";
-import ActionButton from "../../../components/ActionButton";
-import ImageUploadView from "../../../components/ImageUpload";
-import ImagePicker from "react-native-image-picker";
-import DocumentsViewer from "../../../components/DocumentsViewer";
-import LoadingOverlay from "../../../components/Loading";
-import { showMessageAlert } from "../../../common";
-import * as Api from "../../../lib/api";
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-import { showMessage } from "react-native-flash-message";
-import FeaturedImage from "../../../components/FeaturedImage";
-import {photoOptions} from "../../../config/Constants";
+import SupportItem from "../../../components/SupportItem";
 
 const photo = {uri: "", data: {}, add: false};
 
@@ -28,30 +18,22 @@ interface Props {
     navigation: any;
 }
 
-interface State {
-    loading?: boolean;
-    reload?: boolean;
-    message: string;
-    uploadImage?: boolean;
-    showDocumentsViewer?: boolean;
-    photo: any;
-}
 
 export default class ContactUs extends Component<Props, State> {
-    apiHandler: any;
-    apiExHandler: any;
-    constructor(props) {
-        super(props);
-        this.state = {reload: false, message: "", photo: photo, showDocumentsViewer: false,};
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any) {
-        this.setState({photo: photo});
-    }
 
     componentDidMount(): void {
 
     }
+
+    openLink(url) {
+      Linking.canOpenURL(url).then(supported => {
+        if (!supported) {
+         console.log('Can\'t handle url: ' + url);
+        } else {
+         return Linking.openURL(url);
+        }
+      }).catch(err => console.error('An error occurred', err));
+    };
 
     renderHeader() {
         return (
@@ -82,250 +64,22 @@ export default class ContactUs extends Component<Props, State> {
         );
     }
 
-    launchCamera() {
-        ImagePicker.launchCamera(photoOptions, (response) => {
-            if (!response.didCancel) {
-                let photo = this.state.photo;
-                if (photo.uri.length === 0 && !photo.add) {
-                    photo.uri = response.uri;
-                    photo.data = response;
-                }
-            }
-            this.setState({uploadImage: false})
-        });
-    }
-
-    launchGallery() {
-        ImagePicker.launchImageLibrary(photoOptions, (response) => {
-            if (!response.didCancel) {
-                let photo = this.state.photo;
-                if (photo.uri.length === 0 && !photo.add) {
-                    photo.uri = response.uri;
-                    photo.data = response;
-                }
-            }
-            this.setState({uploadImage: false})
-        });
-    }
-
-
-    private removeMainPhoto() {
-        let mainPic = this.state.photo;
-        mainPic.uri = "";
-        mainPic.name = "";
-        mainPic.data = undefined;
-        this.setState({photo: mainPic});
-    }
-
-    private sendFeedback() {
-        if (this.state.message && this.state.message.length > 5) {
-            this.setState({loading: true});
-            let formData = new FormData();
-            if (this.state.photo.uri.length > 0) {
-                formData.append("attachment", {
-                    name: "test",
-                    type: this.state.photo.data.type,
-                    uri: Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
-                });
-            }
-            formData.append("body", this.state.message);
-            this.apiHandler = (response) => {
-                Api.checkValidationError(response, resp => {
-                    if (response.status === "1") {
-                        this.setState({message: ""});
-                        // analytics().logEvent('Contact_Us', {
-                        //     data: formData,
-                        // });
-                        this.removeMainPhoto();
-                        setTimeout(() => {
-                            showMessage({
-                                message: response.success_msg,
-                                type: "success",
-                                icon: "success",
-                                duration: 4000
-                            });
-                            this.props.navigation.pop();
-                        }, 400);
-                    }
-                    this.setState({loading: false});
-                }, (errors, errorMessage) => {
-                    setTimeout(() => {
-                        showMessageAlert(errorMessage);
-                    }, 400);
-                    this.setState({loading: false});
-                });
-            };
-            this.apiExHandler = (reason) => {
-                setTimeout(() => {
-                    showMessageAlert(reason);
-                }, 400);
-                this.setState({loading: false});
-            };
-            Api.sendFeedback(formData)
-                .then((response) => {
-                        this.apiHandler(response);
-                    },
-                ).catch((reason => {
-                    this.apiExHandler(reason);
-                }),
-            );
-        } else {
-            showMessage({
-                message: strings("minimum_five_character"),
-                type: "danger",
-                icon: "info",
-                duration: 4000
-            });
-        }
-
-    }
     render() {
+        let call_us = (Platform.OS === 'ios') ? `telprompt:+971526164664?` : `tel:+971526164664?` ;
+        let technical_support = (Platform.OS === 'ios') ? `telprompt:+971526164664?` : `tel:+971526164664?` ;
+
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: ColorTheme.white}}>
                 {this.renderHeader()}
-                <KeyboardAwareScrollView style={{flex: 1}}>
-                    <View style={{
-                        flex: 1,
-                        paddingHorizontal: Constants.defaultPaddingRegular,
-                        paddingVertical: Constants.defaultPaddingMax
-                    }}>
-                        <RTLText fontSize={Constants.regularFontSize} locale={getCurrentLocale()}
-                                 style={[{
-                                     fontWeight: "500",
-                                     color: ColorTheme.textDark,
-                                     textAlign: isRTLMode() ? "right" : "left"
-                                 }]}>{strings("message")}</RTLText>
-                        <View style={{height: Constants.defaultPadding}}/>
-                        <TextInput textAlignVertical={'top'}
-                                   returnKeyType={'done'}
-                                   editable={true}
-                                   multiline={true}
-                                   placeholderTextColor={ColorTheme.placeholder}
-                                   placeholder={strings("enter_content_here")}
-                                   value={this.state.message}
-                                   style={{
-                                       fontSize: 14,
-                                       paddingHorizontal: Constants.defaultPadding,
-                                       height: 100,
-                                       backgroundColor: ColorTheme.lightGrey,
-                                       color: ColorTheme.black,
-                                       fontWeight: "300",
-                                       textAlign: isRTLMode() ? "right" : "left",
-                                       borderRadius: Constants.defaultPaddingMin
-                                   }}
-                                   onChangeText={(text) => this.setState({message: text})}>
-                        </TextInput>
-                        <RTLView style={{marginTop: Constants.defaultPaddingRegular}} locale={getCurrentLocale()}>
-                            <TouchableOpacity onPress={() => {
-                                if (this.state.photo.uri === "") {
-                                    this.setState({uploadImage: true});
-                                } else {
-                                    this.setState({showDocumentsViewer: true});
-                                }
-                            }}>
-                                {this.state.photo.uri === "" && <View style={{
-                                    width: 100,
-                                    height: 100,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    borderWidth: 0.5,
-                                    borderColor: ColorTheme.grey,
-                                    borderStyle: "dashed",
-                                    backgroundColor: ColorTheme.lightGrey
-                                }}>
-                                    <AppIcon name={"attachment"}
-                                             color={ColorTheme.grey_add}
-                                             provider={CommonIcons}
-                                             size={30}/>
-                                    <View style={{height: Constants.defaultPadding}}/>
-                                    <RTLText fontSize={Constants.regularSmallerFontSize} locale={getCurrentLocale()}
-                                             style={[{
-                                                 fontWeight: "200",
-                                                 color: ColorTheme.grey,
-                                                 textAlign: "center"
-                                             }]}>{strings("upload_image")}</RTLText>
-                                </View>}
-                                {this.state.photo.uri.length > 0 && <View style={{
-                                    width: 100,
-                                    height: 100,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    borderWidth: 0.5,
-                                    borderColor: ColorTheme.grey,
-                                    borderStyle: "dashed",
-                                    backgroundColor: ColorTheme.lightGrey
-                                }}>
-                                    <View style={{ overflow: "hidden", width: 100, height: 100}}>
-                                        <FeaturedImage width={100} height={100} uri={this.state.photo.uri}/>
-                                    </View>
-                                </View>}
-                            </TouchableOpacity>
-                            <View style={{
-                                flex: 1,
-                                paddingHorizontal: Constants.defaultPaddingMax,
-                                justifyContent: "center"
-                            }}>
-                                <RTLText fontSize={Constants.regularSmallerFontSize} locale={getCurrentLocale()}
-                                         style={[{
-                                             fontWeight: "500",
-                                             color: ColorTheme.textDark,
-                                             textAlign: isRTLMode() ? "right" : "left"
-                                         }]}>{strings("attach_your_image")}</RTLText>
-                                <View style={{height: Constants.defaultPadding}}/>
-                                <RTLText fontSize={Constants.regularSmallerFontSize} locale={getCurrentLocale()}
-                                         style={[{
-                                             fontWeight: "300",
-                                             color: ColorTheme.grey,
-                                             textAlign: isRTLMode() ? "right" : "left"
-                                         }]}>{strings("max_image_size")}</RTLText>
-                                {this.state.photo.uri.length > 0 && <TouchableOpacity onPress={() => {
-                                    this.removeMainPhoto();
-                                }}>
-                                    <View style={{height: Constants.defaultPadding}}/>
-                                    <RTLText fontSize={Constants.regularSmallerFontSize} locale={getCurrentLocale()}
-                                             style={[{
-                                                 fontWeight: "300",
-                                                 color: "red",
-                                                 textAlign: isRTLMode() ? "right" : "left"
-                                             }]}>{strings("delete")}</RTLText>
-                                </TouchableOpacity>}
-                            </View>
-                        </RTLView>
-                        <View style={{flex: 1}}/>
-                        <RTLView style={{marginTop: Constants.defaultPaddingRegular, flex: 1, alignItems: "center"}}
-                                 locale={getCurrentLocale()}>
-                            <View style={{flex: 1}}>
-                                <ActionButton variant={"alt"} title={strings("cancel")} onPress={() => {
-                                     this.props.navigation.goBack();
-                                }}/>
-                            </View>
-                            <View style={{width: Constants.defaultPadding}}/>
-                            <View style={{flex: 1}}>
-                                <ActionButton variant={"normal"} title={strings("send_email")} onPress={() => {
-                                     this.sendFeedback();
-                                }}/>
-                            </View>
-                        </RTLView>
-                    </View>
-                    <ImageUploadView show={this.state.uploadImage}
-                                     onDismiss={() => {
-                                         this.setState({uploadImage: false})
-                                     }}
-                                     onCameraSelected={() => {
-                                         this.launchCamera();
-                                     }}
-                                     onGallerySelected={() => {
-                                         this.launchGallery();
-                                     }}
-                    />
-                    <DocumentsViewer show={this.state.showDocumentsViewer}
-                                     onDismiss={() => {
-                                         this.setState({showDocumentsViewer: false})
-                                     }}
-                                     documents={[this.state.photo.uri]}
-                    />
-                </KeyboardAwareScrollView>
-                {this.state.loading && <LoadingOverlay/>}
+                <SupportItem title={strings("call_us")}
+                  onPress={() => this.openLink(call_us)}/>
+                <SupportItem title={strings("technical_support")}
+                onPress={() => this.openLink(technical_support)}/>
+                <SupportItem title={strings("email_us")}
+                onPress={() => this.openLink('mailto:info@hihome.app?subject=Hello HiHome')}/>
+                <SupportItem title={strings("whatsapp")}
+                onPress={() => this.openLink('http://api.whatsapp.com/send?phone=971509555900')}/>
+
             </SafeAreaView>
         );
     }
