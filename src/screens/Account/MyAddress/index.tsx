@@ -146,9 +146,15 @@ export default class MyAddress extends Component<Props, State> {
 
     private loadAddressData() {
       let { sellerProfile } = this.state;
+      console.log("sellerProfile");
+      console.log(sellerProfile);
       this.setState({
           isEdit: false,
           address: sellerProfile.address,
+          selectedCity:{
+            id: sellerProfile.emirates_id,
+            name: sellerProfile.city
+          },
           currentLocation: {
               latitude: sellerProfile.lat,
               longitude: sellerProfile.long,
@@ -334,6 +340,8 @@ export default class MyAddress extends Component<Props, State> {
     }
 
     render() {
+       console.log("this.state.selectedCity");
+       console.log(this.state.selectedCity);
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: ColorTheme.white}}>
                 {this.renderHeader()}
