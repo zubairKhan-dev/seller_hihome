@@ -146,8 +146,7 @@ export default class MyAddress extends Component<Props, State> {
 
     private loadAddressData() {
       let { sellerProfile } = this.state;
-      console.log("sellerProfile");
-      console.log(sellerProfile);
+
       this.setState({
           isEdit: false,
           address: sellerProfile.address,
@@ -205,7 +204,7 @@ export default class MyAddress extends Component<Props, State> {
         let formData = new FormData();
         formData.append("lat", this.state.currentLocation.latitude);
         formData.append("long", this.state.currentLocation.longitude);
-        formData.append("address", this.state.address + "," + this.state.selectedCity.name);
+        formData.append("address", this.state.address);
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
@@ -340,8 +339,7 @@ export default class MyAddress extends Component<Props, State> {
     }
 
     render() {
-       console.log("this.state.selectedCity");
-       console.log(this.state.selectedCity);
+
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: ColorTheme.white}}>
                 {this.renderHeader()}
