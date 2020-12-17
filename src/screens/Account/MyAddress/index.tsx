@@ -200,6 +200,8 @@ export default class MyAddress extends Component<Props, State> {
     }
 
     private saveAddress() {
+
+      if (this.validateInputs()) {
         this.setState({loading: true});
         let formData = new FormData();
         formData.append("lat", this.state.currentLocation.latitude);
@@ -237,6 +239,16 @@ export default class MyAddress extends Component<Props, State> {
                 this.apiExHandler(reason);
             }),
         );
+      }
+    }
+
+    private validateInputs() {
+      // ADDRESS
+      if (!this.state.address || (this.state.address && this.state.address.length === 0)) {
+          showMessageAlert(strings("invalid_address"));
+          return false;
+      }
+      return true;
     }
 
     getGeoLocation() {
