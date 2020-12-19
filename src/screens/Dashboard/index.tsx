@@ -422,7 +422,7 @@ export default class Dashboard extends Component<Props, State> {
                                     {strings("id")}
                                 </Text>
                                 <Text numberOfLines={1} style={[styles.text_order]}>
-                                    {order.transaction_id}
+                                    {order.order_number}
                                 </Text>
                                 <View style={{flex: 1}}/>
                                 <Text numberOfLines={1} style={[styles.text_order_time]}>
