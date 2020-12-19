@@ -189,7 +189,8 @@ export default class AddFoodItem extends Component<Props, State> {
                 if (response && response.code === 200 && resp.data) {
                     this.setState({
                         categories: response.response_data.data,
-                        selectedCategory: response.response_data.data[0]
+                    }, () => {
+                      this.defaultSelectedCategory()
                     });
                     this.updateLocalProfile();
                 }
@@ -211,6 +212,21 @@ export default class AddFoodItem extends Component<Props, State> {
                 this.apiExHandler(reason);
             }),
         );
+    }
+
+    private defaultSelectedCategory(){
+      const {edit, product} = this.props.route.params;
+      const {categories} = this.state;
+      let category = {};
+      if(edit){
+        category = this.getCategory(product.category_id);
+      }else{
+        category = categories[0];
+      }
+
+      this.setState({
+        selectedCategory: category
+      })
     }
 
     getMorePhotos(product) {
