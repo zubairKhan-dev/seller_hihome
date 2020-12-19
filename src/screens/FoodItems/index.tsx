@@ -81,8 +81,18 @@ export default class FoodItems extends Component<Props, State> {
     }
 
     componentDidMount(): void {
-        this.getFoodList();
-        Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.updateLocalProfile.bind(this));
+        const {navigation} = this.props;
+        this.focusListener = navigation.addListener("focus", () => {
+            this.setState({
+              foodItems: [],
+              hasMorePages: false,
+              currentPage: 1,
+            }, () => {
+              this.getFoodList();
+            })
+
+        });
+        //Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.updateLocalProfile.bind(this));
     }
 
     private updateLocalProfile() {
@@ -215,6 +225,7 @@ export default class FoodItems extends Component<Props, State> {
             // showMessage(reason);
             this.setState({loading: false});
         };
+        let currentPage = this.state.currentPage || 1;
         Api.getFoodList(this.state.currentPage)
             .then((response) => {
                     this.apiHandler(response);
