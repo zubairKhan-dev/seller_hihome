@@ -105,9 +105,9 @@ export default class Dashboard extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getOrderStatusLookup();
         });
-        Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
-        // await analytics().setCurrentScreen("Dashboard", "Dashboard").then(r => {
-        // });
+        // Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
+        // // await analytics().setCurrentScreen("Dashboard", "Dashboard").then(r => {
+        // // });
     }
 
     private getStatusColor(status) {
@@ -134,11 +134,14 @@ export default class Dashboard extends Component<Props, State> {
     }
 
     getOrderStatusLookup() {
+        console.log("loading data");
         this.setState({
             loading: true, orderStatus: [{
                 "id": 0,
                 "name": strings("all"),
-            }]
+            }],
+            orders: [],
+            filteredOrders: [],
         });
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
