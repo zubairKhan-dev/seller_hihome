@@ -136,6 +136,9 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     componentDidMount(): void {
+        this.setState({
+          mainPhoto: [{name: "", uri: "", data: undefined}]
+        });
         this.getCategories();
     }
 
