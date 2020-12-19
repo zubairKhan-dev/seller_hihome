@@ -208,11 +208,17 @@ export default class Dashboard extends Component<Props, State> {
     }
 
     performOrderAction(actionStatus: number, order: any, rejectReason?: string) {
-        this.setState({activity: true});
+
         let formData = new FormData();
         formData.append("order_id", order.order_id)
         formData.append("status", actionStatus)
-        formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
+
+        if (actionStatus === OrderStatus.ACCEPTED) {
+          formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
+        }
+
+        this.setState({activity: true});
+        
         if (rejectReason) {
             formData.append("cancellation_comment", rejectReason)
         }
@@ -622,7 +628,7 @@ export default class Dashboard extends Component<Props, State> {
                     <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                         <View style={{flex: 1}}>
                             <ActionButton title={strings("accept")} onPress={() => {
-                                if (this.state.selectedSlot) {
+                                if (Object.keys(this.state.selectedSlot).length > 0) {
                                     this.performOrderAction(OrderStatus.ACCEPTED, item);
                                 } else {
                                     showMessage({
