@@ -142,6 +142,7 @@ export default class Dashboard extends Component<Props, State> {
             }],
             orders: [],
             filteredOrders: [],
+            currentPage: 1,
         });
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
