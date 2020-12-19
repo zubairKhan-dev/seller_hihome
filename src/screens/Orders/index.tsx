@@ -125,7 +125,10 @@ export default class Orders extends Component<Props, State> {
             loading: true, orderStatus: [{
                 "id": 0,
                 "name": strings("all"),
-            }]
+            }],
+            orders: [],
+            filteredOrders: [],
+            currentPage: 1,
         });
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
