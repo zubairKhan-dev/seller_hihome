@@ -142,6 +142,7 @@ export default class Dashboard extends Component<Props, State> {
             orders: [],
             filteredOrders: [],
             currentPage: 1,
+            selectedSlot: undefined,
         });
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
@@ -588,7 +589,6 @@ export default class Dashboard extends Component<Props, State> {
                                     this.setState({
                                         timeSlots: this.getTimeSlot(order.delivery_slot),
                                         showSlots: true,
-                                        selectedSlot: undefined
                                     });
                                 }}
                                                                                             dropdown={true}
