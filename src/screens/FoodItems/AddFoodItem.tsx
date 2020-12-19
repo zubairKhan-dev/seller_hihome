@@ -46,7 +46,7 @@ export enum TextViewType {
     RECIPE
 }
 
-const morePhotos = [
+let morePhotos = [
     {name: "", uri: "", data: {}},
     {name: "", uri: "", data: {}},
     {name: "", uri: "", data: {}},
@@ -55,7 +55,7 @@ const morePhotos = [
 ];
 
 
-const mainPhoto = [
+let mainPhoto = [
     {name: "", uri: "", data: undefined},
 ];
 
@@ -136,10 +136,22 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     componentDidMount(): void {
-        this.setState({
-          mainPhoto: [{name: "", uri: "", data: undefined}]
-        });
         this.getCategories();
+    }
+
+    private photosPlaceHolders(){
+      morePhotos = [
+          {name: "", uri: "", data: {}},
+          {name: "", uri: "", data: {}},
+          {name: "", uri: "", data: {}},
+          {name: "", uri: "", data: {}},
+          {name: "", uri: "", data: {}},
+      ];
+
+
+      mainPhoto = [
+          {name: "", uri: "", data: undefined},
+      ];
     }
 
     private updateLocalProfile() {
@@ -819,6 +831,7 @@ export default class AddFoodItem extends Component<Props, State> {
                     <View style={{height: Constants.defaultPadding}}/>
                     <RTLView locale={getCurrentLocale()}>
                         <TouchableOpacity style={{padding: Constants.defaultPadding}}  onPress={() => {
+                            this.photosPlaceHolders();
                             this.props.navigation.goBack();
                         }}>
                             <AppIcon name={isRTLMode() ? "back_ar" : "back"}
