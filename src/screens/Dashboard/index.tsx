@@ -83,7 +83,7 @@ export default class Dashboard extends Component<Props, State> {
             currentPage: 1,
             stats: categories,
             period: "day",
-            selectedSlot: undefined,
+            selectedSlot: {},
             timeSlots: this.getTimeSlot("")
         }
     }
@@ -142,7 +142,7 @@ export default class Dashboard extends Component<Props, State> {
             orders: [],
             filteredOrders: [],
             currentPage: 1,
-            selectedSlot: undefined,
+            selectedSlot: {},
         });
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
@@ -222,7 +222,7 @@ export default class Dashboard extends Component<Props, State> {
                     if (actionStatus === OrderStatus.RECEIVED) {
                         order.pickup_time = order.delivery_date + " " + this.state.selectedSlot.name;
                         setTimeout(() => {
-                            this.setState({pickupTime: undefined, selectedSlot: undefined});
+                            this.setState({pickupTime: undefined, selectedSlot: {}});
                         }, 100);
                     }
                     order.status = resp.status;
@@ -836,7 +836,7 @@ export default class Dashboard extends Component<Props, State> {
                             renderItem={({item, index}) =>
                                 <View>
                                     <TouchableOpacity onPress={() => {
-                                        this.setState({selectedSlot: undefined});
+                                        this.setState({selectedSlot: {}});
                                     }}>
                                         {this.renderOrder(item, index)}
                                     </TouchableOpacity>
