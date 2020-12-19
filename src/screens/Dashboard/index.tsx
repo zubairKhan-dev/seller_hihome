@@ -291,7 +291,7 @@ export default class Dashboard extends Component<Props, State> {
                 value = "month_orders";
                 break;
             case "year":
-                value = "year_earnings";
+                value = "year_orders";
                 break;
         }
         return value;
