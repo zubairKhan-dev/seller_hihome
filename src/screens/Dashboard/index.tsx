@@ -134,7 +134,6 @@ export default class Dashboard extends Component<Props, State> {
     }
 
     getOrderStatusLookup() {
-        console.log("loading data");
         this.setState({
             loading: true, orderStatus: [{
                 "id": 0,
@@ -563,7 +562,7 @@ export default class Dashboard extends Component<Props, State> {
                                     textAlign: isRTLMode() ? "right" : "left",
                                     fontSize: 10,
                                     fontWeight: "400"
-                                }]}>{order.delivery_date}</Text>
+                                }]}>{order.delivery_date} @ {order.delivery_slot}</Text>
                                 {/*--------PICKUP TIME DETAILS-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
                                 <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
@@ -574,12 +573,17 @@ export default class Dashboard extends Component<Props, State> {
                                     {strings("pickup_time")}
                                 </Text>
                                 <View style={{height: Constants.defaultPaddingMin}}/>
-                                {order.pickup_time && <Text style={[StaticStyles.regularFont, {
-                                    color: ColorTheme.grey,
-                                    textAlign: isRTLMode() ? "right" : "left",
-                                    fontSize: 10,
-                                    fontWeight: "400"
-                                }]}>{order.pickup_time}</Text>}
+                                {(order.pickup_time)?
+                                  <Text style={[StaticStyles.regularFont, {
+                                      color: ColorTheme.grey,
+                                      textAlign: isRTLMode() ? "right" : "left",
+                                      fontSize: 10,
+                                      fontWeight: "400"
+                                  }]}>{order.pickup_time}</Text>
+                                  :
+                                  null
+                                }
+                                <View style={{height: Constants.defaultPaddingMin}}/>
                                 {order.status.id === OrderStatus.RECEIVED && <TextFormInput showOptions={() => {
                                     this.setState({
                                         timeSlots: this.getTimeSlot(order.delivery_slot),
