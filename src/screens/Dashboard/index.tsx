@@ -430,7 +430,7 @@ export default class Dashboard extends Component<Props, State> {
                                     color: ColorTheme.textDark,
                                     fontSize: Constants.regularSmallFontSize
                                 }]}>
-                                    {strings("id")}
+                                    {strings("order_number")}
                                 </Text>
                                 <Text numberOfLines={1} style={[styles.text_order]}>
                                     {order.order_number}
