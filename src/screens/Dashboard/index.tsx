@@ -218,20 +218,21 @@ export default class Dashboard extends Component<Props, State> {
         }
 
         this.setState({activity: true});
-        
+
         if (rejectReason) {
             formData.append("cancellation_comment", rejectReason)
         }
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
-                    if (actionStatus === OrderStatus.RECEIVED) {
-                        order.pickup_time = order.delivery_date + " " + this.state.selectedSlot.name;
-                        setTimeout(() => {
-                            this.setState({pickupTime: undefined, selectedSlot: {}});
-                        }, 100);
-                    }
+                    // if (actionStatus === OrderStatus.RECEIVED) {
+                    //     order.pickup_time = order.delivery_date + " " + this.state.selectedSlot.name;
+                    //     setTimeout(() => {
+                    //         this.setState({pickupTime: undefined, selectedSlot: {}});
+                    //     }, 100);
+                    // }
                     order.status = resp.status;
+                    order.pickup_time = resp.pickup_time;
                     // analytics().logEvent('Order_Action', {
                     //     action_status: actionStatus,
                     //     order_id: order.id,
