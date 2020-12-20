@@ -306,4 +306,7 @@
   "can_not_accept_orders": "لا يمكن قبول الطلبات",
 
   "special_request": "طلب خاص",
+
+  "add_serve_count": "يخدم ل",
+  "invalid_serve_count": "أدخل عددًا صالحًا للخدمة للمواد الغذائية",
 }

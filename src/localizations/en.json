@@ -307,4 +307,7 @@
   "can_not_accept_orders": "Can Not Accept Orders",
 
   "special_request": "Special Request",
+
+  "add_serve_count": "Serving For",
+  "invalid_serve_count": "Enter a valid serving count for food item",
 }

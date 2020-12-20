@@ -105,6 +105,8 @@ interface State {
 
     showFeatureInfo?: boolean;
     isFeatureProduct?: number;
+
+    serveCount?: number;
 }
 
 export default class AddFoodItem extends Component<Props, State> {
@@ -136,9 +138,7 @@ export default class AddFoodItem extends Component<Props, State> {
             description: edit === 0 ? "" : product.description ? product.description : "",
             edit: edit !== 0,
             product: edit === 1 ? product : undefined,
-            // days: edit === 1 ? "" + splitTime(product.prepration_time).days : "",
-            // hours: edit === 1 ? "" + splitTime(product.prepration_time).hours : "",
-            // minutes: edit === 1 ? "" + splitTime(product.prepration_time).minutes : ""
+            serveCount: "",
         }
     }
 
@@ -465,6 +465,14 @@ export default class AddFoodItem extends Component<Props, State> {
         if (this.state.costPrice.length === 0) {
             showMessage({
                 message: strings("invalid_price"),
+                type: "danger",
+                icon: "info"
+            });
+            return false;
+        }
+        if (this.state.serveCount.length === 0) {
+            showMessage({
+                message: strings("invalid_serve_count"),
                 type: "danger",
                 icon: "info"
             });
@@ -977,6 +985,14 @@ export default class AddFoodItem extends Component<Props, State> {
                     </View>
                 </RTLView>
 
+                <View style={{height: Constants.defaultPaddingRegular}}/>
+
+                <HFTextRegular fontSize={Constants.regularSmallFontSize} value={strings("add_serve_count")}/>
+                  <TextFormInput text={this.state.serveCount} keyboard={"numeric"}
+                                       placeholder={strings("add_serve_count")} value={value => {
+                                          this.setState({serveCount: value});
+                                      }}
+                  />
                 <View style={{height: Constants.defaultPaddingRegular}}/>
 
                 <HFTextRegular fontSize={Constants.regularSmallFontSize} value={strings("ingredients")}/>
