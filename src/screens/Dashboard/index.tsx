@@ -536,8 +536,24 @@ export default class Dashboard extends Component<Props, State> {
                                     </Text>
                                 </RTLView>
                                 <View style={{height: Constants.defaultPadding}}/>
-
+                                {/*--------SPECIAL REQUEST-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
+                                <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
+                                    textAlign: isRTLMode() ? "right" : "left",
+                                    color: ColorTheme.textDark,
+                                    fontSize: Constants.regularSmallerFontSize
+                                }]}>
+                                    {strings("special_request")}
+                                </Text>
+                                <View style={{height: Constants.defaultPaddingMin}}/>
+                                <Text style={[StaticStyles.regularFont, {
+                                    color: ColorTheme.grey,
+                                    textAlign: isRTLMode() ? "right" : "left",
+                                    fontSize: 10,
+                                    fontWeight: "400"
+                                }]}>{order.special_request}</Text>
+                                <View style={{height: Constants.defaultPadding}}/>
+
                                 {/*--------DELIVERY DETAILS DETAILS-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
                                 <Text numberOfLines={2} style={[StaticStyles.heavyFont, {

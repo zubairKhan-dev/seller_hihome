@@ -305,4 +305,6 @@
   "delete_alert_message": "Are you sure you want to delete?",
   "accept_orders": "Accept Orders",
   "can_not_accept_orders": "Can Not Accept Orders",
+
+  "special_request": "Special Request",
 }

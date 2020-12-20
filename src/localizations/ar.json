@@ -304,4 +304,6 @@
 
   "accept_orders": "قبول الطلبات",
   "can_not_accept_orders": "لا يمكن قبول الطلبات",
+
+  "special_request": "طلب خاص",
 }
