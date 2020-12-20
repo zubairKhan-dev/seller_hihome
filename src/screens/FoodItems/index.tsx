@@ -83,14 +83,7 @@ export default class FoodItems extends Component<Props, State> {
     componentDidMount(): void {
         const {navigation} = this.props;
         this.focusListener = navigation.addListener("focus", () => {
-            this.setState({
-              foodItems: [],
-              hasMorePages: false,
-              currentPage: 1,
-            }, () => {
-              this.getFoodList();
-            })
-
+            this.refreshFoodList();
         });
         //Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.updateLocalProfile.bind(this));
     }
@@ -244,7 +237,7 @@ export default class FoodItems extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
-                    //product.status = actionStatus;
+                    product.out_of_stock = actionStatus;
                     if (actionStatus === 1) {
                         this.setState({
                             outOfStockItems: this.state.outOfStockItems + 1,
@@ -615,8 +608,8 @@ export default class FoodItems extends Component<Props, State> {
                                 <TouchableOpacity onPress={() => {
                                 }}>
                                     {this.state.selectedCategory === 0 && this.renderFoodItem(item, index)}
-                                    {this.state.selectedCategory === 1 && this.state.foodItems[index].status === 0 && this.renderFoodItem(item, index)}
-                                    {this.state.selectedCategory === 2 && this.state.foodItems[index].status === 1 && this.renderFoodItem(item, index)}
+                                    {this.state.selectedCategory === 1 && this.state.foodItems[index].out_of_stock === 1 && this.renderFoodItem(item, index)}
+                                    {this.state.selectedCategory === 2 && this.state.foodItems[index].out_of_stock === 0 && this.renderFoodItem(item, index)}
                                 </TouchableOpacity>
                             }
                             showsVerticalScrollIndicator={false}
