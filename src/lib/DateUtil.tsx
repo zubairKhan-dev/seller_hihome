@@ -17,12 +17,15 @@ export function splitTime(numberOfHours) {
 }
 
 export function combineTime(days, hours, minutes) {
-    days = days.length === 0 ? "0" : days;
-    hours = hours.length === 0 ? "0" : hours;
-    minutes = minutes.length === 0 ? "0" : minutes;
+  // console.log(days);
+  // console.log(hours);
+  // console.log(minutes);
+    // days = days.id.length === 0 ? "0" : days;
+    // hours = hours.length === 0 ? "0" : hours;
+    // minutes = minutes.length === 0 ? "0" : minutes;
 
-    let newHours = parseInt(days) * 24
-    newHours = newHours + parseInt(hours)
-    newHours = newHours + (parseInt(minutes)/60)
+    let newHours = parseInt(days.id) * 24
+    newHours = newHours + parseInt(hours.id)
+    newHours = newHours + (parseInt(minutes.id)/60)
     return newHours
 }

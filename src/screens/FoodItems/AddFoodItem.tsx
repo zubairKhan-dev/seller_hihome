@@ -37,6 +37,7 @@ import Events from "react-native-simple-events";
 import {hasFeaturedProduct, setProfile} from "../../lib/user";
 import FeaturedImage from "../../components/FeaturedImage";
 import {photoOptions} from "../../config/Constants";
+import {daysOptions, hoursOptions, minutesOptions} from "../../config/item/data";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
@@ -89,6 +90,12 @@ interface State {
     uploadImage?: boolean;
     selectedCategory?: any;
     showCategories?: boolean;
+    showDaysPopup?: boolean;
+    selectedDays?: any;
+    showHoursPopup?: boolean;
+    selectedHours?: any;
+    showMinutesPopup?: boolean;
+    selectedMinutes?: any;
 
     errorOccurred?: boolean;
     errorText?: string;
@@ -129,13 +136,14 @@ export default class AddFoodItem extends Component<Props, State> {
             description: edit === 0 ? "" : product.description ? product.description : "",
             edit: edit !== 0,
             product: edit === 1 ? product : undefined,
-            days: edit === 1 ? "" + splitTime(product.prepration_time).days : "",
-            hours: edit === 1 ? "" + splitTime(product.prepration_time).hours : "",
-            minutes: edit === 1 ? "" + splitTime(product.prepration_time).minutes : ""
+            // days: edit === 1 ? "" + splitTime(product.prepration_time).days : "",
+            // hours: edit === 1 ? "" + splitTime(product.prepration_time).hours : "",
+            // minutes: edit === 1 ? "" + splitTime(product.prepration_time).minutes : ""
         }
     }
 
     componentDidMount(): void {
+        this.defaultPrepareTime();
         this.getCategories();
     }
 
@@ -227,6 +235,31 @@ export default class AddFoodItem extends Component<Props, State> {
       this.setState({
         selectedCategory: category
       })
+    }
+
+    private defaultPrepareTime(){
+      const {edit, product} = this.props.route.params;
+      if(edit){
+        let split_time = splitTime(product.prepration_time);
+        this.setState({
+          selectedDays: daysOptions.find(element => element.id == split_time.days),
+          showDaysPopup: false,
+          showHoursPopup: false,
+          selectedHours: hoursOptions.find(element => element.id == split_time.hours),
+          showMinutesPopup: false,
+          selectedMinutes:  minutesOptions.find(element => element.id == split_time.minutes),
+        });
+      }else{
+        this.setState({
+          selectedDays: daysOptions[0],
+          showDaysPopup: false,
+          showHoursPopup: false,
+          selectedHours: hoursOptions[0],
+          showMinutesPopup: false,
+          selectedMinutes: minutesOptions[0]
+        });
+
+      }
     }
 
     getMorePhotos(product) {
@@ -446,16 +479,16 @@ export default class AddFoodItem extends Component<Props, State> {
             return false;
         }
 
-        // if (this.state.description.length === 0) {
-        //     showMessage({
-        //         message: strings("invalid_description"),
-        //         type: "danger",
-        //         icon: "info"
-        //     });
-        //     return false;
-        // }
+        if (this.state.description.length === 0) {
+            showMessage({
+                message: strings("invalid_description"),
+                type: "danger",
+                icon: "info"
+            });
+            return false;
+        }
 
-        if (combineTime(this.state.days, this.state.hours, this.state.minutes) === 0) {
+        if (combineTime(this.state.selectedDays, this.state.selectedHours, this.state.selectedMinutes) === 0) {
             showMessage({
                 message: strings("invalid_time"),
                 type: "danger",
@@ -463,18 +496,6 @@ export default class AddFoodItem extends Component<Props, State> {
             });
             return false;
         }
-
-        // if (hasFeaturedProduct() === false) {
-        //     if (this.state.isFeatureProduct === 0) {
-        //         showMessage({
-        //             message: strings("mandatory_feature_product"),
-        //             type: "danger",
-        //             icon: "info",
-        //             duration: 4000
-        //         });
-        //         return false;
-        //     }
-        // }
 
         return true;
     }
@@ -491,7 +512,7 @@ export default class AddFoodItem extends Component<Props, State> {
             });
             // {days: this.state.days, hours: this.state.hours, minutes: this.state.minutes}
             formData.append("price", this.state.costPrice)
-            formData.append("prepration_time", combineTime(this.state.days, this.state.hours, this.state.minutes))
+            formData.append("prepration_time", combineTime(this.state.selectedDays, this.state.selectedHours, this.state.selectedMinutes))
             formData.append("details[en][name]", this.state.foodName)
             formData.append("details[en][ingredients]", this.state.ingredients)
             if (this.state.description.length > 0) {
@@ -552,7 +573,7 @@ export default class AddFoodItem extends Component<Props, State> {
             // {days: this.state.days, hours: this.state.hours, minutes: this.state.minutes}
             formData.append("product_id", this.state.product.id)
             formData.append("price", this.state.costPrice)
-            formData.append("prepration_time", combineTime(this.state.days, this.state.hours, this.state.minutes))
+            formData.append("prepration_time", combineTime(this.state.selectedDays, this.state.selectedHours, this.state.selectedMinutes))
             formData.append("details[en][name]", this.state.foodName)
             formData.append("details[en][ingredients]", this.state.ingredients)
             formData.append("details[en][description]", this.state.description)
@@ -920,26 +941,39 @@ export default class AddFoodItem extends Component<Props, State> {
                 <HFTextRegular fontSize={Constants.regularSmallFontSize} value={strings("time_to_make")}/>
                 <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                     <View style={{flex: 1}}>
-                        <TextFormInput keyboard={"numeric"} text={this.state.days} placeholder={strings("days")}
-                                       value={value => {
-                                           this.setState({days: value});
-                                       }}/>
+
+                                       <TextFormInput showOptions={() => {
+                                           this.setState({showDaysPopup: true})
+                                       }}
+                                                      dropdown={true}
+                                                      placeholder={strings("days")}
+                                                      text={this.state.selectedDays ? this.state.selectedDays.name : ""}
+                                                      value={value => {
+                                                      }}/>
                     </View>
                     <View style={{width: Constants.defaultPadding}}/>
                     <View style={{flex: 1}}>
-                        <TextFormInput keyboard={"numeric"} text={this.state.hours} placeholder={strings("hours")}
-                                       value={value => {
-                                           this.setState({hours: value});
-                                       }}/>
+                                       <TextFormInput showOptions={() => {
+                                           this.setState({showHoursPopup: true})
+                                       }}
+                                                      dropdown={true}
+                                                      placeholder={strings("hours")}
+                                                      text={this.state.selectedHours ? this.state.selectedHours.name : ""}
+                                                      value={value => {
+                                                      }}/>
                     </View>
                     <View style={{width: Constants.defaultPaddingMin}}/>
                     <HFTextRegular fontSize={Constants.regularSmallFontSize} value={":"}/>
                     <View style={{width: Constants.defaultPaddingMin}}/>
                     <View style={{flex: 1}}>
-                        <TextFormInput keyboard={"numeric"} text={this.state.minutes} placeholder={strings("minutes")}
-                                       value={value => {
-                                           this.setState({minutes: value});
-                                       }}/>
+                                       <TextFormInput showOptions={() => {
+                                           this.setState({showMinutesPopup: true})
+                                       }}
+                                                      dropdown={true}
+                                                      placeholder={strings("minutes")}
+                                                      text={this.state.selectedMinutes ? this.state.selectedMinutes.name : ""}
+                                                      value={value => {
+                                                      }}/>
                     </View>
                 </RTLView>
 
@@ -1127,6 +1161,30 @@ export default class AddFoodItem extends Component<Props, State> {
                                   }}
                                   selectedValue={this.state.selectedCategory}
                                   values={this.state.categories}/>
+                    <HHPickerView show={this.state.showDaysPopup}
+                                  onDismiss={() => this.setState({showDaysPopup: false})}
+                                  onValueChange={(value, index) => {
+                                      this.setState({showDaysPopup: false, selectedDays: value})
+                                  }}
+                                  selectedValue={this.state.selectedDays}
+                                  values={daysOptions}
+                                  />
+                    <HHPickerView show={this.state.showHoursPopup}
+                                  onDismiss={() => this.setState({showHoursPopup: false})}
+                                  onValueChange={(value, index) => {
+                                      this.setState({showHoursPopup: false, selectedHours: value})
+                                  }}
+                                  selectedValue={this.state.selectedHours}
+                                  values={hoursOptions}
+                                  />
+                    <HHPickerView show={this.state.showMinutesPopup}
+                                  onDismiss={() => this.setState({showMinutesPopup: false})}
+                                  onValueChange={(value, index) => {
+                                      this.setState({showMinutesPopup: false, selectedMinutes: value})
+                                  }}
+                                  selectedValue={this.state.selectedMinutes}
+                                  values={minutesOptions}
+                                  />
                     <ImageUploadView show={this.state.uploadImage}
                                      onDismiss={() => {
                                          this.setState({uploadImage: false})
