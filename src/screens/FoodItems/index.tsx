@@ -203,7 +203,7 @@ export default class FoodItems extends Component<Props, State> {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
                     resp.data.map((item) => {
-                        if (item.status === 0) {
+                        if (item.out_of_stock === 1) {
                             this.setState({outOfStockItems: this.state.outOfStockItems + 1});
                         } else {
                             this.setState({inStockItems: this.state.inStockItems + 1});
@@ -247,13 +247,13 @@ export default class FoodItems extends Component<Props, State> {
                     //product.status = actionStatus;
                     if (actionStatus === 1) {
                         this.setState({
-                            outOfStockItems: this.state.outOfStockItems - 1,
-                            inStockItems: this.state.inStockItems + 1
+                            outOfStockItems: this.state.outOfStockItems + 1,
+                            inStockItems: this.state.inStockItems - 1
                         });
                     } else {
                         this.setState({
-                            outOfStockItems: this.state.outOfStockItems + 1,
-                            inStockItems: this.state.inStockItems - 1
+                            outOfStockItems: this.state.outOfStockItems - 1,
+                            inStockItems: this.state.inStockItems + 1
                         })
                     }
                 }
