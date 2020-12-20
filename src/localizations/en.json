@@ -302,5 +302,7 @@
   "email_us": "Email Us",
   "whatsapp": "Whatsapp Us",
   "order_number": "Order Number : ",
-  "delete_alert_message": "Are you sure you want to delete?"
+  "delete_alert_message": "Are you sure you want to delete?",
+  "accept_orders": "Accept Orders",
+  "can_not_accept_orders": "Can Not Accept Orders",
 }

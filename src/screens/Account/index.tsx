@@ -35,6 +35,7 @@ interface State {
     options: any[];
     showLogin: boolean;
     isAccountEnabled: boolean;
+    acceptOrder: boolean;
     appVersion?: string;
     label?: string;
     description?: string;
@@ -54,7 +55,7 @@ export default class Account extends Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
-            showLogin: false, isAccountEnabled: true, options: [
+            showLogin: false, isAccountEnabled: true, acceptOrder: true, options: [
                 {"icon": "profile", "title": "my_profile", "screen": "Profile", "alertMessage": undefined},
                 {"icon": "my_license", "title": "my_license", "screen": "License", "alertMessage": undefined},
                 {"icon": "map_pin", "title": "my_address", "screen": "MyAddress", "alertMessage": undefined},
@@ -115,6 +116,7 @@ export default class Account extends Component<Props, State> {
                         sellerProfile: resp,
                         licenseExpiryDate: details.license_end_date,
                         isAccountEnabled: true,
+                        acceptOrder: Boolean(details.accept_orders),
                         options: [
                             {"icon": "profile", "title": "my_profile", "screen": "Profile", "alertMessage": undefined},
                             {
@@ -289,7 +291,7 @@ export default class Account extends Component<Props, State> {
         }
     }
     toggleSwitch = (value) => {
-        this.setState({isAccountEnabled: value});
+        this.setState({acceptOrder: value});
     }
 
     renderHeader() {
@@ -351,20 +353,20 @@ export default class Account extends Component<Props, State> {
                             <Switch
                                 style={{transform: [{scaleX: .7}, {scaleY: .7}]}}
                                 trackColor={{false: ColorTheme.white, true: ColorTheme.appThemeSecond}}
-                                thumbColor={this.state.isAccountEnabled ? ColorTheme.white : ColorTheme.textGreyDark}
+                                thumbColor={this.state.acceptOrder ? ColorTheme.white : ColorTheme.textGreyDark}
                                 ios_backgroundColor={ColorTheme.textGreyLight}
                                 onValueChange={(value) => {
                                     this.toggleSwitch(value);
                                     this.updateStatus(value);
                                 }}
-                                value={this.state.isAccountEnabled}
+                                value={this.state.acceptOrder}
                             />
                             <Text
                                 style={[StaticStyles.regularFont, {
-                                    color: this.state.isAccountEnabled ? ColorTheme.appTheme : ColorTheme.textGreyDark,
+                                    color: this.state.acceptOrder ? ColorTheme.appTheme : ColorTheme.textGreyDark,
                                     fontSize: isRTLMode() ? 12 : 11, textAlign: "center"
                                 }]}>
-                                {this.state.isAccountEnabled ? strings("account_active") : strings("account_inactive")}
+                                {this.state.acceptOrder ? strings("accept_orders") : strings("can_not_accept_orders")}
                             </Text>
                         </RTLView>
                         <View style={{height: Constants.defaultPaddingMin}}/>

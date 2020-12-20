@@ -300,5 +300,8 @@
   "whatsapp": "واتس اب لنا",
 
   "order_number": "رقم الأمر :",
-  "delete_alert_message": "هل أنت متأكد أنك تريد حذف؟"
+  "delete_alert_message": "هل أنت متأكد أنك تريد حذف؟",
+
+  "accept_orders": "قبول الطلبات",
+  "can_not_accept_orders": "لا يمكن قبول الطلبات",
 }
