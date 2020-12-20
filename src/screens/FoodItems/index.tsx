@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
@@ -449,34 +449,26 @@ export default class FoodItems extends Component<Props, State> {
                                 onDelete={() => {
                                     this.setState({showProductActions: false});
                                     setTimeout(() => {
-                                        this.removeProduct();
+                                      Alert.alert(
+                                                strings("app_name"),
+                                                strings("delete_alert_message"),
+                                                [
+                                                    {
+                                                        text: strings("cancel"), onPress: () => {
+                                                        }
+                                                    },
+                                                    {
+                                                        text: strings("yes"), onPress: () => {
+                                                            setTimeout(() => {
+                                                                this.removeProduct();
+                                                            }, 400);
+                                                        }
+                                                    },
+                                                ],
+                                                {cancelable: false},
+                                            );
                                     }, 400);
-                                    // if (this.state.selectedFood.is_feature === 1) {
-                                    //     setTimeout(() => {
-                                    //         Alert.alert(
-                                    //             strings("app_name"),
-                                    //             strings("delete_feature_product_info"),
-                                    //             [
-                                    //                 {
-                                    //                     text: strings("ok"), onPress: () => {
-                                    //                     }
-                                    //                 },
-                                    //                 {
-                                    //                     text: strings("delete_anyway"), onPress: () => {
-                                    //                         setTimeout(() => {
-                                    //                             this.removeProduct();
-                                    //                         }, 400);
-                                    //                     }
-                                    //                 },
-                                    //             ],
-                                    //             {cancelable: false},
-                                    //         );
-                                    //     }, 400);
-                                    // } else {
-                                    //     setTimeout(() => {
-                                    //         this.removeProduct();
-                                    //     }, 400);
-                                    // }
+
                                 }}
                                 onDismiss={() => {
                                     this.setState({showProductActions: false});
