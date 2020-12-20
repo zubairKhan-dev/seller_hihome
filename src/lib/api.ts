@@ -71,6 +71,10 @@ export function updateProductStatus(request: any) {
     return httpPostForm(appConfig.sellerAPI().endPoint() + "sellers/products/change_product_status", request);
 }
 
+export function updateProductStock(request: any) {
+    return httpPostForm(appConfig.sellerAPI().endPoint() + "sellers/products/out_of_stock", request);
+}
+
 export function addProductImage(request: any) {
     return httpPostForm(appConfig.sellerAPI().endPoint() + "sellers/products/add-images", request);
 }

@@ -244,7 +244,7 @@ export default class FoodItems extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
-                    product.status = actionStatus;
+                    //product.status = actionStatus;
                     if (actionStatus === 1) {
                         this.setState({
                             outOfStockItems: this.state.outOfStockItems - 1,
@@ -267,7 +267,7 @@ export default class FoodItems extends Component<Props, State> {
             // showError(reason);
             this.setState({loading: false});
         };
-        Api.updateProductStatus(formData)
+        Api.updateProductStock(formData)
             .then((response) => {
                     this.apiHandler(response);
                 },
@@ -360,9 +360,9 @@ export default class FoodItems extends Component<Props, State> {
                         {foodItem.status === 1 && <View>
                             <View style={{flex: 1}}/>
                             <StockSwitch initialState={!foodItem.out_of_stock} onActive={() => {
-                                this.performProductAction(1, foodItem, index);
-                            }} onInActive={() => {
                                 this.performProductAction(0, foodItem, index);
+                            }} onInActive={() => {
+                                this.performProductAction(1, foodItem, index);
                             }}/>
                             <View style={{flex: 1}}/>
                         </View>}
