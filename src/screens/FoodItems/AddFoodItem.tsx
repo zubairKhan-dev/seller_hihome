@@ -138,7 +138,7 @@ export default class AddFoodItem extends Component<Props, State> {
             description: edit === 0 ? "" : product.description ? product.description : "",
             edit: edit !== 0,
             product: edit === 1 ? product : undefined,
-            serveCount: "",
+            serveCount: edit === 0 ? "" : "" + product.serve_count,
         }
     }
 
@@ -470,7 +470,7 @@ export default class AddFoodItem extends Component<Props, State> {
             });
             return false;
         }
-        if (this.state.serveCount.length === 0) {
+        if (this.state.serveCount.length === 0 || this.state.serveCount == 0) {
             showMessage({
                 message: strings("invalid_serve_count"),
                 type: "danger",
@@ -529,7 +529,7 @@ export default class AddFoodItem extends Component<Props, State> {
             formData.append("category_id", this.state.selectedCategory.id)
             formData.append("is_feature", this.state.isFeatureProduct)
             formData.append("serve_count", this.state.serveCount)
-            
+
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response && response.code === 200 && resp) {
@@ -593,6 +593,8 @@ export default class AddFoodItem extends Component<Props, State> {
             formData.append("details[en][description]", this.state.description)
             formData.append("category_id", this.state.selectedCategory.id)
             formData.append("is_feature", this.state.isFeatureProduct)
+            formData.append("is_feature", this.state.isFeatureProduct)
+            formData.append("serve_count", this.state.serveCount)
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response && response.code === 200 && resp) {
@@ -610,7 +612,11 @@ export default class AddFoodItem extends Component<Props, State> {
                     }
                     this.setState({loading: false});
                 }, (errors, errorMessage) => {
-                    // showMessage(errorMessage);
+                  showMessage({
+                      message: errorMessage,
+                      type: "danger",
+                      icon: "info"
+                  });
                     this.setState({loading: false});
                 });
             };
