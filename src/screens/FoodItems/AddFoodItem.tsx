@@ -528,6 +528,8 @@ export default class AddFoodItem extends Component<Props, State> {
             }
             formData.append("category_id", this.state.selectedCategory.id)
             formData.append("is_feature", this.state.isFeatureProduct)
+            formData.append("serve_count", this.state.serveCount)
+            
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     if (response && response.code === 200 && resp) {
@@ -547,7 +549,11 @@ export default class AddFoodItem extends Component<Props, State> {
                     }
                     this.setState({loading: false});
                 }, (errors, errorMessage) => {
-                    // showMessage(errorMessage);
+                    showMessage({
+                        message: errorMessage,
+                        type: "danger",
+                        icon: "info"
+                    });
                     this.setState({loading: false});
                 });
             };
