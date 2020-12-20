@@ -187,7 +187,8 @@ export default class Account extends Component<Props, State> {
             formData.append("license_end_date", this.state.sellerProfile.seller_details.license_end_date)
             formData.append("city", this.state.sellerProfile.seller_details.city)
             formData.append("pincode", this.state.sellerProfile.seller_details.pincode)
-            formData.append("status", status)
+            //formData.append("status", status)
+            formData.append("accept_orders", status ? 1 : 0);
 
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
