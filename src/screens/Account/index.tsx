@@ -167,9 +167,6 @@ export default class Account extends Component<Props, State> {
             formData.append("first_name", this.state.sellerProfile.first_name)
             formData.append("last_name", this.state.sellerProfile.last_name)
             formData.append("email", this.state.sellerProfile.email)
-            formData.append("password", "123456") // REMOVE
-            formData.append("c_password", "123456") // REMOVE
-            formData.append("phone", "0507467251")
             formData.append("lang", getCurrentLocale())
             formData.append("emirates_id", this.state.sellerProfile.seller_details.emirates_id)
             formData.append("address", this.state.sellerProfile.seller_details.address)
