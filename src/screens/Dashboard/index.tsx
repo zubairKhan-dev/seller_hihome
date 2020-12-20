@@ -536,24 +536,6 @@ export default class Dashboard extends Component<Props, State> {
                                 </RTLView>
                                 <View style={{height: Constants.defaultPadding}}/>
 
-                                <View style={{height: 0.5, backgroundColor: ColorTheme.selected_tab}}/>
-
-                                {/*--------CUSTOMER DETAILS-------*/}
-                                <View style={{height: Constants.defaultPadding}}/>
-                                <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
-                                    textAlign: isRTLMode() ? "right" : "left",
-                                    color: ColorTheme.textDark,
-                                    fontSize: Constants.regularSmallerFontSize
-                                }]}>
-                                    {strings("customer_details")}
-                                </Text>
-                                <View style={{height: Constants.defaultPaddingMin}}/>
-                                <Text style={[StaticStyles.regularFont, {
-                                    color: ColorTheme.grey,
-                                    textAlign: isRTLMode() ? "right" : "left",
-                                    fontSize: 10,
-                                    fontWeight: "400"
-                                }]}>{order.customer.name + ", " + order.customer.address}</Text>
                                 <View style={{height: Constants.defaultPadding}}/>
                                 {/*--------DELIVERY DETAILS DETAILS-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
