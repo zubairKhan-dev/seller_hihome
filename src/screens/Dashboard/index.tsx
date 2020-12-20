@@ -105,7 +105,7 @@ export default class Dashboard extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getOrderStatusLookup();
         });
-        // Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
+        Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
         // // await analytics().setCurrentScreen("Dashboard", "Dashboard").then(r => {
         // // });
     }

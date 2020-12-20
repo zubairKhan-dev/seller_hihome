@@ -20,6 +20,9 @@ import {showMessage} from "react-native-flash-message";
 import Moment from "moment";
 import FeaturedImage from "../../components/FeaturedImage";
 
+import {XEvents} from "../../lib/EventBus";
+import Events from "react-native-simple-events";
+
 // {"icon": "subscription", "title": strings("subscription"), "screen": "Subscription"},
 // {"icon": "my_earnings", "title": strings("my_earnings"), "screen": "Earnings"},
 // {"icon": "customer_reviews", "title": strings("customer_reviews"), "screen": "Reviews"},
@@ -67,6 +70,8 @@ export default class Account extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getProfile();
         });
+
+        Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getProfile.bind(this));
 
         CodePush.getUpdateMetadata().then((metadata) => {
             if (metadata) {
