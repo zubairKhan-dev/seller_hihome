@@ -170,7 +170,6 @@ export default class Account extends Component<Props, State> {
             formData.append("lang", getCurrentLocale())
             formData.append("emirates_id", this.state.sellerProfile.seller_details.emirates_id)
             formData.append("address", this.state.sellerProfile.seller_details.address)
-            formData.append("accept_orders", this.state.sellerProfile.seller_details.accept_orders)
             formData.append("legal_business_name", this.state.sellerProfile.seller_details.title)
             formData.append("legal_business_email", this.state.sellerProfile.seller_details.legal_business_email)
             formData.append("c_legal_business_email", this.state.sellerProfile.seller_details.legal_business_email)
