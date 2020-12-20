@@ -59,6 +59,10 @@ export function getOrdersList(pageIndex: number) {
     return httpGet(appConfig.sellerAPI().endPoint() + "sellers/orders?per_page=10&status=all&page=" + pageIndex);
 }
 
+export function getDashboardOrdersList(pageIndex: number) {
+    return httpGet(appConfig.sellerAPI().endPoint() + "sellers/orders/dashboard?per_page=10&status=all&page=" + pageIndex);
+}
+
 export function updateOrderStatus(request: any) {
     return httpPostForm(appConfig.sellerAPI().endPoint() + "sellers/orders/change_order_status", request);
 }

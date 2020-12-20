@@ -105,7 +105,7 @@ export default class Dashboard extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getOrderStatusLookup();
         });
-        Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
+        //Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
         // // await analytics().setCurrentScreen("Dashboard", "Dashboard").then(r => {
         // // });
     }
@@ -147,8 +147,9 @@ export default class Dashboard extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
+                    let resp_statuses = response.response_data.filter(status => status.id < OrderStatus.DELIVERED);
                     this.setState({
-                        orderStatus: this.state.orderStatus.concat(response.response_data),
+                        orderStatus: this.state.orderStatus.concat(resp_statuses),
                         currentPage: 1
                     });
                 }
@@ -197,7 +198,7 @@ export default class Dashboard extends Component<Props, State> {
             // showError(reason);
             this.setState({loading: false});
         };
-        Api.getOrdersList(this.state.currentPage)
+        Api.getDashboardOrdersList(this.state.currentPage)
             .then((response) => {
                     this.apiHandler(response);
                 },
