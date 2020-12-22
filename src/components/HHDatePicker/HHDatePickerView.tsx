@@ -49,6 +49,7 @@ export default class HHDatePickerView extends Component<Props, State> {
                     <DatePicker
                         date={this.state.currentDate}
                         mode={"date"}
+                        minimumDate={this.props.minimumDate}
                         onDateChange={(date) => {
                             this.setState({currentDate: date});
                         }}

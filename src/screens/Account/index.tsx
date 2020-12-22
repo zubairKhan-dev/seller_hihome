@@ -20,6 +20,9 @@ import {showMessage} from "react-native-flash-message";
 import Moment from "moment";
 import FeaturedImage from "../../components/FeaturedImage";
 
+import {XEvents} from "../../lib/EventBus";
+import Events from "react-native-simple-events";
+
 // {"icon": "subscription", "title": strings("subscription"), "screen": "Subscription"},
 // {"icon": "my_earnings", "title": strings("my_earnings"), "screen": "Earnings"},
 // {"icon": "customer_reviews", "title": strings("customer_reviews"), "screen": "Reviews"},
@@ -32,6 +35,7 @@ interface State {
     options: any[];
     showLogin: boolean;
     isAccountEnabled: boolean;
+    acceptOrder: boolean;
     appVersion?: string;
     label?: string;
     description?: string;
@@ -51,7 +55,7 @@ export default class Account extends Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
-            showLogin: false, isAccountEnabled: true, options: [
+            showLogin: false, isAccountEnabled: true, acceptOrder: true, options: [
                 {"icon": "profile", "title": "my_profile", "screen": "Profile", "alertMessage": undefined},
                 {"icon": "my_license", "title": "my_license", "screen": "License", "alertMessage": undefined},
                 {"icon": "map_pin", "title": "my_address", "screen": "MyAddress", "alertMessage": undefined},
@@ -67,6 +71,8 @@ export default class Account extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getProfile();
         });
+
+        Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getProfile.bind(this));
 
         CodePush.getUpdateMetadata().then((metadata) => {
             if (metadata) {
@@ -110,6 +116,7 @@ export default class Account extends Component<Props, State> {
                         sellerProfile: resp,
                         licenseExpiryDate: details.license_end_date,
                         isAccountEnabled: true,
+                        acceptOrder: Boolean(details.accept_orders),
                         options: [
                             {"icon": "profile", "title": "my_profile", "screen": "Profile", "alertMessage": undefined},
                             {
@@ -160,13 +167,9 @@ export default class Account extends Component<Props, State> {
             formData.append("first_name", this.state.sellerProfile.first_name)
             formData.append("last_name", this.state.sellerProfile.last_name)
             formData.append("email", this.state.sellerProfile.email)
-            formData.append("password", "123456") // REMOVE
-            formData.append("c_password", "123456") // REMOVE
-            formData.append("phone", "0507467251")
             formData.append("lang", getCurrentLocale())
             formData.append("emirates_id", this.state.sellerProfile.seller_details.emirates_id)
             formData.append("address", this.state.sellerProfile.seller_details.address)
-            formData.append("accept_orders", this.state.sellerProfile.seller_details.accept_orders)
             formData.append("legal_business_name", this.state.sellerProfile.seller_details.title)
             formData.append("legal_business_email", this.state.sellerProfile.seller_details.legal_business_email)
             formData.append("c_legal_business_email", this.state.sellerProfile.seller_details.legal_business_email)
@@ -180,7 +183,8 @@ export default class Account extends Component<Props, State> {
             formData.append("license_end_date", this.state.sellerProfile.seller_details.license_end_date)
             formData.append("city", this.state.sellerProfile.seller_details.city)
             formData.append("pincode", this.state.sellerProfile.seller_details.pincode)
-            formData.append("status", status)
+            //formData.append("status", status)
+            formData.append("accept_orders", status ? 1 : 0);
 
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
@@ -284,7 +288,7 @@ export default class Account extends Component<Props, State> {
         }
     }
     toggleSwitch = (value) => {
-        this.setState({isAccountEnabled: value});
+        this.setState({acceptOrder: value});
     }
 
     renderHeader() {
@@ -346,20 +350,20 @@ export default class Account extends Component<Props, State> {
                             <Switch
                                 style={{transform: [{scaleX: .7}, {scaleY: .7}]}}
                                 trackColor={{false: ColorTheme.white, true: ColorTheme.appThemeSecond}}
-                                thumbColor={this.state.isAccountEnabled ? ColorTheme.white : ColorTheme.textGreyDark}
+                                thumbColor={this.state.acceptOrder ? ColorTheme.white : ColorTheme.textGreyDark}
                                 ios_backgroundColor={ColorTheme.textGreyLight}
                                 onValueChange={(value) => {
                                     this.toggleSwitch(value);
                                     this.updateStatus(value);
                                 }}
-                                value={this.state.isAccountEnabled}
+                                value={this.state.acceptOrder}
                             />
                             <Text
                                 style={[StaticStyles.regularFont, {
-                                    color: this.state.isAccountEnabled ? ColorTheme.appTheme : ColorTheme.textGreyDark,
+                                    color: this.state.acceptOrder ? ColorTheme.appTheme : ColorTheme.textGreyDark,
                                     fontSize: isRTLMode() ? 12 : 11, textAlign: "center"
                                 }]}>
-                                {this.state.isAccountEnabled ? strings("account_active") : strings("account_inactive")}
+                                {this.state.acceptOrder ? strings("accept_orders") : strings("can_not_accept_orders")}
                             </Text>
                         </RTLView>
                         <View style={{height: Constants.defaultPaddingMin}}/>

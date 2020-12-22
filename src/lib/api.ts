@@ -59,6 +59,10 @@ export function getOrdersList(pageIndex: number) {
     return httpGet(appConfig.sellerAPI().endPoint() + "sellers/orders?per_page=10&status=all&page=" + pageIndex);
 }
 
+export function getDashboardOrdersList(pageIndex: number) {
+    return httpGet(appConfig.sellerAPI().endPoint() + "sellers/orders/dashboard?per_page=10&status=all&page=" + pageIndex);
+}
+
 export function updateOrderStatus(request: any) {
     return httpPostForm(appConfig.sellerAPI().endPoint() + "sellers/orders/change_order_status", request);
 }
@@ -69,6 +73,10 @@ export function getFoodList(pageIndex: number) {
 
 export function updateProductStatus(request: any) {
     return httpPostForm(appConfig.sellerAPI().endPoint() + "sellers/products/change_product_status", request);
+}
+
+export function updateProductStock(request: any) {
+    return httpPostForm(appConfig.sellerAPI().endPoint() + "sellers/products/out_of_stock", request);
 }
 
 export function addProductImage(request: any) {
@@ -100,7 +108,7 @@ export function getCategories() {
 }
 
 export function getCities() {
-    return  httpGet("http://shop.hihoome.com/api/locations?per_page=10&with_sub_locations=false&must_has_sub_locations=false");
+    return  httpGet(appConfig.sellerAPI().endPoint() + "locations?per_page=10&with_sub_locations=false&must_has_sub_locations=false");
 }
 
 export function saveAddress(request: any) {
@@ -246,4 +254,3 @@ export function checkValidationError(apiResponse: any,
 function updateToken(token: string) {
     setToken(token);
 }
-

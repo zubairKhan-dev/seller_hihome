@@ -25,7 +25,7 @@ interface State {
 export default class TextKVInput extends Component<Props, State> {
     constructor(props) {
         super(props);
-        this.state = {hidePassword: true, icon: require('../../../assets/images/eye.png')}
+        this.state = {hidePassword: true, icon: require('../../../assets/images/hidden.png')}
     }
 
     getEyeIcon() {
@@ -35,7 +35,9 @@ export default class TextKVInput extends Component<Props, State> {
             return require('../../../assets/images/hidden.png');
         }
     }
+
     render() {
+
         return (
             <View style={[styles.container]}>
                 {this.props.title.length > 0 && <View>
@@ -59,7 +61,7 @@ export default class TextKVInput extends Component<Props, State> {
                                onChangeText={(text) => this.props.value(text)}>
                     </TextInput>
                     {this.props.secure &&
-                    <View style={{padding: 5, justifyContent:"center"}}>
+                    <View style={{padding: 10, justifyContent:"center"}}>
                         <TouchableOpacity onPress={() => {
                             this.setState({
                                 hidePassword: !this.state.hidePassword,

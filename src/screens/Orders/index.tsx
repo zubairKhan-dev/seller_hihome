@@ -77,7 +77,7 @@ export default class Orders extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getOrderStatusLookup();
         });
-        Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
+        //Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
         // analytics().setCurrentScreen("Dashboard", "Dashboard");
     }
 
@@ -125,7 +125,10 @@ export default class Orders extends Component<Props, State> {
             loading: true, orderStatus: [{
                 "id": 0,
                 "name": strings("all"),
-            }]
+            }],
+            orders: [],
+            filteredOrders: [],
+            currentPage: 1,
         });
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
@@ -240,10 +243,10 @@ export default class Orders extends Component<Props, State> {
                         color: ColorTheme.textDark,
                         fontSize: Constants.regularSmallFontSize
                     }]}>
-                        {"ID : "}
+                        {strings("order_number")}
                     </Text>
                     <Text numberOfLines={1} style={[styles.text_order]}>
-                        {order.transaction_id}
+                        {order.order_number}
                     </Text>
                     <View style={{flex: 1}}/>
                     <Text numberOfLines={1} style={[styles.text_order_time]}>

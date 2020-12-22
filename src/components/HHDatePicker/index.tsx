@@ -70,6 +70,7 @@ export default class HHDatePicker extends Component<Props, State> {
                     }}
                     date={this.props.date}
                     show={this.state.showCalendar}
+                    minimumDate={this.props.minimumDate}
                     onSaveDate={(dateValue) => {
                         this.props.value(dateValue);
                         this.setState({showCalendar: false});

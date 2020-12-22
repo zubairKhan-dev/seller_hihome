@@ -53,10 +53,8 @@ export default class Login extends Component<Props, State> {
     }
 
     validEmail(email: string) {
-        return true;
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (reg.test(email) === false) {
-            console.log("Email is Not Correct");
             return false;
         }
         return true;
@@ -81,7 +79,8 @@ export default class Login extends Component<Props, State> {
 
     loginUser() {
         this.hideErrorMessage();
-        if (this.validEmail(this.state.username)) {
+
+        if (this.validInputs()) {
             this.setState({loading: true, errorOccurred: false});
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
@@ -119,9 +118,21 @@ export default class Login extends Component<Props, State> {
                     this.apiExHandler(reason);
                 }),
             );
-        } else {
-            this.showErrorMessage("invalid_email");
         }
+    }
+
+    validInputs() {
+
+        if(!this.validEmail(this.state.username)){
+          this.showErrorMessage("invalid_email");
+          return false;
+        }
+
+        if (!this.state.password && this.state.password.length === 0) {
+            this.showErrorMessage("invalid_password")
+            return false;
+        }
+        return true;
     }
 
     private getErrors(errors) {
@@ -139,6 +150,11 @@ export default class Login extends Component<Props, State> {
     }
 
     private dismiss() {
+        this.hideErrorMessage();
+        this.setState({
+          username: "",
+          password: ""
+        });
         this.props.onDismiss();
     }
 
@@ -173,6 +189,7 @@ export default class Login extends Component<Props, State> {
                         }]}> {strings("login")}</Text>
                         <View style={{flex: 1}}/>
                         <TouchableOpacity onPress={() => {
+                            this.hideErrorMessage();
                             this.dismiss();
                         }}>
                             <AppIcon name={"ic_close"}
@@ -262,4 +279,3 @@ const styles = StyleSheet.create({
         margin: -20,
     },
 });
-

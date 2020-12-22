@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
@@ -81,8 +81,11 @@ export default class FoodItems extends Component<Props, State> {
     }
 
     componentDidMount(): void {
-        this.getFoodList();
-        Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.updateLocalProfile.bind(this));
+        const {navigation} = this.props;
+        this.focusListener = navigation.addListener("focus", () => {
+            this.refreshFoodList();
+        });
+        //Events.on(XEvents.UPDATE_FOOD_ITEMS, "update_food_items", this.updateLocalProfile.bind(this));
     }
 
     private updateLocalProfile() {
@@ -193,7 +196,7 @@ export default class FoodItems extends Component<Props, State> {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
                     resp.data.map((item) => {
-                        if (item.status === 0) {
+                        if (item.out_of_stock === 1) {
                             this.setState({outOfStockItems: this.state.outOfStockItems + 1});
                         } else {
                             this.setState({inStockItems: this.state.inStockItems + 1});
@@ -215,6 +218,7 @@ export default class FoodItems extends Component<Props, State> {
             // showMessage(reason);
             this.setState({loading: false});
         };
+        let currentPage = this.state.currentPage || 1;
         Api.getFoodList(this.state.currentPage)
             .then((response) => {
                     this.apiHandler(response);
@@ -233,16 +237,16 @@ export default class FoodItems extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
-                    product.status = actionStatus;
+                    product.out_of_stock = actionStatus;
                     if (actionStatus === 1) {
-                        this.setState({
-                            outOfStockItems: this.state.outOfStockItems - 1,
-                            inStockItems: this.state.inStockItems + 1
-                        });
-                    } else {
                         this.setState({
                             outOfStockItems: this.state.outOfStockItems + 1,
                             inStockItems: this.state.inStockItems - 1
+                        });
+                    } else {
+                        this.setState({
+                            outOfStockItems: this.state.outOfStockItems - 1,
+                            inStockItems: this.state.inStockItems + 1
                         })
                     }
                 }
@@ -256,7 +260,7 @@ export default class FoodItems extends Component<Props, State> {
             // showError(reason);
             this.setState({loading: false});
         };
-        Api.updateProductStatus(formData)
+        Api.updateProductStock(formData)
             .then((response) => {
                     this.apiHandler(response);
                 },
@@ -349,9 +353,9 @@ export default class FoodItems extends Component<Props, State> {
                         {foodItem.status === 1 && <View>
                             <View style={{flex: 1}}/>
                             <StockSwitch initialState={!foodItem.out_of_stock} onActive={() => {
-                                this.performProductAction(1, foodItem, index);
-                            }} onInActive={() => {
                                 this.performProductAction(0, foodItem, index);
+                            }} onInActive={() => {
+                                this.performProductAction(1, foodItem, index);
                             }}/>
                             <View style={{flex: 1}}/>
                         </View>}
@@ -438,34 +442,26 @@ export default class FoodItems extends Component<Props, State> {
                                 onDelete={() => {
                                     this.setState({showProductActions: false});
                                     setTimeout(() => {
-                                        this.removeProduct();
+                                      Alert.alert(
+                                                strings("app_name"),
+                                                strings("delete_alert_message"),
+                                                [
+                                                    {
+                                                        text: strings("cancel"), onPress: () => {
+                                                        }
+                                                    },
+                                                    {
+                                                        text: strings("yes"), onPress: () => {
+                                                            setTimeout(() => {
+                                                                this.removeProduct();
+                                                            }, 400);
+                                                        }
+                                                    },
+                                                ],
+                                                {cancelable: false},
+                                            );
                                     }, 400);
-                                    // if (this.state.selectedFood.is_feature === 1) {
-                                    //     setTimeout(() => {
-                                    //         Alert.alert(
-                                    //             strings("app_name"),
-                                    //             strings("delete_feature_product_info"),
-                                    //             [
-                                    //                 {
-                                    //                     text: strings("ok"), onPress: () => {
-                                    //                     }
-                                    //                 },
-                                    //                 {
-                                    //                     text: strings("delete_anyway"), onPress: () => {
-                                    //                         setTimeout(() => {
-                                    //                             this.removeProduct();
-                                    //                         }, 400);
-                                    //                     }
-                                    //                 },
-                                    //             ],
-                                    //             {cancelable: false},
-                                    //         );
-                                    //     }, 400);
-                                    // } else {
-                                    //     setTimeout(() => {
-                                    //         this.removeProduct();
-                                    //     }, 400);
-                                    // }
+
                                 }}
                                 onDismiss={() => {
                                     this.setState({showProductActions: false});
@@ -612,8 +608,8 @@ export default class FoodItems extends Component<Props, State> {
                                 <TouchableOpacity onPress={() => {
                                 }}>
                                     {this.state.selectedCategory === 0 && this.renderFoodItem(item, index)}
-                                    {this.state.selectedCategory === 1 && this.state.foodItems[index].status === 0 && this.renderFoodItem(item, index)}
-                                    {this.state.selectedCategory === 2 && this.state.foodItems[index].status === 1 && this.renderFoodItem(item, index)}
+                                    {this.state.selectedCategory === 1 && this.state.foodItems[index].out_of_stock === 1 && this.renderFoodItem(item, index)}
+                                    {this.state.selectedCategory === 2 && this.state.foodItems[index].out_of_stock === 0 && this.renderFoodItem(item, index)}
                                 </TouchableOpacity>
                             }
                             showsVerticalScrollIndicator={false}

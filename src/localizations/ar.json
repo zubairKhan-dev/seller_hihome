@@ -226,6 +226,7 @@
   "invalid_email_contact": "أدخل بريدًا إلكترونيًا صحيحًا للتواصل.",
   "invalid_mobile_number_contact": "أدخل رقم صحيح للهاتف المحمول للتواصل.",
   "invalid_business_email": "أدخل عنوان بريد إلكتروني صحيح .",
+  "invalid_business_phone": "أدخل رقم هاتف عمل صالحًا.",
   "account_under_review" : "لقد تم تسجيلك بنجاح. نحن حاليا نتحقق من صحة تفاصيل حسابك. بمجرد الموافقة ، ستتلقى إشعارًا بالموافقة ويمكنك تسجيل الدخول إلى حسابك.",
   "security_information": "حماية المعلومات",
   "change_password": "غير كلمة السر",
@@ -290,5 +291,22 @@
   "delivery_date": "Delivery Date",
   "select_pickup_time": "Select PickUp Time",
   "pickup_time": "PickUp Time",
-  "select_pickup_time_error": "Please select a pickup time. This will be the time when food will be ready for delivery."
+  "select_pickup_time_error": "Please select a pickup time. This will be the time when food will be ready for delivery.",
+  "select_city": "اختر مدينة",
+
+  "call_us": "اتصل بنا",
+  "technical_support": "دعم فني",
+  "email_us": "ارسل لنا عبر البريد الإلكتروني",
+  "whatsapp": "واتس اب لنا",
+
+  "order_number": "رقم الأمر :",
+  "delete_alert_message": "هل أنت متأكد أنك تريد حذف؟",
+
+  "accept_orders": "قبول الطلبات",
+  "can_not_accept_orders": "لا يمكن قبول الطلبات",
+
+  "special_request": "طلب خاص",
+
+  "add_serve_count": "يخدم ل",
+  "invalid_serve_count": "أدخل عددًا صالحًا للخدمة للمواد الغذائية",
 }

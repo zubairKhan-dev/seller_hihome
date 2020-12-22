@@ -83,7 +83,7 @@ export default class Dashboard extends Component<Props, State> {
             currentPage: 1,
             stats: categories,
             period: "day",
-            selectedSlot: undefined,
+            selectedSlot: {},
             timeSlots: this.getTimeSlot("")
         }
     }
@@ -105,9 +105,9 @@ export default class Dashboard extends Component<Props, State> {
         this.focusListener = navigation.addListener("focus", () => {
             this.getOrderStatusLookup();
         });
-        Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
-        // await analytics().setCurrentScreen("Dashboard", "Dashboard").then(r => {
-        // });
+        //Events.on(XEvents.USER_LOGGED_IN, "user_logged_in", this.getOrderStatusLookup.bind(this));
+        // // await analytics().setCurrentScreen("Dashboard", "Dashboard").then(r => {
+        // // });
     }
 
     private getStatusColor(status) {
@@ -138,13 +138,18 @@ export default class Dashboard extends Component<Props, State> {
             loading: true, orderStatus: [{
                 "id": 0,
                 "name": strings("all"),
-            }]
+            }],
+            orders: [],
+            filteredOrders: [],
+            currentPage: 1,
+            selectedSlot: {},
         });
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
+                    let resp_statuses = response.response_data.filter(status => status.id < OrderStatus.DELIVERED);
                     this.setState({
-                        orderStatus: this.state.orderStatus.concat(response.response_data),
+                        orderStatus: this.state.orderStatus.concat(resp_statuses),
                         currentPage: 1
                     });
                 }
@@ -193,7 +198,7 @@ export default class Dashboard extends Component<Props, State> {
             // showError(reason);
             this.setState({loading: false});
         };
-        Api.getOrdersList(this.state.currentPage)
+        Api.getDashboardOrdersList(this.state.currentPage)
             .then((response) => {
                     this.apiHandler(response);
                 },
@@ -204,24 +209,31 @@ export default class Dashboard extends Component<Props, State> {
     }
 
     performOrderAction(actionStatus: number, order: any, rejectReason?: string) {
-        this.setState({activity: true});
+
         let formData = new FormData();
         formData.append("order_id", order.order_id)
         formData.append("status", actionStatus)
-        formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
+
+        if (actionStatus === OrderStatus.ACCEPTED) {
+          formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
+        }
+
+        this.setState({activity: true});
+
         if (rejectReason) {
             formData.append("cancellation_comment", rejectReason)
         }
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
-                    if (actionStatus === OrderStatus.RECEIVED) {
-                        order.pickup_time = order.delivery_date + " " + this.state.selectedSlot.name;
-                        setTimeout(() => {
-                            this.setState({pickupTime: undefined, selectedSlot: undefined});
-                        }, 100);
-                    }
+                    // if (actionStatus === OrderStatus.RECEIVED) {
+                    //     order.pickup_time = order.delivery_date + " " + this.state.selectedSlot.name;
+                    //     setTimeout(() => {
+                    //         this.setState({pickupTime: undefined, selectedSlot: {}});
+                    //     }, 100);
+                    // }
                     order.status = resp.status;
+                    order.pickup_time = resp.pickup_time;
                     // analytics().logEvent('Order_Action', {
                     //     action_status: actionStatus,
                     //     order_id: order.id,
@@ -280,7 +292,7 @@ export default class Dashboard extends Component<Props, State> {
                 value = "month_orders";
                 break;
             case "year":
-                value = "year_earnings";
+                value = "year_orders";
                 break;
         }
         return value;
@@ -419,10 +431,10 @@ export default class Dashboard extends Component<Props, State> {
                                     color: ColorTheme.textDark,
                                     fontSize: Constants.regularSmallFontSize
                                 }]}>
-                                    {strings("id")}
+                                    {strings("order_number")}
                                 </Text>
                                 <Text numberOfLines={1} style={[styles.text_order]}>
-                                    {order.transaction_id}
+                                    {order.order_number}
                                 </Text>
                                 <View style={{flex: 1}}/>
                                 <Text numberOfLines={1} style={[styles.text_order_time]}>
@@ -524,17 +536,14 @@ export default class Dashboard extends Component<Props, State> {
                                     </Text>
                                 </RTLView>
                                 <View style={{height: Constants.defaultPadding}}/>
-
-                                <View style={{height: 0.5, backgroundColor: ColorTheme.selected_tab}}/>
-
-                                {/*--------CUSTOMER DETAILS-------*/}
+                                {/*--------SPECIAL REQUEST-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
                                 <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
                                     textAlign: isRTLMode() ? "right" : "left",
                                     color: ColorTheme.textDark,
                                     fontSize: Constants.regularSmallerFontSize
                                 }]}>
-                                    {strings("customer_details")}
+                                    {strings("special_request")}
                                 </Text>
                                 <View style={{height: Constants.defaultPaddingMin}}/>
                                 <Text style={[StaticStyles.regularFont, {
@@ -542,8 +551,9 @@ export default class Dashboard extends Component<Props, State> {
                                     textAlign: isRTLMode() ? "right" : "left",
                                     fontSize: 10,
                                     fontWeight: "400"
-                                }]}>{order.customer.name + ", " + order.customer.address}</Text>
+                                }]}>{order.special_request}</Text>
                                 <View style={{height: Constants.defaultPadding}}/>
+
                                 {/*--------DELIVERY DETAILS DETAILS-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
                                 <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
@@ -559,7 +569,7 @@ export default class Dashboard extends Component<Props, State> {
                                     textAlign: isRTLMode() ? "right" : "left",
                                     fontSize: 10,
                                     fontWeight: "400"
-                                }]}>{order.delivery_date}</Text>
+                                }]}>{order.delivery_date} @ {order.delivery_slot}</Text>
                                 {/*--------PICKUP TIME DETAILS-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
                                 <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
@@ -570,17 +580,21 @@ export default class Dashboard extends Component<Props, State> {
                                     {strings("pickup_time")}
                                 </Text>
                                 <View style={{height: Constants.defaultPaddingMin}}/>
-                                {order.pickup_time && <Text style={[StaticStyles.regularFont, {
-                                    color: ColorTheme.grey,
-                                    textAlign: isRTLMode() ? "right" : "left",
-                                    fontSize: 10,
-                                    fontWeight: "400"
-                                }]}>{order.pickup_time}</Text>}
+                                {(order.pickup_time)?
+                                  <Text style={[StaticStyles.regularFont, {
+                                      color: ColorTheme.grey,
+                                      textAlign: isRTLMode() ? "right" : "left",
+                                      fontSize: 10,
+                                      fontWeight: "400"
+                                  }]}>{order.pickup_time}</Text>
+                                  :
+                                  null
+                                }
+                                <View style={{height: Constants.defaultPaddingMin}}/>
                                 {order.status.id === OrderStatus.RECEIVED && <TextFormInput showOptions={() => {
                                     this.setState({
                                         timeSlots: this.getTimeSlot(order.delivery_slot),
                                         showSlots: true,
-                                        selectedSlot: undefined
                                     });
                                 }}
                                                                                             dropdown={true}
@@ -614,7 +628,7 @@ export default class Dashboard extends Component<Props, State> {
                     <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                         <View style={{flex: 1}}>
                             <ActionButton title={strings("accept")} onPress={() => {
-                                if (this.state.selectedSlot) {
+                                if (Object.keys(this.state.selectedSlot).length > 0) {
                                     this.performOrderAction(OrderStatus.ACCEPTED, item);
                                 } else {
                                     showMessage({
@@ -828,7 +842,7 @@ export default class Dashboard extends Component<Props, State> {
                             renderItem={({item, index}) =>
                                 <View>
                                     <TouchableOpacity onPress={() => {
-                                        this.setState({selectedSlot: undefined});
+                                        this.setState({selectedSlot: {}});
                                     }}>
                                         {this.renderOrder(item, index)}
                                     </TouchableOpacity>

@@ -117,10 +117,12 @@ export default class MyAddress extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response.code === 200 && resp && resp.seller_details) {
-                    this.setState({
-                        sellerProfile: resp.seller_details,
-                        address: resp.seller_details.address,
+                  this.setState({
+                      sellerProfile: resp.seller_details
+                    }, () => {
+                        this.loadAddressData();
                     });
+
                 }
                 this.setState({loading: false});
             }, (errors, errorMessage) => {
@@ -141,6 +143,30 @@ export default class MyAddress extends Component<Props, State> {
             }),
         );
     }
+
+    private loadAddressData() {
+      let { sellerProfile } = this.state;
+
+      this.setState({
+          isEdit: false,
+          address: sellerProfile.address,
+          selectedCity:{
+            id: sellerProfile.emirates_id,
+            name: sellerProfile.city
+          },
+          currentLocation: {
+              latitude: sellerProfile.lat,
+              longitude: sellerProfile.long,
+          },
+          initialRegion: {
+              latitude: sellerProfile.lat,
+              longitude: sellerProfile.long,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+          },
+      });
+    }
+
 
     private getCities() {
         this.setState({loading: true});
@@ -174,11 +200,13 @@ export default class MyAddress extends Component<Props, State> {
     }
 
     private saveAddress() {
+
+      if (this.validateInputs()) {
         this.setState({loading: true});
         let formData = new FormData();
         formData.append("lat", this.state.currentLocation.latitude);
         formData.append("long", this.state.currentLocation.longitude);
-        formData.append("address", this.state.address + "," + this.state.selectedCity.name);
+        formData.append("address", this.state.address);
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200 && resp) {
@@ -211,6 +239,16 @@ export default class MyAddress extends Component<Props, State> {
                 this.apiExHandler(reason);
             }),
         );
+      }
+    }
+
+    private validateInputs() {
+      // ADDRESS
+      if (!this.state.address || (this.state.address && this.state.address.length === 0)) {
+          showMessageAlert(strings("invalid_address"));
+          return false;
+      }
+      return true;
     }
 
     getGeoLocation() {
@@ -313,6 +351,7 @@ export default class MyAddress extends Component<Props, State> {
     }
 
     render() {
+
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: ColorTheme.white}}>
                 {this.renderHeader()}
@@ -391,7 +430,7 @@ export default class MyAddress extends Component<Props, State> {
                              locale={getCurrentLocale()}>
                         <View style={{flex: 1}}>
                             <ActionButton variant={"alt"} title={strings("cancel")} onPress={() => {
-                                this.setState({isEdit: false});
+                                this.loadAddressData();
                             }}/>
                         </View>
                         <View style={{width: Constants.defaultPadding}}/>

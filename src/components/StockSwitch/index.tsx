@@ -42,7 +42,7 @@ export default class StockSwitch extends Component<Props, State> {
                 <Text
                     style={[StaticStyles.regularFont, {color: this.state.isEnabled ? ColorTheme.appTheme : ColorTheme.textGreyDark ,
                     fontSize: Constants.regularSmallestFontSize, textAlign: "center"}]}>
-                    {this.state.isEnabled ? strings("active") : strings("out_of_stock")}
+                    {this.state.isEnabled ? strings("in_stock") : strings("out_of_stock")}
                 </Text>
             </View>
         );

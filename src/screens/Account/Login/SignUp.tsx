@@ -140,22 +140,8 @@ export default class SignUp extends Component<Props, State> {
             photoIndex: -1,
             verified_mobile: "",
             pin: "12345",
-            // business_name:"Test Business",
-            // business_email: "sohrab.iosdev@gmail.com",
-            // emirates_id: "784198809538493",
-            // license_id: "234123",
-            // address: "Al Nahda",
-            // city: "Sharjah",
-            // email: "sohrab@gmail.com",
-            // mobile_number: "971507467251",
-            // password: "123456",
-            // confirm_password: "123456",
-            // first_name: "Sohrab",
-            // last_name: "Hussain",
-            // email_contact: "sohrab.iosdev@gmail.com",
-            // mobile_number_contact: "971507467251",
             license_start_date: new Date,
-            license_end_date: new Date,
+            license_end_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
             resendRequest: false,
             selectedCity: undefined,
             showCities: false,
@@ -309,7 +295,7 @@ export default class SignUp extends Component<Props, State> {
 
         // EMIRATES ID
         if (!this.state.emirates_id || (this.state.emirates_id && this.state.emirates_id.length === 0)) {
-            showMessageAlert(strings("invalid_emiractes_id"));
+            showMessageAlert(strings("invalid_emirates_id"));
             return false;
         } else {
             if (this.state.emirates_id.length !== 15) {
@@ -678,12 +664,18 @@ export default class SignUp extends Component<Props, State> {
                                   date={this.state.license_start_date}
                                   editable={true}
                                   value={(dateValue) => {
-                                      this.setState({license_start_date: dateValue});
+                                    this.setState({license_start_date: dateValue},
+                                    ()=>{
+                                      let endDate = new Date(dateValue);
+                                      endDate = new Date(endDate.setFullYear(endDate.getFullYear() + 1));
+                                      this.setState({license_end_date: endDate});
+                                    });
                                   }}/>
                     <View style={{height: Constants.defaultPadding}}/>
                     <HHDatePicker title={strings("license_expiry_date")}
                                   date={this.state.license_end_date}
                                   editable={true}
+                                  minimumDate={this.state.license_end_date}
                                   value={(dateValue) => {
                                       this.setState({license_end_date: dateValue});
                                   }}/>
@@ -777,7 +769,7 @@ export default class SignUp extends Component<Props, State> {
                         this.setState({showCities: true});
                     }}
                                    dropdown={true}
-                                   placeholder={strings("add_price")}
+                                   placeholder={strings("select_city")}
                                    text={this.state.selectedCity ? this.state.selectedCity.name : ""}
                                    value={value => {
                                    }}/>

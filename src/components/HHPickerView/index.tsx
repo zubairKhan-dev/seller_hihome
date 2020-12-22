@@ -28,7 +28,13 @@ export default class HHPickerView extends Component<Props, State> {
     }
 
     renderFoodItem(option: any, index: number) {
-        let selItem = this.props.selectedValue.id === this.props.values[index].id;
+       let selItem = false;
+       
+       if(Object.keys(this.props.selectedValue).length > 0){
+          selItem = parseInt(this.props.selectedValue.id) === this.props.values[index].id;
+       }
+
+
         return (
             <View style={{
                 marginTop: Constants.defaultPadding,

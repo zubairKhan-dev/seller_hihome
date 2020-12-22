@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Modal from "react-native-modal";
 import {Text, TouchableOpacity, View, Dimensions, StyleSheet, ScrollView} from "react-native";
-import {getCurrentLocale, strings} from "../../../components/Translations";
+import {getCurrentLocale, strings, isRTLMode} from "../../../components/Translations";
 import Constants from "../../../theme/Constants";
 import ColorTheme from "../../../theme/Colors";
 import {CommonIcons} from "../../../icons/Common";
@@ -77,7 +77,7 @@ export default class TermsConditions extends Component<Props, State> {
                     </RTLView>
                     <ScrollView style={{paddingHorizontal: Constants.defaultPadding, marginTop: Constants.defaultPaddingMax}}>
                         <Text style={[{
-                            textAlign: "right", color: "black",
+                            textAlign: isRTLMode() ? "right" : "left", color: "black",
                             fontWeight: "500",
                             fontSize: 14,
                         }]}> {strings("terms_conditions_text")}</Text>

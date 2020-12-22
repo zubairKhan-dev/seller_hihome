@@ -373,9 +373,15 @@ class App extends Component<Props, State> {
                       });
                     }}/> :
                     <View style={{flex: 1}}>
-                      <ConnectedRoot/>
-                      <LoginPopUp navigation={this.props.navigation} show={!isUserLoggedIn()}
-                                  onDismiss={() => this.setState({showLogin: false})}/>
+                     {
+                       (!isUserLoggedIn()) ?
+                       <LoginPopUp navigation={this.props.navigation} show={!isUserLoggedIn()}
+                                   onDismiss={() => this.setState({showLogin: false})}/>
+                       :
+                       <ConnectedRoot/>
+                     }
+
+
                     </View>}
                 <FlashMessage position="top"/>
               </SafeAreaProvider>
