@@ -2,8 +2,8 @@ import {APIConfig, Environment} from "./def";
 import {BaseAPIConfig} from "./BaseAPIConfig";
 
 const PROTOCOL = "http";
-const SERVER = "shop.hihoome.com";
-const APPLICATION = "api";
+const SERVER = "staging.hihome.app";
+const APPLICATION = "public/api";
 const ENDPOINT = "";
 const VERSION = "";
 
