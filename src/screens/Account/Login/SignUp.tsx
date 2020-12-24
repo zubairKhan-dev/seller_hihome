@@ -470,7 +470,7 @@ export default class SignUp extends Component<Props, State> {
         formData.append("legal_business_email", this.state.email)
         formData.append("c_legal_business_email", this.state.email)
         formData.append("legal_business_phone", this.state.mobile_number_contact)
-        formData.append("emirates_id", this.state.emirates_id)
+        formData.append("seller_eid", this.state.emirates_id)
         formData.append("address", this.state.address)
         formData.append("license_id", this.state.license_id)
         formData.append("license_start_date", parseDate(this.state.license_start_date, "yyyy-MM-DD"))
