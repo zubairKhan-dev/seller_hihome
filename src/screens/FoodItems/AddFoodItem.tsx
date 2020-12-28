@@ -510,6 +510,7 @@ export default class AddFoodItem extends Component<Props, State> {
 
     private addProduct() {
         if (this.validateInputs()) {
+            let language = getCurrentLocale();
             this.setState({loading: true});
             let photo = this.state.mainPhoto[0];
             let formData = new FormData();
@@ -521,10 +522,10 @@ export default class AddFoodItem extends Component<Props, State> {
             // {days: this.state.days, hours: this.state.hours, minutes: this.state.minutes}
             formData.append("price", this.state.costPrice)
             formData.append("prepration_time", combineTime(this.state.selectedDays, this.state.selectedHours, this.state.selectedMinutes))
-            formData.append("details[en][name]", this.state.foodName)
-            formData.append("details[en][ingredients]", this.state.ingredients)
+            formData.append("details["+language+"][name]", this.state.foodName)
+            formData.append("details["+language+"][ingredients]", this.state.ingredients)
             if (this.state.description.length > 0) {
-                formData.append("details[en][description]", this.state.description)
+                formData.append("details["+language+"][description]", this.state.description)
             }
             formData.append("category_id", this.state.selectedCategory.id)
             formData.append("is_feature", this.state.isFeatureProduct)
@@ -575,6 +576,7 @@ export default class AddFoodItem extends Component<Props, State> {
     private updateProduct() {
         if (this.validateInputs()) {
             this.setState({loading: true});
+            let language = getCurrentLocale();
             let photo = this.state.mainPhoto[0];
             let formData = new FormData();
             if (photo.uri !== this.state.product.main_image) {
@@ -588,9 +590,9 @@ export default class AddFoodItem extends Component<Props, State> {
             formData.append("product_id", this.state.product.id)
             formData.append("price", this.state.costPrice)
             formData.append("prepration_time", combineTime(this.state.selectedDays, this.state.selectedHours, this.state.selectedMinutes))
-            formData.append("details[en][name]", this.state.foodName)
-            formData.append("details[en][ingredients]", this.state.ingredients)
-            formData.append("details[en][description]", this.state.description)
+            formData.append("details["+language+"][name]", this.state.foodName)
+            formData.append("details["+language+"][ingredients]", this.state.ingredients)
+            formData.append("details["+language+"][description]", this.state.description)
             formData.append("category_id", this.state.selectedCategory.id)
             formData.append("is_feature", this.state.isFeatureProduct)
             formData.append("is_feature", this.state.isFeatureProduct)
