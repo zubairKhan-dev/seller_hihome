@@ -84,8 +84,8 @@ export default class MyAddress extends Component<Props, State> {
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 {
                     buttonPositive: "",
-                    'title': 'Example App',
-                    'message': 'Example App access to your location '
+                    'title': 'HiHome App',
+                    'message': 'HiHome App access to your location '
                 }
             )
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -112,7 +112,7 @@ export default class MyAddress extends Component<Props, State> {
     }
 
     private getProfile() {
-        this.setState({loading: true});
+        //this.setState({loading: true});
         let formData = new FormData();
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
@@ -155,12 +155,12 @@ export default class MyAddress extends Component<Props, State> {
             name: sellerProfile.city
           },
           currentLocation: {
-              latitude: sellerProfile.lat,
-              longitude: sellerProfile.long,
+              latitude: Number(sellerProfile.lat),
+              longitude: Number(sellerProfile.long),
           },
           initialRegion: {
-              latitude: sellerProfile.lat,
-              longitude: sellerProfile.long,
+              latitude: Number(sellerProfile.lat),
+              longitude: Number(sellerProfile.long),
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA
           },
@@ -385,12 +385,13 @@ export default class MyAddress extends Component<Props, State> {
                     <View style={{height: Constants.defaultPadding}}/>
                     <View style={{}}>
                         <MapView
+                            provider={MapView.PROVIDER_GOOGLE}
                             style={{
                                 height: 250,
                                 borderRadius: Constants.defaultPaddingMin,
                                 width: width - (2 * Constants.defaultPaddingRegular)
                             }}
-                            initialRegion={this.state.initialRegion}>
+                            region={this.state.initialRegion}>
                             {this.state.currentLocation && <Marker
                                 onDragEnd={(e) => {
                                     this.setState({

@@ -14,6 +14,7 @@
 #import <CodePush/CodePush.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 @import Firebase;
+@import GoogleMaps;
 
 @implementation AppDelegate
 
@@ -26,6 +27,7 @@
     // Fallback on earlier versions
   }
   
+  [GMSServices provideAPIKey:@"AIzaSyBXXWBUoC0GYbDbfAKtlPxn5PPJm5YSJYI"];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"HiHomeSeller"

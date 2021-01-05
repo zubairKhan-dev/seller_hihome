@@ -776,6 +776,7 @@ export default class SignUp extends Component<Props, State> {
                     <View style={{height: Constants.defaultPadding}}/>
                     <View style={{}}>
                         <MapView
+                            provider={MapView.PROVIDER_GOOGLE}
                             style={{
                                 height: 250,
                                 borderRadius: Constants.defaultPaddingMin,
