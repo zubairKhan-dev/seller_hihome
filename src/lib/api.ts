@@ -220,7 +220,7 @@ function handleHttpResponse(response: any, responseJSON: any) {
 
 function buildHeaders(extra?: any) {
     let token = getToken();
-    console.log("TOKEN", token);
+    
     let headers: any = {
         "Content-Type": "multipart/form-data",
         "Accept-Language": getCurrentLocale(),

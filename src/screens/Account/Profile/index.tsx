@@ -238,7 +238,6 @@ export default class Profile extends Component<Props, State> {
             formData.append("city", this.state.sellerProfile.seller_details.city)
             formData.append("pincode", this.state.sellerProfile.seller_details.pincode)
             formData.append("accept_orders", this.state.sellerProfile.seller_details.accept_orders)
-            formData.append("license_photo", this.state.sellerProfile.seller_details.license_photo)
 
             formData.append("legal_business_name", this.state.business_name)
             formData.append("legal_business_email", this.state.business_email)
