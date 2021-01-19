@@ -265,18 +265,18 @@ export default class SignUp extends Component<Props, State> {
     }
 
     componentWillReceiveProps(){
-        console.log("componentWillReceiveProps");
+      //  console.log("componentWillReceiveProps");
     }
 
     getSellerLocation() {
 
-      if (Platform.OS === "ios") {
-        console.log("getSellerLocation");
-          Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
-      } else {
-          this.requestLocationPermission().then(r => {
-          });
-      }
+      // if (Platform.OS === "ios") {
+      //   console.log("getSellerLocation");
+      //     Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
+      // } else {
+      //     this.requestLocationPermission().then(r => {
+      //     });
+      //}
     }
 
     onIds = (device) => {

@@ -63,6 +63,8 @@ export default class LoginPopUp extends Component<Props, State> {
     }
 
     componentWillReceiveProps(newProps) {
+        console.log("componentWillReceiveProps");
+        console.log(newProps);
         this.setState({
             show: newProps.show,
             showSignUp: newProps.showSignUp,
@@ -237,15 +239,26 @@ export default class LoginPopUp extends Component<Props, State> {
                                 {this.renderGuestUser()}
                             </ScrollView>
                         </View>
-                        <SignUp navigation={this.props.navigation} show={this.state.showSignUp}
-                                onDismiss={() => this.setState({showSignUp: false})}/>
-                        <Login navigation={this.props.navigation} show={this.state.showLogin}
-                               onDismiss={() => this.setState({showLogin: false})}
-                               onLoginSuccess={() => {
-                                   Events.trigger(XEvents.USER_LOGGED_IN);
-                                   // this.setState({showLogin: false, show: false});
-                                   this.dismiss();
-                               }}/>
+                        {
+                          (this.state.showSignUp) ?
+                          <SignUp navigation={this.props.navigation} show={this.state.showSignUp}
+                                  onDismiss={() => this.setState({showSignUp: false})}/>
+                          :
+                          null
+                        }
+                        {
+                          (this.state.showLogin)?
+                          <Login navigation={this.props.navigation} show={this.state.showLogin}
+                                 onDismiss={() => this.setState({showLogin: false})}
+                                 onLoginSuccess={() => {
+                                     Events.trigger(XEvents.USER_LOGGED_IN);
+                                     // this.setState({showLogin: false, show: false});
+                                     this.dismiss();
+                                 }}/>
+                                : null
+
+                        }
+
                     </View>
                 </View>
             </Modal>
