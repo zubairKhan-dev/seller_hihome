@@ -102,11 +102,12 @@ export default class MyAddress extends Component<Props, State> {
     }
 
     componentDidMount(): void {
-        if (Platform.OS === "ios") {
-            Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
-        } else {
-            this.requestLocationPermission().then(r => {});
-        }
+
+        // if (Platform.OS === "ios") {
+        //     Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
+        // } else {
+        //     this.requestLocationPermission().then(r => {});
+        // }
 
         this.getCities();
     }
@@ -298,7 +299,7 @@ export default class MyAddress extends Component<Props, State> {
 
     onRegionChange(region) {
         console.log("REGION CHANGED");
-        this.setState({initialRegion: region});
+        this.setState({initialRegion: region, currentLocation: region});
     }
 
     componentWillUnmount() {
@@ -386,6 +387,10 @@ export default class MyAddress extends Component<Props, State> {
                     <View style={{}}>
                         <MapView
                             provider={MapView.PROVIDER_GOOGLE}
+                            pitchEnabled={ this.state.isEdit ? true : false }
+                            rotateEnabled={ this.state.isEdit ? true : false }
+                            scrollEnabled={ this.state.isEdit ? true : false }
+                            zoomEnabled={ this.state.isEdit ? true : false }
                             style={{
                                 height: 250,
                                 borderRadius: Constants.defaultPaddingMin,
@@ -394,15 +399,16 @@ export default class MyAddress extends Component<Props, State> {
                             region={this.state.initialRegion}>
                             {this.state.currentLocation && <Marker
                                 onDragEnd={(e) => {
-                                    this.setState({
-                                        currentLocation: {
-                                            latitude: e.nativeEvent.coordinate.latitude,
-                                            longitude: e.nativeEvent.coordinate.longitude,
-                                        }
-                                    });
+                                    let region = {
+                                      latitude: e.nativeEvent.coordinate.latitude,
+                                      longitude: e.nativeEvent.coordinate.longitude,
+                                      latitudeDelta: LATITUDE_DELTA,
+                                      longitudeDelta: LONGITUDE_DELTA
+                                    }
+                                    this.onRegionChange(region);
                                 }}
                                 pinColor={"red"}
-                                draggable={true}
+                                draggable={ this.state.isEdit ? true : false}
                                 coordinate={{
                                     'latitude': this.state.currentLocation.latitude,
                                     'longitude': this.state.currentLocation.longitude

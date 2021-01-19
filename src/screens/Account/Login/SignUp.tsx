@@ -8,7 +8,10 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    Alert,
+    Linking,
+
 } from "react-native";
 import {StaticStyles} from "../../../theme/Styles";
 import Constants from "../../../theme/Constants";
@@ -157,8 +160,8 @@ export default class SignUp extends Component<Props, State> {
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 {
                     buttonPositive: "",
-                    'title': 'Example App',
-                    'message': 'Example App access to your location '
+                    'title': 'HiHome App',
+                    'message': 'For Registration HiHome need to access your location '
                 }
             )
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -195,7 +198,19 @@ export default class SignUp extends Component<Props, State> {
                 // }, 200);
             },
             (error) => {
-                // See error code charts below.
+                //See error code charts below.
+                Alert.alert(
+                  `Turn on Location Services to allow HiHome to determine your location.`,
+                  '',
+                  [
+                    { text: 'Go to Settings', onPress:  () => {
+                        Linking.openSettings().catch(() => {
+                          Alert.alert('Unable to open settings');
+                        });
+                      }
+                    },
+                  ],
+                );
                 console.log(error.code, error.message);
             },
             {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
@@ -221,7 +236,7 @@ export default class SignUp extends Component<Props, State> {
 
     onRegionChange(region) {
         console.log("REGION CHANGED");
-        this.setState({initialRegion: region});
+        this.setState({initialRegion: region, currentLocation: region});
     }
 
     componentWillUnmount() {
@@ -229,13 +244,18 @@ export default class SignUp extends Component<Props, State> {
     }
 
     componentDidMount(): void {
-        if (Platform.OS === "ios") {
-            Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
-        } else {
-            this.requestLocationPermission().then(r => {
-            });
-        }
         this.getCities();
+    }
+
+    getSellerLocation() {
+
+      if (Platform.OS === "ios") {
+        console.log("getSellerLocation");
+          Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
+      } else {
+          this.requestLocationPermission().then(r => {
+          });
+      }
     }
 
     onIds = (device) => {
@@ -399,41 +419,42 @@ export default class SignUp extends Component<Props, State> {
 
     private registerUser() {
         if (!this.state.currentLocation) {
-            this.requestLocationPermission().then(r => {
-            });
+            this.getSellerLocation();
+        }else{
+          if (this.validateInputs()) {
+              this.setState({loading: true});
+              this.apiHandler = (response) => {
+                  Api.checkValidationError(response, resp => {
+                      if (response && response.code === 200 && resp) {
+                          // analytics().logEvent('Register_Seller', {
+                          //     user_id: response.response_data.id,
+                          // });
+                          this.setState({loading: false, showMessagePopup: true});
+                      }
+                  }, (errors, errorMessage) => {
+                      setTimeout(() => {
+                          showMessageAlert(errorMessage);
+                      }, 400);
+                      this.setState({loading: false});
+                  });
+              };
+              this.apiExHandler = (reason) => {
+                  setTimeout(() => {
+                      showMessageAlert(reason);
+                  }, 400);
+                  this.setState({loading: false});
+              };
+              Api.registerUser(this.getPostObj())
+                  .then((response) => {
+                          this.apiHandler(response);
+                      },
+                  ).catch((reason => {
+                      this.apiExHandler(reason);
+                  }),
+              );
+          }
         }
-        if (this.validateInputs()) {
-            this.setState({loading: true});
-            this.apiHandler = (response) => {
-                Api.checkValidationError(response, resp => {
-                    if (response && response.code === 200 && resp) {
-                        // analytics().logEvent('Register_Seller', {
-                        //     user_id: response.response_data.id,
-                        // });
-                        this.setState({loading: false, showMessagePopup: true});
-                    }
-                }, (errors, errorMessage) => {
-                    setTimeout(() => {
-                        showMessageAlert(errorMessage);
-                    }, 400);
-                    this.setState({loading: false});
-                });
-            };
-            this.apiExHandler = (reason) => {
-                setTimeout(() => {
-                    showMessageAlert(reason);
-                }, 400);
-                this.setState({loading: false});
-            };
-            Api.registerUser(this.getPostObj())
-                .then((response) => {
-                        this.apiHandler(response);
-                    },
-                ).catch((reason => {
-                    this.apiExHandler(reason);
-                }),
-            );
-        }
+
     }
 
     private getErrors(errors) {
@@ -782,15 +803,17 @@ export default class SignUp extends Component<Props, State> {
                                 borderRadius: Constants.defaultPaddingMin,
                                 width: width - (2 * 30) - (2 * Constants.defaultPadding)
                             }}
-                            initialRegion={this.state.initialRegion}>
+                            initialRegion={this.state.initialRegion}
+                            region={this.state.initialRegion}>
                             {this.state.currentLocation && <Marker
                                 onDragEnd={(e) => {
-                                    this.setState({
-                                        currentLocation: {
-                                            latitude: e.nativeEvent.coordinate.latitude,
-                                            longitude: e.nativeEvent.coordinate.longitude,
-                                        }
-                                    });
+                                  let region = {
+                                    latitude: e.nativeEvent.coordinate.latitude,
+                                    longitude: e.nativeEvent.coordinate.longitude,
+                                    latitudeDelta: LATITUDE_DELTA,
+                                    longitudeDelta: LONGITUDE_DELTA
+                                  }
+                                  this.onRegionChange(region);
                                 }}
                                 pinColor={"red"}
                                 draggable={true}
@@ -1079,6 +1102,9 @@ export default class SignUp extends Component<Props, State> {
                 isVisible={this.props.show}
                 onBackButtonPress={() => {
                     this.dismiss();
+                }}
+                onShow={()=>{
+                  this.getSellerLocation();
                 }}
                 avoidKeyboard={true}
                 useNativeDriver={true}
