@@ -270,13 +270,13 @@ export default class SignUp extends Component<Props, State> {
 
     getSellerLocation() {
 
-      // if (Platform.OS === "ios") {
-      //   console.log("getSellerLocation");
-      //     Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
-      // } else {
-      //     this.requestLocationPermission().then(r => {
-      //     });
-      //}
+      if (Platform.OS === "ios") {
+        console.log("getSellerLocation");
+          Geolocation.requestAuthorization("whenInUse").then(r => this.getGeoLocation());
+      } else {
+          this.requestLocationPermission().then(r => {
+          });
+      }
     }
 
     onIds = (device) => {
