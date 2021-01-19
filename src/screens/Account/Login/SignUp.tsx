@@ -156,25 +156,42 @@ export default class SignUp extends Component<Props, State> {
 
     async requestLocationPermission() {
         try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                    buttonPositive: "",
-                    'title': 'HiHome App',
-                    'message': 'For Registration HiHome need to access your location '
-                }
-            )
+            const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log("You can use the location")
                 this.getGeoLocation();
                 // alert("You can use the location");
+            } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN){
+              Alert.alert(
+                `Turn on Location Services to allow HiHome to determine your location.`,
+                '',
+                [
+                  { text: 'Go to Settings', onPress:  () => {
+                      Linking.openSettings().catch(() => {
+                        Alert.alert('Unable to open settings');
+                      });
+                      this.handleAndroidBackLink();
+                    }
+                  },
+                ],
+              );
             } else {
-                console.log("location permission denied")
+              console.log("PermissionsAndroid.RESULTS.GRANTED");
+              console.log(PermissionsAndroid.RESULTS);
+
+              console.log("location permission denied")
                 // alert("Location permission denied");
             }
         } catch (err) {
             console.warn(err)
         }
+    }
+
+    handleAndroidBackLink(){
+      setTimeout(() => {
+          console.log("handleAndroidBackLink");
+          this.requestLocationPermission();
+      }, 600);
     }
 
     getGeoLocation() {
@@ -245,6 +262,10 @@ export default class SignUp extends Component<Props, State> {
 
     componentDidMount(): void {
         this.getCities();
+    }
+
+    componentWillReceiveProps(){
+        console.log("componentWillReceiveProps");
     }
 
     getSellerLocation() {

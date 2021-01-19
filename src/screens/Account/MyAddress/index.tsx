@@ -84,8 +84,8 @@ export default class MyAddress extends Component<Props, State> {
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 {
                     buttonPositive: "",
-                    'title': 'HiHome App',
-                    'message': 'HiHome App access to your location '
+                    'title': strings("address_updated_success"),
+                    'message': 'HiHome App access to your location'
                 }
             )
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
