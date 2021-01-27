@@ -65,7 +65,7 @@ export default class ContactUs extends Component<Props, State> {
     }
 
     render() {
-        let call_us = (Platform.OS === 'ios') ? `telprompt:+971526164664?` : `tel:+971526164664?` ;
+        let call_us = (Platform.OS === 'ios') ? `telprompt:+971523771785?` : `tel:+971523771785?` ;
         let technical_support = (Platform.OS === 'ios') ? `telprompt:+971526164664?` : `tel:+971526164664?` ;
 
         return (
@@ -76,9 +76,9 @@ export default class ContactUs extends Component<Props, State> {
                 <SupportItem title={strings("technical_support")}
                 onPress={() => this.openLink(technical_support)}/>
                 <SupportItem title={strings("email_us")}
-                onPress={() => this.openLink('mailto:info@hihome.app?subject=Hello HiHome')}/>
+                onPress={() => this.openLink('mailto:help@hihome.app?subject=Hello HiHome')}/>
                 <SupportItem title={strings("whatsapp")}
-                onPress={() => this.openLink('http://api.whatsapp.com/send?phone=971509555900')}/>
+                onPress={() => this.openLink('http://api.whatsapp.com/send?phone=971523771785')}/>
 
             </SafeAreaView>
         );
