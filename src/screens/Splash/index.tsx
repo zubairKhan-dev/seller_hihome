@@ -156,7 +156,7 @@ export default class SplashScreen extends Component<Props, State> {
                             transform: [{scaleX: this.state.splashLoading}],
                             alignSelf: "flex-start",
                         }}/>
-                        <View style={{flexDirection: "row", width: "100%", padding: Constants.defaultPadding}} />
+                        <View style={{flexDirection: "row", width: "100%", padding: 3 * Constants.defaultPadding}} />
                     </View>
                 </View>}
             </SafeAreaView>
