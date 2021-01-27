@@ -156,17 +156,7 @@ export default class SplashScreen extends Component<Props, State> {
                             transform: [{scaleX: this.state.splashLoading}],
                             alignSelf: "flex-start",
                         }}/>
-                        <View style={{flexDirection: "row", width: "100%", padding: Constants.defaultPadding}}>
-                            <View style={{flex: 1, alignItems: "center"}}>
-                                <Text style={[{
-                                    textAlign: "center",
-                                    color: ColorTheme.appTheme,
-                                    fontWeight: "700",
-                                    fontSize: 13,
-                                    marginBottom: 50
-                                }]}> {this.state.codePushStatus}</Text>
-                            </View>
-                        </View>
+                        
                     </View>
                 </View>}
             </SafeAreaView>
