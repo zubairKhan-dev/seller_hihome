@@ -133,7 +133,7 @@ export default class ForgotPassword extends Component<Props, State> {
                     borderColor: ColorTheme.grey,
                     borderWidth: 1,
                     borderRadius: 5,
-                    padding: Constants.defaultPadding
+                    padding: Platform.OS == 'android' ? 0 : Constants.defaultPadding
                 }}>
                     <TextInput style={{color: ColorTheme.textDark}} placeholder={"example@info.com"}
                                placeholderTextColor={ColorTheme.placeholder} value={this.state.email}
