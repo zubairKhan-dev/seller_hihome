@@ -40,7 +40,7 @@
   "enter_last_name" : "Please enter your last name",
   "enter_email_address" : "Please enter your email address",
   "enter_password" : "Please enter your password",
-  "enter_mobile" : "Please enter your mobile (9715********)",
+  "enter_mobile" : "Please enter your mobile (05********)",
   "enter_confirm_password" : "Please confirm your password",
   "password_mismatch": "New Password and Confirm Password doesn't match",
   "password_reset_success": "Your account password has been updated.",
