@@ -6,7 +6,7 @@ export function validEmail(email: string) {
 
 
 export function validMobile(mobile: string) {
-  if (mobile && mobile.length === 12 && mobile.substring(0, 3) === "971") {
+  if (mobile && mobile.length === 10 && mobile.substring(0, 2) === "05") {
       return true
   }
   return false;

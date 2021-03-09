@@ -34,6 +34,7 @@ import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import VerifyOTPPopUp from "../../../components/VerifyOTPPopUp";
 import {parseDate} from "../../../lib/DateUtil";
 import {getDeviceId, setDeviceId} from "../../../lib/user";
+import { validMobile } from "../../../lib/Validation";
 import TermsConditions from "./TermsConditions"
 import {ONESIGNAL_APP_ID, photoOptions} from "../../../config/Constants";
 import OneSignal from 'react-native-onesignal';
@@ -328,12 +329,6 @@ export default class SignUp extends Component<Props, State> {
             return false;
         }
 
-        // BUSINESS NAME
-        // if (!this.state.business_email || (this.state.business_email && this.state.business_email.length === 0)) {
-        //     showMessageAlert(strings("invalid_business_email"));
-        //     return false;
-        // }
-
         // EMIRATES ID
         if (!this.state.emirates_id || (this.state.emirates_id && this.state.emirates_id.length === 0)) {
             showMessageAlert(strings("invalid_emirates_id"));
@@ -351,7 +346,6 @@ export default class SignUp extends Component<Props, State> {
             return false;
         }
 
-        // LICENSE START DATE
 
         // LICENSE PHOTO
         if (this.state.licensePhoto[0].uri.length === 0) {
@@ -371,11 +365,6 @@ export default class SignUp extends Component<Props, State> {
             return false;
         }
 
-        // CITY
-        // if (!this.state.city || (this.state.city && this.state.city.length === 0)) {
-        //     showMessageAlert(strings("invalid_city"));
-        //     return false;
-        // }
 
         // EMAIL
         if (!this.state.email || (this.state.email && this.state.email.length === 0)) {
@@ -384,7 +373,7 @@ export default class SignUp extends Component<Props, State> {
         }
 
         // MOBILE
-        if (!this.state.mobile_number || (this.state.mobile_number && this.state.mobile_number.length === 0)) {
+        if (!validMobile(this.state.mobile_number)) {
             showMessageAlert(strings("invalid_mobile_number"));
             return false;
         }
@@ -419,14 +408,8 @@ export default class SignUp extends Component<Props, State> {
             return false;
         }
 
-        // EMAIL CONTACT
-        // if (!this.state.email_contact || (this.state.email_contact && this.state.email_contact.length === 0)) {
-        //     showMessageAlert(strings("invalid_email_contact"));
-        //     return false;
-        // }
-
         // MOBILE CONTACT
-        if (!this.state.mobile_number_contact || (this.state.mobile_number_contact && this.state.mobile_number_contact.length === 0)) {
+        if (!validMobile(this.state.mobile_number_contact)) {
             showMessageAlert(strings("invalid_mobile_number_contact"));
             return false;
         }
