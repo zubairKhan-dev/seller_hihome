@@ -10,7 +10,7 @@ import BorderButton from "../ActionButton/BorderButton";
 import {RTLView} from "react-native-rtl-layout";
 import {isRTLMode, strings} from "../Translations";
 import RoundButton from "../ActionButton/RoundButton";
-
+import {generateImageURL} from "../../lib/Image";
 interface Props {
     show: boolean;
     onDismiss: Function;
@@ -32,6 +32,14 @@ export default class FoodDetails extends Component<Props, State> {
     }
 
     render() {
+      let images = this.props.details ?
+                    this.props.details.images.map(function(image) {
+                                          console.log("image");
+                                          console.log(image);
+                                          return generateImageURL(image, 800, 800);
+                                          })
+                                    : [];
+
         return (
             <Modal
                 onBackdropPress={() => this.props.onDismiss()}
@@ -56,7 +64,7 @@ export default class FoodDetails extends Component<Props, State> {
                         ImageComponent={Image}
                         sliderBoxHeight={300}
                         sliderBoxWidth={windowWidth - 2 * Constants.defaultPadding}
-                        images={this.props.details?.images}
+                        images={images}
                         onCurrentImagePressed={index => {
                         }}
                         currentImageEmitter={index => {
