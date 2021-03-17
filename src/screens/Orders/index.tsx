@@ -13,6 +13,7 @@ import * as Api from "../../lib/api";
 import LoadingOverlay from "../../components/Loading";
 import NoDataFound from "../../components/NoDataFound";
 import FeaturedImage from "../../components/FeaturedImage";
+import {generateImageURL} from "../../lib/Image";
 
 export enum OrderStatus {
     RECEIVED = 1,
@@ -209,7 +210,7 @@ export default class Orders extends Component<Props, State> {
                             overflow: "hidden"
                         }}>
                             <FeaturedImage width={50} height={50}
-                                           uri={foodItem.product_details.main_image}/>
+                                           uri={generateImageURL(foodItem.product_details.main_image, 150, 150)}/>
                         </View>
                     </View>
                     <View style={{flex: 1, paddingHorizontal: Constants.defaultPadding}}>
