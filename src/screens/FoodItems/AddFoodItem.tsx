@@ -36,6 +36,7 @@ import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import {hasFeaturedProduct, setProfile} from "../../lib/user";
 import FeaturedImage from "../../components/FeaturedImage";
+import {generateImageURL} from "../../lib/Image";
 import {photoOptions} from "../../config/Constants";
 import {daysOptions, hoursOptions, minutesOptions} from "../../config/item/data";
 
@@ -263,11 +264,12 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     getMorePhotos(product) {
+      
         let newPhotos = morePhotos;
         for (let i = 0; i < newPhotos.length; i++) {
             let pic = newPhotos[i];
             if (product.images_list && product.images_list.length > i) {
-                pic.uri = product.images_list[i].image;
+                pic.uri = generateImageURL(product.images_list[i].image, 300, 300);
             } else {
                 pic.uri = "";
             }
@@ -280,7 +282,7 @@ export default class AddFoodItem extends Component<Props, State> {
         for (let i = 0; i < newPhoto.length; i++) {
             let pic = newPhoto[i];
             if (product.main_image && product.main_image.length > 0) {
-                pic.uri = product.main_image;
+                pic.uri = generateImageURL(product.main_image, 300, 300);
             } else {
                 pic.uri = "";
             }
@@ -790,9 +792,10 @@ export default class AddFoodItem extends Component<Props, State> {
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response && response.code === 200) {
-                    this.state.product.images_list.push({image: photoResponse.uri, id: 0});
-                    // CHANGE TO BE MADE
+                    this.state.product.images_list.push({image: response.response_data[0].image, id: 0});
+                    // // CHANGE TO BE MADE
                     this.setState({photos: this.getMorePhotos(this.state.product)});
+
                 } else if (response.code === 400) {
                     showMessageAlert(resp.error_msg)
                 }
