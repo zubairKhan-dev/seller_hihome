@@ -34,8 +34,6 @@ export default class FoodDetails extends Component<Props, State> {
     render() {
       let images = this.props.details ?
                     this.props.details.images.map(function(image) {
-                                          console.log("image");
-                                          console.log(image);
                                           return generateImageURL(image, 800, 800);
                                           })
                                     : [];

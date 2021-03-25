@@ -58,7 +58,7 @@ let morePhotos = [
 
 
 let mainPhoto = [
-    {name: "", uri: "", data: undefined},
+    {name: "", uri: "", path: "", data: undefined},
 ];
 
 interface Props {
@@ -264,7 +264,7 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     getMorePhotos(product) {
-      
+
         let newPhotos = morePhotos;
         for (let i = 0; i < newPhotos.length; i++) {
             let pic = newPhotos[i];
@@ -283,8 +283,10 @@ export default class AddFoodItem extends Component<Props, State> {
             let pic = newPhoto[i];
             if (product.main_image && product.main_image.length > 0) {
                 pic.uri = generateImageURL(product.main_image, 300, 300);
+                pic.path = product.main_image;
             } else {
                 pic.uri = "";
+                pic.path = "";
             }
         }
         return newPhoto;
@@ -422,6 +424,7 @@ export default class AddFoodItem extends Component<Props, State> {
                     let mainPic = this.state.mainPhoto[0];
                     mainPic.uri = "";
                     mainPic.name = "";
+                    mainPic.path = "";
                     mainPic.data = undefined;
                     this.setState({mainPhoto: [mainPic]});
                 } else if (response.code === 400) {
@@ -581,7 +584,8 @@ export default class AddFoodItem extends Component<Props, State> {
             let language = getCurrentLocale();
             let photo = this.state.mainPhoto[0];
             let formData = new FormData();
-            if (photo.uri !== this.state.product.main_image) {
+            if (photo.path !== this.state.product.main_image) {
+              return false;
                 formData.append("main_image", {
                     name: "test",
                     type: photo.data.type,
