@@ -25,6 +25,7 @@ import { parseDate, formatDate } from "../../../lib/DateUtil";
 import LoadingOverlay from "../../../components/Loading";
 import FeaturedImage from "../../../components/FeaturedImage";
 import {photoOptions} from "../../../config/Constants";
+import { generateImageURL } from "../../../lib/Image";
 
 const defaultPhoto = {name: "", uri: "", data: undefined};
 
@@ -391,7 +392,8 @@ export default class License extends Component<Props, State> {
                             }}>
                                 {this.state.showActivity && <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>}
                                 <View style={{overflow: "hidden", width: windowWidth - (2 * Constants.defaultPaddingRegular), height: 150}}>
-                                    <FeaturedImage width={windowWidth - (2 * Constants.defaultPaddingRegular)} height={150} uri={this.state.licensePhoto.uri}/>
+                                    <FeaturedImage width={windowWidth - (2 * Constants.defaultPaddingRegular)} height={windowWidth - (2 * Constants.defaultPaddingRegular)}
+                                                   uri={generateImageURL(this.state.licensePhoto.uri, windowWidth - (2 * Constants.defaultPaddingRegular), windowWidth - (2 * Constants.defaultPaddingRegular))}/>
                                 </View>
                             </View>
                             {this.state.isEdit && <View style={{
@@ -446,7 +448,7 @@ export default class License extends Component<Props, State> {
                                      onDismiss={() => {
                                          this.setState({showDocumentsViewer: false})
                                      }}
-                                     documents={[this.state.licensePhoto.uri]}
+                                     documents={[generateImageURL(this.state.licensePhoto.uri)]}
                     />
                     <ImageUploadView show={this.state.uploadImage}
                                      onDismiss={() => {

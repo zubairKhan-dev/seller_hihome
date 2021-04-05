@@ -24,6 +24,7 @@ import ImageUploadView from "../../../components/ImageUpload";
 import FeaturedImage from "../../../components/FeaturedImage";
 import {photoOptions} from "../../../config/Constants";
 import { validEmail, validMobile } from "../../../lib/Validation";
+import { generateImageURL } from "../../../lib/Image";
 
 const logoPhoto = [
     {name: "", uri: "", data: undefined},
@@ -420,7 +421,7 @@ export default class Profile extends Component<Props, State> {
                                                     height: itemDimension
                                                 }}>
                                                     <FeaturedImage width={itemDimension} height={itemDimension}
-                                                                   uri={item.uri}/>
+                                                                   uri={generateImageURL(item.uri, itemDimension, itemDimension)}/>
                                                 </View>
                                             </View>
                                             }

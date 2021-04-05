@@ -22,6 +22,7 @@ import FeaturedImage from "../../components/FeaturedImage";
 
 import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
+import { generateImageURL } from "../../lib/Image";
 
 // {"icon": "subscription", "title": strings("subscription"), "screen": "Subscription"},
 // {"icon": "my_earnings", "title": strings("my_earnings"), "screen": "Earnings"},
@@ -327,7 +328,7 @@ export default class Account extends Component<Props, State> {
                             overflow: "hidden"
                         }}>
                             <FeaturedImage width={itemDimension} height={itemDimension}
-                                           uri={this.state.logo}/>
+                                           uri={generateImageURL(this.state.logo, itemDimension, itemDimension)}/>
                         </View>
                     </View>
                     <View style={{width: Constants.defaultPadding}}/>
