@@ -24,6 +24,7 @@ import {XEvents} from "../../lib/EventBus";
 import Events from "react-native-simple-events";
 import {setProfile} from "../../lib/user";
 import FeaturedImage from "../../components/FeaturedImage";
+import {generateImageURL} from "../../lib/Image";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
@@ -295,7 +296,7 @@ export default class FoodItems extends Component<Props, State> {
                             overflow: "hidden"
                         }}>
                             <FeaturedImage width={80} height={80}
-                                           uri={imageURL ? imageURL.includes("http") ? foodItem.main_image : "" : ""}/>
+                                           uri={foodItem.main_image ? generateImageURL(foodItem.main_image, 240, 240) : ""}/>
                         </View>
                         {/*{foodItem.is_feature === 1 && <View style={{*/}
                         {/*    height: 16,*/}
