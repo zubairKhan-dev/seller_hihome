@@ -16,7 +16,7 @@ import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import {windowWidth, showMessageAlert} from "../../../common";
 import ImageUploadView from "../../../components/ImageUpload";
 import DocumentsViewer from "../../../components/DocumentsViewer";
-import ImagePicker from "react-native-image-picker";
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ActionButton from "../../../components/ActionButton";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import * as Api from "../../../lib/api";
@@ -103,7 +103,7 @@ export default class License extends Component<Props, State> {
     private loadLicenseData(){
       let { seller_details } = this.state.sellerProfile;
       let licPic = defaultPhoto;
-      licPic.uri = seller_details.license_photo;
+      licPic.uri = generateImageURL(seller_details.license_photo);
       this.setState({
           isEdit: false,
           licenseId: seller_details.license_id,
@@ -216,7 +216,7 @@ export default class License extends Component<Props, State> {
     }
 
     launchCamera() {
-        ImagePicker.launchCamera(photoOptions, (response) => {
+        launchCamera(photoOptions, (response) => {
             if (!response.didCancel) {
                 let photo = this.state.licensePhoto;
                 if (photo.uri.length === 0 && !photo.add) {
@@ -229,7 +229,7 @@ export default class License extends Component<Props, State> {
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(photoOptions, (response) => {
+        launchImageLibrary(photoOptions, (response) => {
             if (!response.didCancel) {
                 let photo = this.state.licensePhoto;
                 if (photo.uri.length === 0 && !photo.add) {
@@ -393,7 +393,7 @@ export default class License extends Component<Props, State> {
                                 {this.state.showActivity && <ActivityIndicator size={"small"} style={{position: "absolute"}} color={ColorTheme.appTheme}/>}
                                 <View style={{overflow: "hidden", width: windowWidth - (2 * Constants.defaultPaddingRegular), height: 150}}>
                                     <FeaturedImage width={windowWidth - (2 * Constants.defaultPaddingRegular)} height={windowWidth - (2 * Constants.defaultPaddingRegular)}
-                                                   uri={generateImageURL(this.state.licensePhoto.uri, windowWidth - (2 * Constants.defaultPaddingRegular), windowWidth - (2 * Constants.defaultPaddingRegular))}/>
+                                                   uri={this.state.isEdit? this.state.licensePhoto.uri : this.state.licensePhoto.uri}/>
                                 </View>
                             </View>
                             {this.state.isEdit && <View style={{
@@ -448,7 +448,7 @@ export default class License extends Component<Props, State> {
                                      onDismiss={() => {
                                          this.setState({showDocumentsViewer: false})
                                      }}
-                                     documents={[generateImageURL(this.state.licensePhoto.uri)]}
+                                     documents={[this.state.licensePhoto.uri]}
                     />
                     <ImageUploadView show={this.state.uploadImage}
                                      onDismiss={() => {
