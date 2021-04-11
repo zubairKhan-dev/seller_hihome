@@ -28,7 +28,6 @@ import Modal from "react-native-modal";
 import {AppIcon} from "../../../common/IconUtils";
 import {CommonIcons} from "../../../icons/Common";
 import HHDatePicker from "../../../components/HHDatePicker";
-import ImagePicker from "react-native-image-picker";
 import ImageUploadView from "../../../components/ImageUpload";
 import HFTextRegular from "../../../components/HFText/HFTextRegular";
 import VerifyOTPPopUp from "../../../components/VerifyOTPPopUp";
@@ -43,6 +42,7 @@ import MapView, {Marker} from "react-native-maps";
 import Geolocation from "react-native-geolocation-service";
 import TextFormInput from "../../../components/TextFormInput";
 import HHPickerView from "../../../components/HHPickerView";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 const {width, height} = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -535,7 +535,7 @@ export default class SignUp extends Component<Props, State> {
     }
 
     launchCamera() {
-        ImagePicker.launchCamera(photoOptions, (response) => {
+        launchCamera(photoOptions, (response) => {
             if (!response.didCancel) {
                 if (this.state.photoIndex === 0) {
                     // License Photo
@@ -565,7 +565,7 @@ export default class SignUp extends Component<Props, State> {
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(photoOptions, (response) => {
+        launchImageLibrary(photoOptions, (response) => {
             if (!response.didCancel) {
                 if (this.state.photoIndex === 0) {
                     // Main Photo

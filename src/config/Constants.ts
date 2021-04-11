@@ -1,3 +1,5 @@
+import {CameraOptions} from "react-native-image-picker";
+
 export const PaymentGatewayAPIKey = "M2E1ZWI2M2EtYTEwYy00YzgwLTkxZmUtZWRhYTRiNTM4MGRlOmRiNGMyYmQ3LTgzNTItNGVlYi1iZGQ1LWQ4OTU4MGNiYmY1Mg==";
 export const SMS_API_Key = "2f91f01e";
 export const SMS_API_Secret = "mea6QqIDYTCLb7kI";
@@ -21,13 +23,10 @@ export const APP_VERSION = "1.0.1"
 // export const APP_VERSION = "1.0.1"
 
 
-export const photoOptions = {
-    title: 'Select Picture',
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
+export const photoOptions: CameraOptions = {
+    mediaType: 'photo',
+    saveToPhotos: true,
     maxWidth: 1000,
     maxHeight: 1000,
-    quality: 0.85
+    quality: 1
 };

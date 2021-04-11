@@ -10,13 +10,13 @@ import {CommonIcons} from "../../icons/Common";
 import SaveButton from "../../components/SaveButton";
 import {windowWidth} from "../../common";
 import ImageUploadView from "../../components/ImageUpload";
-import ImagePicker from "react-native-image-picker";
 import {SafeAreaView} from "react-navigation";
 import * as Api from "../../lib/api";
 import DocumentsViewer from "../../components/DocumentsViewer";
 import {getToken} from "../../lib/user";
 import FeaturedImage from "../../components/FeaturedImage";
 import {photoOptions} from "../../config/Constants";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 const createFormData = (photo) => {
     let data = new FormData();
@@ -83,13 +83,13 @@ export default class UploadFoodImages extends Component<Props, State> {
 
     launchCamera() {
         this.setState({uploadImage: false})
-        ImagePicker.launchCamera(photoOptions, (response) => {
+        launchCamera(photoOptions, (response) => {
             this.setState({uploadImage: false})
         });
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(photoOptions, (response) => {
+        launchImageLibrary(photoOptions, (response) => {
             for (let i = 0; i < this.state.photos.length; i++) {
                 let photo = this.state.photos[i];
                 if (photo.uri.length === 0 && !photo.add) {

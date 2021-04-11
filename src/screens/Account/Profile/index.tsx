@@ -24,7 +24,7 @@ import FeaturedImage from "../../../components/FeaturedImage";
 import {photoOptions} from "../../../config/Constants";
 import { validEmail, validMobile } from "../../../lib/Validation";
 import { generateImageURL } from "../../../lib/Image";
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from "react-native-image-picker";
 
 const logoPhoto = [
     {name: "", uri: "", data: undefined},

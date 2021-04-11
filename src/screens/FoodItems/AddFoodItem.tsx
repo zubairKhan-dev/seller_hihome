@@ -25,7 +25,6 @@ import ActionButton from "../../components/ActionButton";
 import HHPickerView from "../../components/HHPickerView";
 import {SafeAreaView} from "react-navigation";
 import ImageUploadView from "../../components/ImageUpload";
-import ImagePicker from "react-native-image-picker";
 import * as Api from "../../lib/api";
 import {showMessageAlert} from "../../common";
 import LoadingOverlay from "../../components/Loading";
@@ -39,6 +38,7 @@ import FeaturedImage from "../../components/FeaturedImage";
 import {generateImageURL} from "../../lib/Image";
 import {photoOptions} from "../../config/Constants";
 import {daysOptions, hoursOptions, minutesOptions} from "../../config/item/data";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 const removeItem = (items, i) =>
     items.slice(0, i - 1).concat(items.slice(i, items.length))
@@ -740,7 +740,7 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     launchCamera() {
-        ImagePicker.launchCamera(photoOptions, (response) => {
+        launchCamera(photoOptions, (response) => {
             if (!response.didCancel) {
                 this.setState({showMainPhotoActivity: true});
                 if (this.state.photoIndex === -1) {
@@ -763,7 +763,7 @@ export default class AddFoodItem extends Component<Props, State> {
     }
 
     launchGallery() {
-        ImagePicker.launchImageLibrary(photoOptions, (response) => {
+        launchImageLibrary(photoOptions, (response) => {
             if (!response.didCancel) {
                 if (this.state.photoIndex === -1) {
                     // Main Photo
