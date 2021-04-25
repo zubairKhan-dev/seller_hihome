@@ -607,7 +607,7 @@ export default class SignUp extends Component<Props, State> {
         mainPic.uri = "";
         mainPic.name = "";
         mainPic.data = undefined;
-        this.setState({licensePhoto: [mainPic]});
+        this.setState({logoPhoto: [mainPic]});
     }
 
     renderBusinessView() {
