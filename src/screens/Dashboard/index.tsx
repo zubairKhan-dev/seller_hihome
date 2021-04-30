@@ -83,7 +83,7 @@ export default class Dashboard extends Component<Props, State> {
             currentPage: 1,
             stats: categories,
             period: "day",
-            selectedSlot: {},
+            selectedSlot: {name: "08:00 PM", id: 9},
             timeSlots: this.getTimeSlot("")
         }
     }
@@ -209,13 +209,12 @@ export default class Dashboard extends Component<Props, State> {
     }
 
     performOrderAction(actionStatus: number, order: any, rejectReason?: string) {
-
         let formData = new FormData();
         formData.append("order_id", order.order_id)
         formData.append("status", actionStatus)
 
         if (actionStatus === OrderStatus.ACCEPTED) {
-            formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
+            formData.append("pickup_time", "" + order.delivery_date + " " + order.delivery_slot)
         }
 
         this.setState({activity: true});
@@ -589,13 +588,13 @@ export default class Dashboard extends Component<Props, State> {
                                     <Text style={[StaticStyles.regularFont, {
                                         color: ColorTheme.grey,
                                         textAlign: isRTLMode() ? "right" : "left",
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontWeight: "400"
                                     }]}>{strings("item_pickup")}</Text>
                                     <Text style={{
                                         color: ColorTheme.grey,
                                         textAlign: isRTLMode() ? "right" : "left",
-                                        fontSize: 11,
+                                        fontSize: 14,
                                         fontWeight: "600"
                                     }}>{parseDate(order.delivery_date, Constants.dateFormat)}</Text>
                                 </View>
@@ -647,17 +646,17 @@ export default class Dashboard extends Component<Props, State> {
                     <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                         <View style={{flex: 1}}>
                             <ActionButton title={strings("accept")} onPress={() => {
-                                if (Object.keys(this.state.selectedSlot).length > 0) {
-                                    this.performOrderAction(OrderStatus.ACCEPTED, item);
-                                } else {
-                                    showMessage({
-                                        message: strings("select_pickup_time_error"),
-                                        type: "danger",
-                                        icon: "info",
-                                        duration: 4000
-                                    });
-                                }
-
+                                this.performOrderAction(OrderStatus.ACCEPTED, item);
+                                // if (Object.keys(this.state.selectedSlot).length > 0) {
+                                //     this.performOrderAction(OrderStatus.ACCEPTED, item);
+                                // } else {
+                                //     showMessage({
+                                //         message: strings("select_pickup_time_error"),
+                                //         type: "danger",
+                                //         icon: "info",
+                                //         duration: 4000
+                                //     });
+                                // }
                             }} variant={"normal"}/>
                         </View>
                         <View style={{width: Constants.defaultPadding}}/>
