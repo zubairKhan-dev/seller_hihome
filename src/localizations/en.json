@@ -310,4 +310,5 @@
 
   "add_serve_count": "Serving For",
   "invalid_serve_count": "Enter a valid serving count for food item",
+  "item_pickup": "The food item will be picked up between 8AM-11AM on : "
 }

@@ -215,7 +215,7 @@ export default class Dashboard extends Component<Props, State> {
         formData.append("status", actionStatus)
 
         if (actionStatus === OrderStatus.ACCEPTED) {
-          formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
+            formData.append("pickup_time", "" + order.delivery_date + " " + this.state.selectedSlot.name)
         }
 
         this.setState({activity: true});
@@ -569,7 +569,7 @@ export default class Dashboard extends Component<Props, State> {
                                     textAlign: isRTLMode() ? "right" : "left",
                                     fontSize: 10,
                                     fontWeight: "400"
-                                }]}>{order.delivery_date} @ {order.delivery_slot}</Text>
+                                }]}>{parseDate(order.delivery_date, Constants.dateFormat)} @ {order.delivery_slot}</Text>
                                 {/*--------PICKUP TIME DETAILS-------*/}
                                 <View style={{height: Constants.defaultPadding}}/>
                                 <Text numberOfLines={2} style={[StaticStyles.heavyFont, {
@@ -580,28 +580,47 @@ export default class Dashboard extends Component<Props, State> {
                                     {strings("pickup_time")}
                                 </Text>
                                 <View style={{height: Constants.defaultPaddingMin}}/>
-                                {(order.pickup_time)?
-                                  <Text style={[StaticStyles.regularFont, {
-                                      color: ColorTheme.grey,
-                                      textAlign: isRTLMode() ? "right" : "left",
-                                      fontSize: 10,
-                                      fontWeight: "400"
-                                  }]}>{order.pickup_time}</Text>
-                                  :
-                                  null
-                                }
-                                <View style={{height: Constants.defaultPaddingMin}}/>
-                                {order.status.id === OrderStatus.RECEIVED && <TextFormInput showOptions={() => {
-                                    this.setState({
-                                        timeSlots: this.getTimeSlot(order.delivery_slot),
-                                        showSlots: true,
-                                    });
-                                }}
-                                                                                            dropdown={true}
-                                                                                            placeholder={strings("select_pickup_time")}
-                                                                                            text={this.state.selectedSlot ? this.state.selectedSlot.name : ""}
-                                                                                            value={value => {
-                                                                                            }}/>}
+                                <View style={{
+                                    flex: 1,
+                                    backgroundColor: ColorTheme.appThemeLight,
+                                    paddingHorizontal: Constants.defaultPadding,
+                                    borderRadius: 5,
+                                    paddingVertical: Constants.defaultPadding}}>
+                                    <Text style={[StaticStyles.regularFont, {
+                                        color: ColorTheme.grey,
+                                        textAlign: isRTLMode() ? "right" : "left",
+                                        fontSize: 10,
+                                        fontWeight: "400"
+                                    }]}>{strings("item_pickup")}</Text>
+                                    <Text style={{
+                                        color: ColorTheme.grey,
+                                        textAlign: isRTLMode() ? "right" : "left",
+                                        fontSize: 11,
+                                        fontWeight: "600"
+                                    }}>{parseDate(order.delivery_date, Constants.dateFormat)}</Text>
+                                </View>
+                                {/*{(order.pickup_time)?*/}
+                                {/*  <Text style={[StaticStyles.regularFont, {*/}
+                                {/*      color: ColorTheme.grey,*/}
+                                {/*      textAlign: isRTLMode() ? "right" : "left",*/}
+                                {/*      fontSize: 10,*/}
+                                {/*      fontWeight: "400"*/}
+                                {/*  }]}>{order.pickup_time}</Text>*/}
+                                {/*  :*/}
+                                {/*  null*/}
+                                {/*}*/}
+                                {/*<View style={{height: Constants.defaultPaddingMin}}/>*/}
+                                {/*{order.status.id === OrderStatus.RECEIVED && <TextFormInput showOptions={() => {*/}
+                                {/*    this.setState({*/}
+                                {/*        timeSlots: this.getTimeSlot(order.delivery_slot),*/}
+                                {/*        showSlots: true,*/}
+                                {/*    });*/}
+                                {/*}}*/}
+                                {/*                                                            dropdown={true}*/}
+                                {/*                                                            placeholder={strings("select_pickup_time")}*/}
+                                {/*                                                            text={this.state.selectedSlot ? this.state.selectedSlot.name : ""}*/}
+                                {/*                                                            value={value => {*/}
+                                {/*                                                            }}/>}*/}
                                 <View style={{height: Constants.defaultPaddingMin}}/>
                                 {this.state.activity && <ActivityIndicator size={"small"} color={ColorTheme.appTheme}/>}
                                 {this.renderOrderActions(order.status ? order.status.id : undefined, index, order)}
