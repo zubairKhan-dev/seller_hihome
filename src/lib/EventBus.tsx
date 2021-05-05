@@ -5,4 +5,5 @@ export enum XEvents {
     UPDATE_FOOD_ITEMS = "update_food_items",
     USER_LOGGED_IN = "user_logged_in",
     SESSION_EXPIRED = "session_expired",
+    SET_SELLER  = "set_seller",
 }

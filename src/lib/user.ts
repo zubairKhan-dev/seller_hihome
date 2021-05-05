@@ -1,5 +1,5 @@
 import store from "../boot/store";
-import {LANGUAGE_CHANGED, TOKEN_CHANGED, UDID_UPDATED, USER_LOGGED_IN, USER_LOGGED_OUT, ADDRESS_UPDATED} from "../actions/actionTypes";
+import {LANGUAGE_CHANGED, TOKEN_CHANGED, UDID_UPDATED, USER_LOGGED_IN, USER_LOGGED_OUT, ADDRESS_UPDATED, SET_SELLER} from "../actions/actionTypes";
 import {setLocale} from "../components/Translations";
 
 export function setLanguage(code) {
@@ -27,6 +27,14 @@ export function setProfile(profile) {
     store.dispatch({
         type: USER_LOGGED_IN,
         payload: user,
+    });
+}
+
+
+export function setSeller(seller) {
+    store.dispatch({
+        type: SET_SELLER,
+        payload: seller,
     });
 }
 
@@ -61,6 +69,11 @@ export function getUserFullName() {
 
 export function getUserEmail() {
     return store.getState().User.user.profile.email ;
+}
+
+export function getUserCity() {
+    let s = store.getState().User.seller;
+    return s?.seller_details?.city ;
 }
 
 export function hasFeaturedProduct() {

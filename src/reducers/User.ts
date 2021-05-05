@@ -1,4 +1,4 @@
-import {LANGUAGE_CHANGED, TOKEN_CHANGED, UDID_UPDATED, USER_LOGGED_IN, USER_LOGGED_OUT, ADDRESS_UPDATED} from "../actions/actionTypes";
+import {LANGUAGE_CHANGED, TOKEN_CHANGED, UDID_UPDATED, USER_LOGGED_IN, USER_LOGGED_OUT, ADDRESS_UPDATED, SET_SELLER} from "../actions/actionTypes";
 import {getLanguage} from "../lib/user";
 import {REHYDRATE} from "redux-persist/es/constants";
 
@@ -8,6 +8,7 @@ let defaultState = {
     token: undefined,
     deviceId: undefined,
     address: undefined,
+    seller: undefined,
 };
 
 export function UserReducer(state = defaultState, action) {
@@ -30,6 +31,8 @@ export function UserReducer(state = defaultState, action) {
 
         case ADDRESS_UPDATED:
             return {...state, address: action.payload};
+        case SET_SELLER:
+            return {...state, seller: action.payload};
         // case REHYDRATE:
         //     return {
         //         ...state,

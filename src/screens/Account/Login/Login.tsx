@@ -13,7 +13,7 @@ import ForgotPassword from "../../../components/ForgotPassword";
 import * as Api from "../../../lib/api";
 import LoadingOverlay from "../../../components/Loading";
 import {showMessageAlert} from "../../../common";
-import {getDeviceId, setProfile} from "../../../lib/user";
+import {getDeviceId, setProfile, setSeller} from "../../../lib/user";
 import Modal from "react-native-modal";
 import {AppIcon} from "../../../common/IconUtils";
 import {CommonIcons} from "../../../icons/Common";
@@ -91,7 +91,7 @@ export default class Login extends Component<Props, State> {
                                 //     user_id: resp.id,
                                 // });
                                 setProfile(resp);
-                                this.props.onLoginSuccess();
+                                this.getProfile();
                             }
                             break;
                     }
@@ -119,6 +119,35 @@ export default class Login extends Component<Props, State> {
                 }),
             );
         }
+    }
+
+    private getProfile() {
+        this.setState({loading: true});
+        let formData = new FormData();
+        this.apiHandler = (response) => {
+            Api.checkValidationError(response, resp => {
+                if (response.code === 200 && resp && resp.seller_details) {
+                    setSeller(resp);
+                    this.props.onLoginSuccess();
+                }
+                this.setState({loading: false});
+            }, (errors, errorMessage) => {
+                showMessageAlert(errorMessage);
+                this.setState({loading: false});
+            });
+        };
+        this.apiExHandler = (reason) => {
+            showMessageAlert(reason);
+            this.setState({loading: false});
+        };
+        Api.getProfile({})
+            .then((response) => {
+                    this.apiHandler(response);
+                },
+            ).catch((reason => {
+                this.apiExHandler(reason);
+            }),
+        );
     }
 
     validInputs() {
