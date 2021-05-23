@@ -57,6 +57,7 @@ interface State {
     selectedSlot?: any;
     timeSlots?: any[];
     pickupTime?: string;
+    pickupTimeError?: boolean;
 }
 
 export default class Dashboard extends Component<Props, State> {
@@ -87,6 +88,7 @@ export default class Dashboard extends Component<Props, State> {
             stats: categories,
             period: "day",
             selectedSlot: undefined,
+            pickupTimeError: false,
             timeSlots: this.getTimeSlot("")
         }
     }
@@ -94,6 +96,7 @@ export default class Dashboard extends Component<Props, State> {
     quickDeliveryPossible(order) {
         let cus_city = order.customer.address ? order.customer.address.split(", ").pop() : "";
         if (nearByEmirates.includes(getUserCity().toLowerCase()) && nearByEmirates.includes(cus_city.toLowerCase())) {
+            // this.setState({selectedSlot: undefined});
             return  true;
 
         } else {
@@ -229,6 +232,7 @@ export default class Dashboard extends Component<Props, State> {
     performOrderAction(actionStatus: number, order: any, rejectReason?: string) {
         debugger;
         if (this.quickDeliveryPossible(order) && !this.state.selectedSlot) {
+            this.setState({pickupTimeError: true});
             showMessage(strings("select_pickup_time_error"));
             return ;
         }
@@ -649,6 +653,7 @@ export default class Dashboard extends Component<Props, State> {
                                         });
                                     }}
                                                                                                 dropdown={true}
+                                                                                                showError={this.state.pickupTimeError}
                                                                                                 placeholder={strings("select_pickup_time")}
                                                                                                 text={this.state.selectedSlot ? this.state.selectedSlot.name : ""}
                                                                                                 value={value => {
@@ -665,7 +670,7 @@ export default class Dashboard extends Component<Props, State> {
                     <HHPickerView show={this.state.showSlots}
                                   onDismiss={() => this.setState({showSlots: false})}
                                   onValueChange={(value, index) => {
-                                      this.setState({showSlots: false, selectedSlot: value})
+                                      this.setState({showSlots: false, selectedSlot: value, pickupTimeError: false})
                                   }}
                                   selectedValue={this.state.selectedSlot}
                                   values={this.state.timeSlots}/>
@@ -895,7 +900,7 @@ export default class Dashboard extends Component<Props, State> {
                             renderItem={({item, index}) =>
                                 <View>
                                     <TouchableOpacity onPress={() => {
-                                        this.setState({selectedSlot: undefined});
+                                        this.setState({selectedSlot: undefined, pickupTimeError: true});
                                     }}>
                                         {this.renderOrder(item, index)}
                                     </TouchableOpacity>

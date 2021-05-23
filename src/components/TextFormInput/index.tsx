@@ -14,7 +14,7 @@ interface Props {
     textView?: boolean,
     keyboard?: KeyboardTypeOptions,
     text?: string,
-
+    showError?: boolean,
     value(text: string): void;
 
     showOptions?: Function;
@@ -24,23 +24,25 @@ interface Props {
 interface State {
     icon: any;
     text?: string,
+    showError?: boolean,
 }
 
 export default class TextFormInput extends Component<Props, State> {
     constructor(props) {
         super(props);
-        this.state = {icon: "arrow_down"}
+        this.state = {icon: "arrow_down", showError: this.props.showError}
     }
 
     componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any) {
         this.setState({
             text: nextProps.text,
+            showError: nextProps.showError
         });
     }
 
     render() {
         return (
-            <View><View style={[styles.container]}>
+            <View><View style={[styles.container, {borderColor: this.state.showError ? "red" : ColorTheme.placeholder, borderWidth: this.state.showError ? 3 : 1,}]}>
                 <View style={{flex: 1, overflow: "hidden"}}>
                     <RTLView locale={getCurrentLocale()}>
                         {this.props.dropdown &&
@@ -107,8 +109,6 @@ export default class TextFormInput extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     container: {
-        borderColor: ColorTheme.placeholder,
-        borderWidth: 1,
         borderRadius: 3,
         paddingHorizontal: Constants.defaultPadding,
         marginTop: Constants.defaultPaddingMin
