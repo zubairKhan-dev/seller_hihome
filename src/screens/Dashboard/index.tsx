@@ -230,7 +230,7 @@ export default class Dashboard extends Component<Props, State> {
     }
 
     performOrderAction(actionStatus: number, order: any, rejectReason?: string) {
-        if (this.quickDeliveryPossible(order) && !this.state.selectedSlot && actionStatus === OrderStatus.RECEIVED) {
+        if (this.quickDeliveryPossible(order) && !this.state.selectedSlot && actionStatus === OrderStatus.ACCEPTED) {
             this.setState({pickupTimeError: true});
             showMessage(strings("select_pickup_time_error"));
             return ;
