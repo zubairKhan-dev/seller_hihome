@@ -2,7 +2,7 @@ import {APIConfig, Environment} from "./def";
 import {BaseAPIConfig} from "./BaseAPIConfig";
 
 const PROTOCOL = "https";
-const SERVER = "gateway.hihome.app";
+const SERVER = "hihoome.com";
 const APPLICATION = "public/api";
 const ENDPOINT = "";
 const VERSION = "";
