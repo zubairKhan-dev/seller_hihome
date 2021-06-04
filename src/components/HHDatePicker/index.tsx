@@ -15,7 +15,8 @@ import { TouchableOpacity } from "react-native";
 interface Props {
     title: string,
     editable?: boolean,
-    date?: Date;
+    date?: Date,
+    minimumDate?: Date,
     value(newDate: Date): void;
 }
 

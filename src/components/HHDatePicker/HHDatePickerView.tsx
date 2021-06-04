@@ -12,6 +12,7 @@ import {RTLView} from "react-native-rtl-layout";
 interface Props {
     show: boolean;
     date?: Date;
+    minimumDate?: Date,
     onDismiss: Function;
     onSaveDate: Function;
 }
