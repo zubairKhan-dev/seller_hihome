@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {StaticStyles} from "../../theme/Styles";
 import Constants from "../../theme/Constants";
 import {getCurrentLocale, isRTLMode, strings} from "../../components/Translations";
@@ -117,6 +117,9 @@ export default class Dashboard extends Component<Props, State> {
     }
 
     componentDidMount(): void {
+
+      
+
         const {navigation} = this.props;
         this.focusListener = navigation.addListener("focus", () => {
             this.getOrderStatusLookup();
@@ -497,14 +500,14 @@ export default class Dashboard extends Component<Props, State> {
                                     </View>
                                 </View>
                                 <View style={{width: Constants.defaultPadding}}/>
-                                <Text numberOfLines={2}
+                                {/* <Text numberOfLines={2}
                                       style={[StaticStyles.regularFont, {
                                           textAlign: isRTLMode() ? "right" : "left",
                                           color: ColorTheme.appTheme,
                                           fontSize: 11,
                                       }]}>
                                     {strings("delivery") + " : " + order.estimated_time}
-                                </Text>
+                                </Text> */}
                                 <View style={{flex: 1}}/>
                             </RTLView>
                             {this.state.selItem === index && <View style={{
