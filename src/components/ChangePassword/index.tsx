@@ -156,6 +156,7 @@ export default class ChangePasswordView extends Component<Props, State> {
                                        color={ColorTheme.appTheme}/>}
                     <View style={{height: Constants.defaultPadding}}/>
                     {this.props.hasCurrentPassword && <TextKVInput secure={true}
+                                                                   keyboard={'email-address'}
                                                                    text={this.state.current_password}
                                                                    title={strings("current_password")}
                                                                    placeholder={strings("enter_value")}
@@ -164,6 +165,7 @@ export default class ChangePasswordView extends Component<Props, State> {
                                                                    }}/>}
                     <View style={{height: Constants.defaultPadding}}/>
                     <TextKVInput secure={true}
+                                 keyboard={'email-address'}
                                  text={this.state.new_password}
                                  title={strings("new_password")}
                                  placeholder={strings("enter_value")}
@@ -172,6 +174,7 @@ export default class ChangePasswordView extends Component<Props, State> {
                                  }}/>
                     <View style={{height: Constants.defaultPadding}}/>
                     <TextKVInput secure={true}
+                                 keyboard={'email-address'}
                                  text={this.state.confirm_new_password}
                                  title={strings("confirm_new_password")}
                                  placeholder={strings("enter_value")}

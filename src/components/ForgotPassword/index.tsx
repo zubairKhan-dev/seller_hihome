@@ -83,9 +83,18 @@ export default class ForgotPassword extends Component<Props, State> {
                     }
                     this.setState({loading: false});
                 }, (errors, errorMessage) => {
-                    setTimeout(() => {
+
+                      if(errorMessage == "The selected email is invalid." || errorMessage == "البريد الالكتروني"){
+                          setTimeout(() => {
+                        showMessageAlert(strings("email_error"));
+                    }, 200); 
+                      }else{
+                     setTimeout(() => {
                         showMessageAlert(errorMessage);
                     }, 200);
+                      }
+
+                    
                     this.setState({loading: false});
                 });
             };

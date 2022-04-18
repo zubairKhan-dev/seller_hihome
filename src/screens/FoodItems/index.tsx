@@ -149,7 +149,7 @@ export default class FoodItems extends Component<Props, State> {
     }
 
     private removeProduct() {
-        this.setState({loading: true});
+        this.setState({loading: true,showProductActions: false});
         let formData = new FormData();
         formData.append("product_id", this.state.selectedFood.id)
         this.apiHandler = (response) => {
@@ -441,7 +441,7 @@ export default class FoodItems extends Component<Props, State> {
                                     }, 400);
                                 }}
                                 onDelete={() => {
-                                    this.setState({showProductActions: false});
+                                   // this.setState({showProductActions: false});
                                     setTimeout(() => {
                                       Alert.alert(
                                                 strings("app_name"),
@@ -449,6 +449,8 @@ export default class FoodItems extends Component<Props, State> {
                                                 [
                                                     {
                                                         text: strings("cancel"), onPress: () => {
+                                                       
+                                                       this.setState({showProductActions: false})
                                                         }
                                                     },
                                                     {
@@ -461,7 +463,7 @@ export default class FoodItems extends Component<Props, State> {
                                                 ],
                                                 {cancelable: false},
                                             );
-                                    }, 400);
+                                    }, 100);
 
                                 }}
                                 onDismiss={() => {

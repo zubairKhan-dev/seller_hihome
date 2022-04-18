@@ -244,12 +244,17 @@ export default class Login extends Component<Props, State> {
                         </View>}
                         <View style={{height: Constants.defaultPadding}}/>
                         <TextKVInput text={this.state.username} title={strings("email")}
-                                     placeholder={"example@info.com"} value={value => {
+                                     secure={false}
+                                     placeholder={"example@info.com"} 
+                                     keyboard={'email-address'}
+                                     value={value => {
                             this.setState({username: value})
                         }}/>
                         <View style={{height: Constants.defaultPaddingMax}}/>
                         <TextKVInput text={this.state.password} secure={true} title={strings("password")}
-                                     placeholder={"**********"} value={value => {
+                                     placeholder={"**********"} 
+                                     keyboard={'email-address'}
+                                     value={value => {
                             this.setState({password: value})
                         }}/>
                         <View style={{height: Constants.defaultPaddingMax}}/>

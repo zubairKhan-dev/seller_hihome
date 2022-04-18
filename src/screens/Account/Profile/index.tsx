@@ -322,7 +322,7 @@ export default class Profile extends Component<Props, State> {
                                     fontWeight: "500",
                                     alignContent: "center",
                                     alignSelf: "center",
-                                    fontSize: Constants.regularSmallFontSize,
+                                    fontSize: Constants.regularFontSize,
                                     color: ColorTheme.appTheme,
                                 }}>{this.state.isEdit ? "" : strings("edit")}</Text>
                             </View>

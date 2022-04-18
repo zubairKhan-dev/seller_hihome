@@ -119,7 +119,6 @@ export default class Dashboard extends Component<Props, State> {
     componentDidMount(): void {
 
       
-
         const {navigation} = this.props;
         this.focusListener = navigation.addListener("focus", () => {
             this.getOrderStatusLookup();
@@ -400,15 +399,15 @@ export default class Dashboard extends Component<Props, State> {
                     height: 80,
                     borderRadius: Constants.defaultPaddingMin
                 }]}>
-                    <View style={{height: Constants.defaultPadding}}/>
+                    <View style={{height: 5}}/>
                     <RTLView locale={getCurrentLocale()} style={{}}>
                         <View style={[{
                             flex: 1,
                         }]}>
                             <Text numberOfLines={1} style={[StaticStyles.regularFont, {
-                                color: ColorTheme.timeToMakeColor,
+                                color: ColorTheme.appTheme,
                                 textAlign: isRTLMode() ? "right" : "left",
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: "500"
                             }]}>{strings(category.name).toUpperCase()}</Text>
                             <View style={{height: Constants.defaultPaddingMin}}/>
@@ -423,7 +422,7 @@ export default class Dashboard extends Component<Props, State> {
                             <Text numberOfLines={1} style={[StaticStyles.regularFont, {
                                 color: ColorTheme.textDark,
                                 textAlign: isRTLMode() ? "right" : "left",
-                                fontSize: Constants.regularSmallestFontSize,
+                                fontSize: Constants.regularSmallerFontSize,
                             }]}>{strings(category.title).toUpperCase()}</Text>
                         </View>
                         <TouchableOpacity onPress={() => {
@@ -760,17 +759,22 @@ export default class Dashboard extends Component<Props, State> {
         }
     }
 
+
+     // <Image resizeMode={"contain"} style={{backgroundColor:'red',width: 200, height: 20, marginTop: 0}}
+                    //        source={require('../../../assets/images/app-logo.jpg')}/>
+
     renderHeader() {
         return (
             <View style={{
                 paddingHorizontal: Constants.defaultPaddingRegular,
                 backgroundColor: ColorTheme.lightGrey,
-                height: 100
+                height: 105,
+               
             }}>
                 <RTLView locale={getCurrentLocale()}>
                     <View style={{flex: 1}}/>
-                    <Image resizeMode={"contain"} style={{width: 200, height: 20, marginTop: 0}}
-                           source={require('../../../assets/images/app-logo.jpg')}/>
+                      <Text style={[StaticStyles.nav_title,{marginTop:"2%"}]}>{strings("dashboard_heading")}</Text>
+               
                     <View style={{flex: 1}}/>
                 </RTLView>
                 {this.renderOptions()}

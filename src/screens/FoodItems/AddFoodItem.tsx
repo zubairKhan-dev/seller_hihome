@@ -942,6 +942,7 @@ export default class AddFoodItem extends Component<Props, State> {
                 <View style={{height: Constants.defaultPaddingRegular}}/>
                 {this.renderMainPhoto()}
                 {this.state.edit && this.renderMorePhotos()}
+                <View style={{height:5}} ></View>
                 <HFTextRegular fontSize={Constants.regularSmallFontSize} value={strings("add_price")}/>
                 <RTLView locale={getCurrentLocale()} style={{alignItems: "center"}}>
                     <View style={{flex: 1}}>
@@ -1035,7 +1036,7 @@ export default class AddFoodItem extends Component<Props, State> {
                 <HFTextRegular fontSize={Constants.regularSmallFontSize} value={strings("description")}/>
                 <TextFormInput
                     showTextView={() => this.setState({
-                        textViewTitle: strings("recipes"),
+                        textViewTitle: strings("add_description"),
                         showRecipeIngredients: true,
                         textViewType: TextViewType.RECIPE
                     })}

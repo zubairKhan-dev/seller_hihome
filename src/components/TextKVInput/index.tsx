@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Component} from "react";
-import {Image, KeyboardTypeOptions, Platform, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
+import {Image, KeyboardTypeOptions, Platform, StyleSheet,Dimensions, TextInput, TouchableOpacity, View} from "react-native";
 import ColorTheme from "../../theme/Colors";
 import {RTLView} from "react-native-rtl-layout";
 import {getCurrentLocale, isRTLMode} from "../Translations";
@@ -21,6 +21,9 @@ interface State {
     icon: any;
     hidePassword?: boolean;
 }
+
+const size = Dimensions.get('window').height
+
 
 export default class TextKVInput extends Component<Props, State> {
     constructor(props) {
@@ -61,14 +64,14 @@ export default class TextKVInput extends Component<Props, State> {
                                onChangeText={(text) => this.props.value(text)}>
                     </TextInput>
                     {this.props.secure &&
-                    <View style={{padding: 10, justifyContent:"center"}}>
+                    <View style={{padding: 5,position:'absolute',right:"1%", justifyContent:"center"}}>
                         <TouchableOpacity onPress={() => {
                             this.setState({
                                 hidePassword: !this.state.hidePassword,
                                 icon: this.getEyeIcon()
                             })
                         }}>
-                            <Image style={{width: 15, height: 10, alignSelf: "center"}} source={this.state.icon}/>
+                            <Image resizeMode='contain' style={{width: size/20, height: size/31, alignSelf: "center"}} source={this.state.icon}/>
                         </TouchableOpacity>
                     </View>
                     }

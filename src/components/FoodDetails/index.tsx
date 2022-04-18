@@ -98,6 +98,29 @@ export default class FoodDetails extends Component<Props, State> {
                             marginBottom: 8
                         }}
                     />
+
+
+ <View style={{
+                        position: "absolute",
+                        top: Constants.defaultPaddingRegular,
+                        right: Constants.defaultPaddingRegular
+                    }}>
+                        <RoundButton image={"arrow_down"} onPress={() => {
+                            this.props.onDismiss()
+                        }}/>
+                    </View>
+                    <View style={{
+                        position: "absolute",
+                        top: Constants.defaultPaddingRegular,
+                        left: Constants.defaultPaddingRegular ,
+                        
+                    }}>
+                        <RoundButton image={"edit"} onPress={() => {
+                            this.props.onEdit()
+                        }}/>
+                    </View>
+
+
                     <View style={{padding: Constants.defaultPaddingRegular}}>
                         <Text style={[StaticStyles.regularFont, {
                             fontSize: 18,
@@ -131,24 +154,7 @@ export default class FoodDetails extends Component<Props, State> {
                         }]}>{this.state.selectedTab === 0 ? this.props.details?.ingredients : this.props.details?.description}</Text>
                     </ScrollView>
 
-                    <View style={{
-                        position: "absolute",
-                        top: Constants.defaultPaddingRegular,
-                        right: Constants.defaultPaddingRegular
-                    }}>
-                        <RoundButton image={"arrow_down"} onPress={() => {
-                            this.props.onDismiss()
-                        }}/>
-                    </View>
-                    <View style={{
-                        position: "absolute",
-                        top: Constants.defaultPaddingRegular,
-                        left: Constants.defaultPaddingRegular,
-                    }}>
-                        <RoundButton image={"edit"} onPress={() => {
-                            this.props.onEdit()
-                        }}/>
-                    </View>
+                   
                 </View>
             </Modal>
         );
