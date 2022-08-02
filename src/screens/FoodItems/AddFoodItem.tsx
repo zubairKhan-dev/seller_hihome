@@ -9,7 +9,8 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    PermissionsAndroid
 } from "react-native";
 import ColorTheme from "../../theme/Colors";
 import Constants from "../../theme/Constants";
@@ -634,9 +635,11 @@ export default class AddFoodItem extends Component<Props, State> {
             };
             Api.updateProduct(formData)
                 .then((response) => {
+                    console.log('update response',response)
                         this.apiHandler(response);
                     },
-                ).catch((reason => {
+            ).catch((reason => {
+                console.log(reason)
                     this.apiExHandler(reason);
                 }),
             );
@@ -739,27 +742,48 @@ export default class AddFoodItem extends Component<Props, State> {
         );
     }
 
-    launchCamera() {
-        launchCamera(photoOptions, (response) => {
-            if (!response.didCancel) {
-                this.setState({showMainPhotoActivity: true});
-                if (this.state.photoIndex === -1) {
-                    // Main Photo
-                    for (let i = 0; i < this.state.mainPhoto.length; i++) {
-                        let photo = this.state.mainPhoto[i];
-                        if (photo.uri.length === 0 && !photo.add) {
-                            photo.uri = response.uri;
-                            photo.data = response;
-                            break;
+    async launchCamera() {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: "App Camera Permission",
+                    message: "App needs access to your camera ",
+                    buttonNeutral: "Ask Me Later",
+                    buttonNegative: "Cancel",
+                    buttonPositive: "OK"
+                }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Camera permission given");
+                launchCamera(photoOptions, (response) => {
+                    if (!response.didCancel) {
+                        this.setState({ showMainPhotoActivity: true });
+                        if (this.state.photoIndex === -1) {
+                            // Main Photo
+                            for (let i = 0; i < this.state.mainPhoto.length; i++) {
+                                let photo = this.state.mainPhoto[i];
+                                if (photo.uri.length === 0 && !photo.add) {
+                                    photo.uri = response.uri;
+                                    photo.data = response;
+                                    break;
+                                }
+                            }
+                            this.setState({ showMainPhotoActivity: false });
+                        } else {
+                            this.uploadPhoto(response)
                         }
                     }
-                    this.setState({showMainPhotoActivity: false});
-                } else {
-                    this.uploadPhoto(response)
-                }
+                    this.setState({ uploadImage: false })
+                });
+            } else {
+                console.log("Camera permission denied");
             }
-            this.setState({uploadImage: false})
-        });
+        } catch (err) {
+            console.warn(err);
+        }
+
+        
     }
 
     launchGallery() {
@@ -949,7 +973,7 @@ export default class AddFoodItem extends Component<Props, State> {
                         <HFTextLight textColor={ColorTheme.appTheme} fontSize={10} value={strings("costing_price")}/>
                         <TextFormInput text={this.state.costPrice} keyboard={"numeric"}
                                        placeholder={strings("add_price")} value={value => {
-                            this.setState({costPrice: value});
+                                           this.setState({ costPrice: value.replace(/[^\d]/, "") });
                         }}/>
                     </View>
                     <View style={{width: Constants.defaultPadding}}/>
@@ -1012,7 +1036,7 @@ export default class AddFoodItem extends Component<Props, State> {
                 <HFTextRegular fontSize={Constants.regularSmallFontSize} value={strings("add_serve_count")}/>
                   <TextFormInput text={this.state.serveCount} keyboard={"numeric"}
                                        placeholder={strings("add_serve_count")} value={value => {
-                                          this.setState({serveCount: value});
+                                           this.setState({ serveCount: value.replace(/[^\d]/, "") });
                                       }}
                   />
                 <View style={{height: Constants.defaultPaddingRegular}}/>

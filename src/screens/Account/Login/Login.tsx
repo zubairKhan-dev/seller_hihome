@@ -112,6 +112,7 @@ export default class Login extends Component<Props, State> {
             };
             Api.loginUser(this.getPostObj())
                 .then((response) => {
+                    console.log('login response', response)
                         this.apiHandler(response);
                     },
                 ).catch((reason => {

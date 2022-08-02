@@ -262,8 +262,8 @@ export default class FoodItems extends Component<Props, State> {
             this.setState({loading: false});
         };
         Api.updateProductStock(formData)
-            .then((response) => {
-                    this.apiHandler(response);
+            .then((response) => {               
+                this.apiHandler(response);
                 },
             ).catch((reason => {
                 this.apiExHandler(reason);
