@@ -768,7 +768,7 @@ export default class Dashboard extends Component<Props, State> {
             <View style={{
                 paddingHorizontal: Constants.defaultPaddingRegular,
                 backgroundColor: ColorTheme.lightGrey,
-                height: 105,
+                //height: 105,
                
             }}>
                 <RTLView locale={getCurrentLocale()}>
@@ -811,7 +811,7 @@ export default class Dashboard extends Component<Props, State> {
             <View style={{
                 height: 40,
                 marginTop: Constants.defaultPadding,
-                paddingHorizontal: Constants.defaultPaddingMin
+                paddingHorizontal: Constants.defaultPaddingMin,
             }}>
                 <FlatList
                     contentContainerStyle={{}}
@@ -840,7 +840,8 @@ export default class Dashboard extends Component<Props, State> {
                 />
                 <View style={{
                     height: 4,
-                    marginTop: Constants.defaultPadding,
+                    // marginTop: Constants.defaultPadding,
+                    // marginBottom: Constants.defaultPadding,
                     backgroundColor: ColorTheme.lightGrey,
                     marginHorizontal: -10
                 }}/>

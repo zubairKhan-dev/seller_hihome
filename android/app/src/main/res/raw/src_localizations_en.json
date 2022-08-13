@@ -1,5 +1,5 @@
 {
-  "app_name"  : "HiHOME",
+  "app_name"  : "HiHOME ",
   "session_expired"   : "Session Expired",
   "invalid_credentials" : "Invalid Credentials",
   "ok" : "Ok",
@@ -22,6 +22,7 @@
   "confirm_password" : "Confirm Password",
   "mobile_number" : "Mobile Number",
   "forgot_password" : "Forgot Your Password ?",
+  "email_error": "Please enter registered email address.",
   "login" : "Login",
   "hello_welcome": "Hello! Welcome back!",
   "dont_have_account" : "Don't have an account ?",
@@ -40,10 +41,13 @@
   "enter_last_name" : "Please enter your last name",
   "enter_email_address" : "Please enter your email address",
   "enter_password" : "Please enter your password",
-  "enter_mobile" : "Please enter your mobile (9715********)",
+  "enter_mobile" : "Please enter your mobile (05********)",
   "enter_confirm_password" : "Please confirm your password",
   "password_mismatch": "New Password and Confirm Password doesn't match",
   "password_reset_success": "Your account password has been updated.",
+  
+  "dashboard_heading":"Dashboard",
+
 
   "profile" : "Profile",
   "email_login" : "Log in using email",
@@ -107,7 +111,8 @@
   "edit": "Edit",
   "upload_now": "Upload Now",
   "enter_content_here": "Enter content here",
-  "recipes": "Recipes",
+  "add_description": "Add description",
+  "recipes":"Recipes",
   "ingredients": "Ingredients",
   "minutes": "Minutes",
   "minute": "Minute",
@@ -275,7 +280,7 @@
   "today_orders": "Today Orders",
   "week_orders": "This Week Orders",
   "month_orders": "This Month Orders",
-  "year_orders": "This Year Orders",
+  "year_orders": "This Year Orders",   
   "today_earnings": "Today Earnings",
   "week_earnings": "This Week Earnings",
   "month_earnings": "This Month Earnings",
@@ -310,4 +315,5 @@
 
   "add_serve_count": "Serving For",
   "invalid_serve_count": "Enter a valid serving count for food item",
+  "item_pickup": "The food item will be picked up between 8AM-11AM on : "
 }

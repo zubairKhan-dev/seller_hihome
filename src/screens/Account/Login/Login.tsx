@@ -1,22 +1,22 @@
 import * as React from "react";
-import {Component} from "react";
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import { Component } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ColorTheme from "../../../theme/Colors";
-import {StaticStyles} from "../../../theme/Styles";
+import { StaticStyles } from "../../../theme/Styles";
 import Constants from "../../../theme/Constants";
 import TextKVInput from "../../../components/TextKVInput";
-import {getCurrentLocale, isRTLMode, strings} from "../../../components/Translations";
+import { getCurrentLocale, isRTLMode, strings } from "../../../components/Translations";
 import ActionButton from "../../../components/ActionButton";
-import {RTLView} from "react-native-rtl-layout";
+import { RTLView } from "react-native-rtl-layout";
 import HFTextHeading from "../../../components/HFText/HFTextHeading";
 import ForgotPassword from "../../../components/ForgotPassword";
 import * as Api from "../../../lib/api";
 import LoadingOverlay from "../../../components/Loading";
-import {showMessageAlert} from "../../../common";
-import {getDeviceId, setProfile, setSeller} from "../../../lib/user";
+import { showMessageAlert } from "../../../common";
+import { getDeviceId, setProfile, setSeller } from "../../../lib/user";
 import Modal from "react-native-modal";
-import {AppIcon} from "../../../common/IconUtils";
-import {CommonIcons} from "../../../icons/Common";
+import { AppIcon } from "../../../common/IconUtils";
+import { CommonIcons } from "../../../icons/Common";
 import SignUp from "./SignUp";
 import DeviceInfo from "react-native-device-info";
 
@@ -70,22 +70,22 @@ export default class Login extends Component<Props, State> {
     }
 
     showErrorMessage(messageKey: string) {
-        this.setState({errorOccurred: true, errorText: strings(messageKey)});
+        this.setState({ errorOccurred: true, errorText: strings(messageKey) });
     }
 
     hideErrorMessage() {
-        this.setState({errorOccurred: false});
+        this.setState({ errorOccurred: false });
     }
 
     loginUser() {
         this.hideErrorMessage();
 
         if (this.validInputs()) {
-            this.setState({loading: true, errorOccurred: false});
+            this.setState({ loading: true, errorOccurred: false });
             this.apiHandler = (response) => {
                 Api.checkValidationError(response, resp => {
                     switch (response.code) {
-                        case 200 :
+                        case 200:
                             if (resp) {
                                 // analytics().logEvent('Login_Success', {
                                 //     user_id: resp.id,
@@ -95,12 +95,12 @@ export default class Login extends Component<Props, State> {
                             }
                             break;
                     }
-                    this.setState({loading: false});
+                    this.setState({ loading: false });
                 }, (errors, errorMessage) => {
                     setTimeout(() => {
                         showMessageAlert(errorMessage);
                     }, 200);
-                    this.setState({loading: false});
+                    this.setState({ loading: false });
                 });
             };
             this.apiExHandler = (reason) => {
@@ -108,54 +108,58 @@ export default class Login extends Component<Props, State> {
                 setTimeout(() => {
                     showMessageAlert(reason);
                 }, 200);
-                this.setState({loading: false});
+                this.setState({ loading: false });
             };
             Api.loginUser(this.getPostObj())
                 .then((response) => {
                     console.log('login response', response)
-                        this.apiHandler(response);
-                    },
+                    this.apiHandler(response);
+                },
                 ).catch((reason => {
                     this.apiExHandler(reason);
                 }),
-            );
+                );
         }
     }
 
     private getProfile() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         let formData = new FormData();
         this.apiHandler = (response) => {
             Api.checkValidationError(response, resp => {
                 if (response.code === 200 && resp && resp.seller_details) {
                     setSeller(resp);
+                    console.log('on login', this.props.onLoginSuccess());
+                    
                     this.props.onLoginSuccess();
                 }
-                this.setState({loading: false});
+                this.setState({ loading: false });
             }, (errors, errorMessage) => {
                 showMessageAlert(errorMessage);
-                this.setState({loading: false});
+                this.setState({ loading: false });
+                console.log('errrrrrror', errorMessage);
             });
         };
         this.apiExHandler = (reason) => {
             showMessageAlert(reason);
-            this.setState({loading: false});
+            this.setState({ loading: false });
         };
         Api.getProfile({})
             .then((response) => {
-                    this.apiHandler(response);
-                },
+                this.apiHandler(response);
+            },
             ).catch((reason => {
                 this.apiExHandler(reason);
+                console.log('errrrrrror reason', reason);
             }),
-        );
+            );
     }
 
     validInputs() {
 
-        if(!this.validEmail(this.state.username)){
-          this.showErrorMessage("invalid_email");
-          return false;
+        if (!this.validEmail(this.state.username)) {
+            this.showErrorMessage("invalid_email");
+            return false;
         }
 
         if (!this.state.password && this.state.password.length === 0) {
@@ -182,8 +186,8 @@ export default class Login extends Component<Props, State> {
     private dismiss() {
         this.hideErrorMessage();
         this.setState({
-          username: "",
-          password: ""
+            username: "",
+            password: ""
         });
         this.props.onDismiss();
     }
@@ -211,78 +215,80 @@ export default class Login extends Component<Props, State> {
                         alignItems: "center",
                         marginTop: Constants.defaultPaddingRegular
                     }}>
-                        <View style={{flex: 1}}/>
+                        <View style={{ flex: 1 }} />
                         <Text style={[{
                             textAlign: "center", color: "black",
                             fontWeight: "700",
                             fontSize: 18,
                         }]}> {strings("login")}</Text>
-                        <View style={{flex: 1}}/>
+                        <View style={{ flex: 1 }} />
                         <TouchableOpacity onPress={() => {
                             this.hideErrorMessage();
                             this.dismiss();
                         }}>
                             <AppIcon name={"ic_close"}
-                                     color={ColorTheme.appTheme}
-                                     provider={CommonIcons}
-                                     size={25}/>
+                                color={ColorTheme.appTheme}
+                                provider={CommonIcons}
+                                size={25} />
                         </TouchableOpacity>
                     </RTLView>
-                    <ScrollView style={{marginTop: 70}} showsVerticalScrollIndicator={false}>
-                        <HFTextHeading value={strings("hello_welcome")}/>
-                        <View style={{height: Constants.defaultPadding}}/>
+                    <ScrollView style={{ marginTop: 70 }} showsVerticalScrollIndicator={false}>
+                        <HFTextHeading value={strings("hello_welcome")} />
+                        <View style={{ height: Constants.defaultPadding }} />
                         {this.state.errorOccurred &&
-                        <View style={[StaticStyles.center, {backgroundColor: "#ffe5e5", borderRadius: 5}]}>
-                            <View style={{height: Constants.defaultPadding}}/>
-                            <Text style={{
-                                color: "red",
-                                fontWeight: "400",
-                                fontSize: 12,
-                                marginTop: 2,
-                                alignSelf: "center"
-                            }}>{this.state.errorText}</Text>
-                            <View style={{height: Constants.defaultPadding}}/>
-                        </View>}
-                        <View style={{height: Constants.defaultPadding}}/>
+                            <View style={[StaticStyles.center, { backgroundColor: "#ffe5e5", borderRadius: 5 }]}>
+                                <View style={{ height: Constants.defaultPadding }} />
+                                <Text style={{
+                                    color: "red",
+                                    fontWeight: "400",
+                                    fontSize: 12,
+                                    marginTop: 2,
+                                    alignSelf: "center"
+                                }}>{this.state.errorText}</Text>
+                                <View style={{ height: Constants.defaultPadding }} />
+                            </View>}
+                        <View style={{ height: Constants.defaultPadding }} />
                         <TextKVInput text={this.state.username} title={strings("email")}
-                                     secure={false}
-                                     placeholder={"example@info.com"} 
-                                     keyboard={'email-address'}
-                                     value={value => {
-                            this.setState({username: value})
-                        }}/>
-                        <View style={{height: Constants.defaultPaddingMax}}/>
-                        <TextKVInput text={this.state.password} secure={true} title={strings("password")}
-                                     placeholder={"**********"} 
-                                     keyboard={'email-address'}
-                                     value={value => {
-                            this.setState({password: value})
-                        }}/>
-                        <View style={{height: Constants.defaultPaddingMax}}/>
+                            secure={false}
+                            placeholder={"example@info.com"}
+                            keyboard={'email-address'}
+                            value={value => {
+                                this.setState({ username: value })
+                            }} />
+                        <View style={{ height: Constants.defaultPaddingMax }} />
+                        <TextKVInput text={this.state.password}
+                            title={strings("password")}
+                            secure={true}
+                            placeholder={"**********"}
+                            //keyboard={'email-address'}
+                            value={value => {
+                                this.setState({ password: value })
+                            }} />
+                        <View style={{ height: Constants.defaultPaddingMax }} />
                         <RTLView locale={getCurrentLocale()}>
-                            <TouchableOpacity style={{justifyContent: "center"}} onPress={() => {
-                                this.setState({forgotPassword: true})
+                            <TouchableOpacity style={{ justifyContent: "center" }} onPress={() => {
+                                this.setState({ forgotPassword: true })
                             }}>
                                 <Text
-                                    style={[StaticStyles.text_grey, {textAlign: isRTLMode() ? "right" : "left"}]}>{strings("forgot_password")}</Text>
+                                    style={[StaticStyles.text_grey, { textAlign: isRTLMode() ? "right" : "left" }]}>{strings("forgot_password")}</Text>
                             </TouchableOpacity>
-                            <View style={{flex: 1}}/>
+                            <View style={{ flex: 1 }} />
                         </RTLView>
-                        <View style={{height: Constants.defaultPaddingMax}}/>
+                        <View style={{ height: Constants.defaultPaddingMax }} />
                         <ActionButton variant={"normal"} title={strings("login")} onPress={() => {
                             this.loginUser();
-                        }}/>
-                        <View style={{height: 2 * Constants.defaultPaddingMax}}/>
+                        }} />
+                        <View style={{ height: 2 * Constants.defaultPaddingMax }} />
                         <RTLView locale={getCurrentLocale()}>
-                            <View style={{flex: 1}}/>
+                            <View style={{ flex: 1 }} />
                             <Text style={{
                                 fontWeight: "400",
                                 fontSize: 15,
                                 color: ColorTheme.grey
                             }}>{strings("dont_have_account")}</Text>
-                            <View style={{width: Constants.defaultPadding}}/>
-                            <TouchableOpacity style={{justifyContent: "center"}} onPress={() => {
-                                this.setState({showSignUp: true})
+                            <View style={{ width: Constants.defaultPadding }} />
+                            <TouchableOpacity style={{ justifyContent: "center" }} onPress={() => {
+                                this.setState({ showSignUp: true })
                             }}>
                                 <Text style={{
                                     color: ColorTheme.appTheme,
@@ -290,17 +296,17 @@ export default class Login extends Component<Props, State> {
                                     fontSize: 15
                                 }}>{strings("sign_up")}</Text>
                             </TouchableOpacity>
-                            <View style={{flex: 1}}/>
+                            <View style={{ flex: 1 }} />
                         </RTLView>
                     </ScrollView>
                     <ForgotPassword show={this.state.forgotPassword}
-                                    onDismiss={() => this.setState({forgotPassword: false})}/>
-                    {this.state.loading && <LoadingOverlay/>}
+                        onDismiss={() => this.setState({ forgotPassword: false })} />
+                    {this.state.loading && <LoadingOverlay />}
                 </View>
                 {/*<RTLView locale={getCurrentLocale()} style={styles.container}>*/}
                 {/*</RTLView>*/}
                 <SignUp navigation={this.props.navigation} show={this.state.showSignUp}
-                        onDismiss={() => this.setState({showSignUp: false})}/>
+                    onDismiss={() => this.setState({ showSignUp: false })} />
             </Modal>
         );
     }

@@ -137,6 +137,7 @@ export default class Profile extends Component<Props, State> {
         };
         Api.getProfile({})
             .then((response) => {
+                console.log('profile_respone', response)
                     this.apiHandler(response);
                 },
             ).catch((reason => {
